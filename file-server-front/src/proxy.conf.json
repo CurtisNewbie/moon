@@ -1,0 +1,8 @@
+{
+  "/**": {
+    "target": "https://curtisnewbie.com:8002",
+    "secure": false,
+    "changeOrigin": true,
+    "cookieDomainRewrite": "localhost"
+  }
+}
