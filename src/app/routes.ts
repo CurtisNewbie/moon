@@ -1,6 +1,17 @@
 /** Navigation Type (Where we are navigating to) */
 export enum NavType {
-    HOME_PAGE = "home-page",
+    USER_DETAILS = "user-details",
+    MANAGE_USER = "manage-user",
+    ACCESS_LOG = "access-log",
+    CHANGE_PASSWORD = "change-password",
+    OPERATE_HISTORY = "operate-history",
+    MANAGE_TASKS = "manage-task",
+    REGISTER_PAGE = "register",
+    TASK_HISTORY = "task-history",
+    USER_APP = "user-app",
+    MANAGE_KEYS = "manage-keys",
+
+    MANAGE_FILES = "manage-files",
     LOGIN_PAGE = "login-page",
     MANAGE_EXT = "manage-extension",
     FOLDERS = "folders",

@@ -1,17 +1,27 @@
 <ng-container *ngIf="userInfo">
-    <div class="mt-2 mb-2">
-        <button mat-button [matMenuTriggerFor]="menu">{{i18n('menu')}}</button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngFor="let o of baseOptions"
-                (click)="emitBaseChangeEvent(o.base)">{{o.name}}</button>
-        </mat-menu>
+    <button mat-button [matMenuTriggerFor]="menu">menu</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/user-details" routerLinkActive="active">User Details</button>
+        <button mat-menu-item routerLink="/manage-files" routerLinkActive="active" *ngIf="hasRes('manage-files')">Manage Files</button>
+        <button mat-menu-item routerLink="/folders" routerLinkActive="active" *ngIf="hasRes('manage-files')">Virtual Folders</button>
+        <button mat-menu-item routerLink="/file-task" routerLinkActive="active" *ngIf="hasRes('manage-files')">File Tasks</button>
+        <button mat-menu-item routerLink="/manage-fsgroup" routerLinkActive="active" *ngIf="hasRes('admin-file-service')">Manage FSGroup</button>
+        <button mat-menu-item routerLink="/manage-user" routerLinkActive="active" *ngIf="hasRes('manage-users')">Manage Users</button>
+        <button mat-menu-item routerLink="/manage-roles" routerLinkActive="active" *ngIf="hasRes('manage-resources')">Manage Roles</button>
+        <button mat-menu-item routerLink="/manage-paths" routerLinkActive="active" *ngIf="hasRes('manage-resources')">Manage Paths</button>
+        <button mat-menu-item routerLink="/manage-resources" routerLinkActive="active" *ngIf="hasRes('manage-resources')">Manage Resources</button>
+        <button mat-menu-item routerLink="/access-log" routerLinkActive="active" *ngIf="hasRes('access-logs')">Access History</button>
+        <button mat-menu-item routerLink="/operate-history" routerLinkActive="active" *ngIf="hasRes('operate-logs')">Operate History</button>
+        <button mat-menu-item routerLink="/manage-task" routerLinkActive="active" *ngIf="hasRes('manage-tasks')">Manage Tasks</button>
+        <button mat-menu-item routerLink="/task-history" routerLinkActive="active" *ngIf="hasRes('manage-tasks')">Task History</button>
+        <button mat-menu-item routerLink="/manage-keys" routerLinkActive="active" *ngIf="hasRes('basic-user')">Manage Keys</button>
+    </mat-menu>
 
-        <button mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>
-        <mat-menu #userMenu="matMenu" class="m-2">
-            <button mat-menu-item>{{i18n('id')}}: {{userInfo.id}}</button>
-        </mat-menu>
+    <button mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>
+    <mat-menu #userMenu="matMenu" class="m-2">
+        <button mat-menu-item>Role: {{userInfo.roleName}}</button>
+    </mat-menu>
 
-        <button mat-button (click)="changeLang()">{{i18n('lang')}}: {{i18n(lang)}}</button>
-        <button mat-button (click)="logout()">{{i18n('logout')}}</button>
-    </div>
+    <button mat-button (click)="changeLang()">{{i18n('lang')}}: {{i18n(lang)}}</button>
+    <button mat-button (click)="logout()">{{i18n('logout')}}</button>
 </ng-container>

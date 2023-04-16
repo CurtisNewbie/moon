@@ -1,12 +1,21 @@
 export interface UserInfo {
-  /** id */
   id: number;
-  /** username */
   username: string;
-  /** role */
-  role: string;
+  role: string; // deprecated
+
   /** whether the user is disabled, 0-normal, 1-disabled */
   isDisabled: number;
+
+  /** review status */
+  reviewStatus: string;
+
+  roleNo: string;
+  userNo: string;
+  roleName: string;
+  createTime: Date;
+  updateTime: Date;
+  updateBy: string;
+  createBy: string;
 }
 
 /**
@@ -33,3 +42,4 @@ export function emptyChangePasswordParam(): ChangePasswordParam {
     newPassword: null,
   };
 }
+

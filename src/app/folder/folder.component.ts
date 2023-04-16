@@ -89,7 +89,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   selectFolder(f: VFolder): void {
-    this.navi.navigateTo(NavType.HOME_PAGE, [
+    this.navi.navigateTo(NavType.MANAGE_FILES, [
       { folderNo: f.folderNo, folderName: f.name },
     ]);
   }

@@ -1,10 +1,9 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Subscription, timer } from "rxjs";
 import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Resp } from "src/models/resp";
-import { UserInfo } from "src/models/user-info";
+import { ChangePasswordParam, UserInfo } from "src/models/user-info";
 import { NavigationService } from "./navigation.service";
 import { NotificationService } from "./notification.service";
 import { NavType } from "./routes";
@@ -15,18 +14,29 @@ import {
   HClient,
 } from "./util/api-util";
 
+export interface RoleBrief {
+  roleNo?: string;
+  name?: string;
+  code?: string;
+}
+
+export interface ResBrief {
+  code?: string;
+  name?: string;
+}
+
 @Injectable({
   providedIn: "root",
 })
-export class UserService {
-  private roleSubject = new Subject<string>();
+export class UserService implements OnDestroy {
+
   private isLoggedInSubject = new Subject<boolean>();
   private userInfoSubject = new Subject<UserInfo>();
   private resources: Set<string> = null;
 
   // refreshed every 5min
-  private tokenRefresher: Subscription = timer(60_000, 360_000).subscribe(
-    () => {
+  private tokenRefresher: Subscription = timer(60_000, 360_000)
+  .subscribe(() => {
       let t = getToken();
       if (t != null) {
         this.exchangeToken(t).subscribe({
@@ -38,11 +48,8 @@ export class UserService {
     }
   );
 
-  userInfoObservable: Observable<UserInfo> =
-    this.userInfoSubject.asObservable();
-  roleObservable: Observable<string> = this.roleSubject.asObservable();
-  isLoggedInObservable: Observable<boolean> =
-    this.isLoggedInSubject.asObservable();
+  userInfoObservable: Observable<UserInfo> = this.userInfoSubject.asObservable();
+  isLoggedInObservable: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
   constructor(
     private http: HClient,
@@ -52,8 +59,7 @@ export class UserService {
     onEmptyToken(() => this.logout());
   }
 
-  public fetchUserResources(): Observable<any> {
-    let sub = new Subject<any>();
+  public fetchUserResources() {
     this.http.get<any>(environment.goauthPath, "/resource/brief/user").subscribe({
       next: (res) => {
         this.resources = new Set();
@@ -62,10 +68,12 @@ export class UserService {
             this.resources.add(r.code);
           }
         }
-        sub.complete();
       }
-    });
-    return sub.asObservable();
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.tokenRefresher.unsubscribe();
   }
 
   hasResource(code): boolean {
@@ -84,7 +92,6 @@ export class UserService {
       {
         username: username,
         password: password,
-        appName: "file-service",
       }
     );
   }
@@ -94,10 +101,8 @@ export class UserService {
    */
   public logout(): void {
     setToken(null);
-    this.notifyLoginStatus(false);
-    if (environment.loginRedirect) {
-      this.nav.navigateTo(NavType.LOGIN_PAGE);
-    }
+    this._notifyLoginStatus(false);
+    this.nav.navigateTo(NavType.LOGIN_PAGE);
   }
 
   /**
@@ -140,32 +145,31 @@ export class UserService {
       )
       .subscribe({
         next: (resp) => {
-          if (resp.data != null) {
-            this.notifyRole(resp.data.role);
-            this.notifyLoginStatus(true);
-            this.notifyUserInfo(resp.data);
-            if (callback != null) callback();
+          if (resp.data) {
+            this.onUserInfoFetched(resp.data)
+            if (callback) callback();
           } else {
             this.notifi.toast("Please login first");
             setToken(null);
-            this.notifyLoginStatus(false);
+            this._notifyLoginStatus(false);
             this.nav.navigateTo(NavType.LOGIN_PAGE);
           }
         },
       });
   }
 
-  private notifyUserInfo(userInfo: UserInfo): void {
+  private onUserInfoFetched(userInfo: UserInfo): void {
+    this._notifyLoginStatus(true);
+    this._notifyUserInfo(userInfo);
+  }
+
+
+  private _notifyUserInfo(userInfo: UserInfo): void {
     this.userInfoSubject.next(userInfo);
   }
 
-  /** Notify the role of the user via observable */
-  private notifyRole(role: string): void {
-    this.roleSubject.next(role);
-  }
-
   /** Notify the login status of the user via observable */
-  private notifyLoginStatus(isLoggedIn: boolean): void {
+  private _notifyLoginStatus(isLoggedIn: boolean): void {
     this.isLoggedInSubject.next(isLoggedIn);
   }
 
@@ -192,4 +196,23 @@ export class UserService {
       { token: token },
     );
   }
+
+  /**
+   * Change password
+   */
+  public changePassword(param: ChangePasswordParam): Observable<Resp<any>> {
+    return this.http.post<any>(
+      environment.authServicePath, "/user/password/update",
+      param,
+    );
+  }
+
+  public fetchRoleBriefs(): Observable<Resp<any>> {
+    return this.http.get<any>(environment.goauthPath, "/role/brief/all");
+  }
+
+  public fetchAllResBrief(): Observable<Resp<any>> {
+    return this.http.get<any>(environment.goauthPath, "/resource/brief/all");
+  }
+
 }

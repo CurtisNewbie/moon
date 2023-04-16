@@ -5,7 +5,7 @@ import { FolderComponent } from "./folder/folder.component";
 import { FsGroupComponent } from "./fs-group/fs-group.component";
 import { GalleryImageComponent } from "./gallery-image/gallery-image.component";
 import { GalleryComponent } from "./gallery/gallery.component";
-import { HomePageComponent } from "./home-page/home-page.component";
+import { MngFilesComponent } from "./manage-files/mng-files.component";
 import { ImageViewerComponent } from "./image-viewer/image-viewer.component";
 import { LoginComponent } from "./login/login.component";
 import { MediaStreamerComponent } from "./media-streamer/media-streamer.component";
@@ -15,8 +15,8 @@ import { TxtViewerComponent } from "./txt-viewer/txt-viewer.component";
 
 const routes: Routes = [
   {
-    path: NavType.HOME_PAGE,
-    component: HomePageComponent,
+    path: NavType.MANAGE_FILES,
+    component: MngFilesComponent,
   },
   {
     path: NavType.LOGIN_PAGE,
@@ -58,7 +58,7 @@ const routes: Routes = [
     path: NavType.TXT_VIEWER,
     component: TxtViewerComponent,
   },
-  { path: "**", redirectTo: "/" + NavType.LOGIN_PAGE },
+  { path: "**", redirectTo: "/" + NavType.USER_DETAILS},
 ];
 
 @NgModule({

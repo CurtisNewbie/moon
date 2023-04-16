@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     if (getToken()) {
       this.userService.fetchUserInfo(() =>
-        this.nav.navigateTo(NavType.HOME_PAGE)
+        this.nav.navigateTo(NavType.USER_DETAILS)
       );
     }
   }
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
   }
 
   private routeToHomePage(): void {
-    this.nav.navigateTo(NavType.HOME_PAGE);
+    this.nav.navigateTo(NavType.USER_DETAILS);
   }
 
   passwordInputKeyPressed(event: any): void {

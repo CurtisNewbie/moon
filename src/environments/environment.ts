@@ -12,8 +12,6 @@ export const environment = {
   goauthPath: "goauth",
   services: [fileServiceOpt, fantahseaOpt],
   loginRedirect: true,
-  // if fantahsea is down
-  // services: [fileServiceOpt],
 };
 
 /*

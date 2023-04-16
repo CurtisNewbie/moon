@@ -1,11 +1,7 @@
-import { Component, DoCheck, OnDestroy, OnInit } from "@angular/core";
-import { Output, EventEmitter } from "@angular/core";
-import { environment } from "src/environments/environment";
-import { BaseOpt } from "src/models/nav";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { getLLang, LLang, onLangChange, setLLang, translate } from "src/models/translate";
 import { UserInfo } from "src/models/user-info";
 import { UserService } from "../user.service";
-import { getToken } from "../util/api-util";
 
 @Component({
   selector: "app-nav",
@@ -13,11 +9,7 @@ import { getToken } from "../util/api-util";
   styleUrls: ["./nav.component.css"],
 })
 export class NavComponent implements OnInit, OnDestroy {
-  isAdmin: boolean = false;
   userInfo: UserInfo = null;
-  baseOptions: BaseOpt[] = environment.services;
-  base: string = "file-service";
-
   lang: LLang = getLLang();
   i18n = translate;
   onLangChangeSub = onLangChange.subscribe({
@@ -26,37 +18,25 @@ export class NavComponent implements OnInit, OnDestroy {
     }
   });
 
-  @Output() baseChangeEvent = new EventEmitter<string>();
-
   constructor(private userService: UserService) { }
 
   ngOnDestroy(): void {
     this.onLangChangeSub.unsubscribe();
   }
 
-  emitBaseChangeEvent(event: string): void {
-    this.base = event;
-    this.baseChangeEvent.emit(this.base);
-  }
+  hasRes(code) { return this.userService.hasResource(code); }
 
   ngOnInit(): void {
-    if (getToken()) {
-      this.userService.fetchUserInfo();
-    }
     this.userService.userInfoObservable.subscribe({
-      next: (user) => {
-        this.isAdmin = user.role === "admin";
-        this.userInfo = user;
-      },
+      next: (user) => this.userInfo = user,
     });
     this.userService.isLoggedInObservable.subscribe({
       next: (isLoggedIn) => {
-        if (!isLoggedIn) {
-          this.isAdmin = false;
-          this.userInfo = null;
-        }
+        if (!isLoggedIn) this.userInfo = null;
       },
     });
+    this.userService.fetchUserInfo();
+    this.userService.fetchUserResources();
   }
 
   /** log out current user and navigate back to login page */

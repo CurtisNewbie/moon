@@ -54,12 +54,12 @@ export enum TokenType {
 }
 
 @Component({
-  selector: "app-home-page",
-  templateUrl: "./home-page.component.html",
-  styleUrls: ["./home-page.component.css"],
+  selector: "app-mng-files",
+  templateUrl: "./mng-files.component.html",
+  styleUrls: ["./mng-files.component.css"],
   animations: [animateElementExpanding()],
 })
-export class HomePageComponent implements OnInit, OnDestroy, DoCheck {
+export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   readonly fantahseaEnabled: boolean = isServiceEnabled("fantahsea");
   readonly OWNERSHIP_ALL_FILES = FileOwnershipEnum.FILE_OWNERSHIP_ALL_FILES;
@@ -374,7 +374,7 @@ export class HomePageComponent implements OnInit, OnDestroy, DoCheck {
     this.expandUploadPanel = false;
     this.curr = null;
     this.resetSearchParam(false, false);
-    this.nav.navigateTo(NavType.HOME_PAGE, [
+    this.nav.navigateTo(NavType.MANAGE_FILES, [
       { parentDirName: name, parentDirKey: fileKey },
     ]);
   }
@@ -622,7 +622,7 @@ export class HomePageComponent implements OnInit, OnDestroy, DoCheck {
           if (resp.data) {
             this.goToDir(resp.data.fileName, resp.data.fileKey);
           } else {
-            this.nav.navigateTo(NavType.HOME_PAGE, [
+            this.nav.navigateTo(NavType.MANAGE_FILES, [
             ]);
           }
         }

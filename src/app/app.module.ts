@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { HomePageComponent } from "./home-page/home-page.component";
+import { MngFilesComponent } from "./manage-files/mng-files.component";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { LightboxModule } from "ngx-lightbox";
 import {
@@ -56,7 +56,7 @@ import { TxtViewerComponent } from './txt-viewer/txt-viewer.component';
   declarations: [
     PdfViewerComponent,
     AppComponent,
-    HomePageComponent,
+    MngFilesComponent,
     LoginComponent,
     NavComponent,
     ManageExtensionComponent,
