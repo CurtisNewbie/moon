@@ -7,3 +7,4 @@ This project attempts to merge the following two frontend projects together, mak
 - [file-service-front](https://github.com/CurtisNewbie/file-service-front) 
 - [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
 
+This git history of these two projects are being replayed in this repository using git patch.
