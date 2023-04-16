@@ -12,6 +12,18 @@ import { MediaStreamerComponent } from "./media-streamer/media-streamer.componen
 import { PdfViewerComponent } from "./pdf-viewer/pdf-viewer.component";
 import { NavType } from "./routes";
 import { TxtViewerComponent } from "./txt-viewer/txt-viewer.component";
+import { UserDetailComponent } from "./user-detail/user-detail.component";
+import { ManageKeysComponent } from "./manage-keys/manage-keys.component";
+import { ManageRoleComponent } from "./manage-role/manage-role.component";
+import { ManagerUserComponent } from "./manager-user/manager-user.component";
+import { AccessLogComponent } from "./access-log/access-log.component";
+import { ChangePasswordComponent } from "./change-password/change-password.component";
+import { OperateHistoryComponent } from "./operate-history/operate-history.component";
+import { ManageTasksComponent } from "./manage-tasks/manage-tasks.component";
+import { TaskHistoryComponent } from "./task-history/task-history.component";
+import { RegisterComponent } from "./register/register.component";
+import { ManageResourcesComponent } from "./manage-resources/manage-resources.component";
+import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
 
 const routes: Routes = [
   {
@@ -57,6 +69,58 @@ const routes: Routes = [
   {
     path: NavType.TXT_VIEWER,
     component: TxtViewerComponent,
+  },
+  {
+    path: NavType.MANAGE_KEYS,
+    component: ManageKeysComponent,
+  },
+  {
+    path: NavType.LOGIN_PAGE,
+    component: LoginComponent,
+  },
+  {
+    path: NavType.USER_DETAILS,
+    component: UserDetailComponent,
+  },
+  {
+    path: NavType.MNG_ROLES,
+    component: ManageRoleComponent,
+  },
+  {
+    path: NavType.MANAGE_USER,
+    component: ManagerUserComponent,
+  },
+  {
+    path: NavType.ACCESS_LOG,
+    component: AccessLogComponent,
+  },
+  {
+    path: NavType.CHANGE_PASSWORD,
+    component: ChangePasswordComponent,
+  },
+  {
+    path: NavType.OPERATE_HISTORY,
+    component: OperateHistoryComponent,
+  },
+  {
+    path: NavType.MANAGE_TASKS,
+    component: ManageTasksComponent,
+  },
+  {
+    path: NavType.TASK_HISTORY,
+    component: TaskHistoryComponent,
+  },
+  {
+    path: NavType.REGISTER_PAGE,
+    component: RegisterComponent,
+  },
+  {
+    path: NavType.MNG_PATHS,
+    component: ManagePathsComponent,
+  },
+  {
+    path: NavType.MNG_RES,
+    component: ManageResourcesComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS},
 ];

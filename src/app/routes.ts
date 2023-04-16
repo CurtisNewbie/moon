@@ -10,6 +10,9 @@ export enum NavType {
     TASK_HISTORY = "task-history",
     USER_APP = "user-app",
     MANAGE_KEYS = "manage-keys",
+    MNG_ROLES = "manage-roles",
+    MNG_PATHS = "manage-paths",
+    MNG_RES = "manage-resources",
 
     MANAGE_FILES = "manage-files",
     LOGIN_PAGE = "login-page",

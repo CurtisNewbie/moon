@@ -50,6 +50,21 @@ import { ControlledPaginatorComponent } from './controlled-paginator/controlled-
 import { MediaStreamerComponent } from './media-streamer/media-streamer.component';
 import { FileTaskComponent } from './file-task/file-task.component';
 import { TxtViewerComponent } from './txt-viewer/txt-viewer.component';
+import { UserDetailComponent } from "./user-detail/user-detail.component";
+import { ManageKeysComponent } from "./manage-keys/manage-keys.component";
+import { TaskHistoryComponent } from "./task-history/task-history.component";
+import { RegisterComponent } from "./register/register.component";
+import { OperateHistoryComponent } from "./operate-history/operate-history.component";
+import { ManageTasksComponent } from "./manage-tasks/manage-tasks.component";
+import { ManagerUserComponent } from "./manager-user/manager-user.component";
+import { ManageRoleComponent } from "./manage-role/manage-role.component";
+import { ManageResourcesComponent } from "./manage-resources/manage-resources.component";
+import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
+import { MngResDialogComponent } from "./mng-res-dialog/mng-res-dialog.component";
+import { MngPathDialogComponent } from "./mng-path-dialog/mng-path-dialog.component";
+import { MngRoleDialogComponent } from "./mng-role-dialog/mng-role-dialog.component";
+import { ChangePasswordComponent } from "./change-password/change-password.component";
+import { AccessLogComponent } from "./access-log/access-log.component";
 
 @NgModule({
   exports: [],
@@ -72,6 +87,21 @@ import { TxtViewerComponent } from './txt-viewer/txt-viewer.component';
     MediaStreamerComponent,
     FileTaskComponent,
     TxtViewerComponent,
+    UserDetailComponent,
+    ManageKeysComponent,
+    TaskHistoryComponent,
+    RegisterComponent,
+    OperateHistoryComponent,
+    ManageTasksComponent,
+    ManagerUserComponent,
+    ManageRoleComponent,
+    ManageResourcesComponent,
+    ManagePathsComponent,
+    MngResDialogComponent,
+    MngPathDialogComponent,
+    MngRoleDialogComponent,
+    ChangePasswordComponent,
+    AccessLogComponent,
   ],
   imports: [
     MatTabsModule,

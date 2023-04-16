@@ -41,11 +41,16 @@ export class LoginComponent implements OnInit {
         setToken(resp.data);
         this.routeToHomePage();
         this.userService.fetchUserInfo();
+        this.userService.fetchUserResources();
       },
       complete: () => {
         this.passwordInput = "";
       },
     });
+  }
+
+  goToRegisterPage(): void {
+    this.nav.navigateTo(NavType.REGISTER_PAGE);
   }
 
   private routeToHomePage(): void {

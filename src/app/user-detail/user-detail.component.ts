@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { NavigationService, NavType } from "../navigation.service";
+import { NavigationService} from "../navigation.service";
 import { UserService } from "../user.service";
 import { HClient } from "../../common/api-util";
+import { NavType } from "../routes";
 
 export interface UserDetail {
   id?: string;

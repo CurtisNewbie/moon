@@ -2,6 +2,7 @@
     <button mat-button [matMenuTriggerFor]="menu">menu</button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/user-details" routerLinkActive="active">User Details</button>
+        <button mat-menu-item routerLink="/manage-keys" routerLinkActive="active" *ngIf="hasRes('basic-user')">Manage Keys</button>
         <button mat-menu-item routerLink="/manage-files" routerLinkActive="active" *ngIf="hasRes('manage-files')">Manage Files</button>
         <button mat-menu-item routerLink="/folders" routerLinkActive="active" *ngIf="hasRes('manage-files')">Virtual Folders</button>
         <button mat-menu-item routerLink="/file-task" routerLinkActive="active" *ngIf="hasRes('manage-files')">File Tasks</button>
@@ -14,7 +15,6 @@
         <button mat-menu-item routerLink="/operate-history" routerLinkActive="active" *ngIf="hasRes('operate-logs')">Operate History</button>
         <button mat-menu-item routerLink="/manage-task" routerLinkActive="active" *ngIf="hasRes('manage-tasks')">Manage Tasks</button>
         <button mat-menu-item routerLink="/task-history" routerLinkActive="active" *ngIf="hasRes('manage-tasks')">Task History</button>
-        <button mat-menu-item routerLink="/manage-keys" routerLinkActive="active" *ngIf="hasRes('basic-user')">Manage Keys</button>
     </mat-menu>
 
     <button mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>

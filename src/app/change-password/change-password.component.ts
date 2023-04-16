@@ -3,10 +3,11 @@ import {
   ChangePasswordParam,
   emptyChangePasswordParam,
 } from "src/common/user-info";
-import { NavigationService, NavType } from "../navigation.service";
+import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { UserService } from "../user.service";
 import { hasText } from "../../common/str-util";
+import { NavType } from "../routes";
 
 @Component({
   selector: "app-change-password",

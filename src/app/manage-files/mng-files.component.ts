@@ -33,7 +33,7 @@ import { FileInfoService } from "../file-info.service";
 import { GrantAccessDialogComponent, GrantTarget } from "../grant-access-dialog/grant-access-dialog.component";
 import { ManageTagDialogComponent } from "../manage-tag-dialog/manage-tag-dialog.component";
 import { NavigationService } from "../navigation.service";
-import { isMobile, isServiceEnabled } from "../util/env-util";
+import { isMobile } from "../util/env-util";
 import { environment } from "src/environments/environment";
 import { ActivatedRoute } from "@angular/router";
 import { Resp } from "src/models/resp";
@@ -45,7 +45,6 @@ import { resolveSize } from "../util/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
 import { Option } from "src/models/select-util";
 import { isEnterKey } from "../util/condition";
-import { time } from "../util/date-util";
 import { NavType } from "../routes";
 
 export enum TokenType {
@@ -61,7 +60,6 @@ export enum TokenType {
 })
 export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
-  readonly fantahseaEnabled: boolean = isServiceEnabled("fantahsea");
   readonly OWNERSHIP_ALL_FILES = FileOwnershipEnum.FILE_OWNERSHIP_ALL_FILES;
   readonly OWNERSHIP_MY_FILES = FileOwnershipEnum.FILE_OWNERSHIP_MY_FILES;
   readonly PRIVATE_GROUP = FileUserGroupEnum.USER_GROUP_PRIVATE;
@@ -330,10 +328,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       this._fetchTags();
       this._fetchDirBriefList();
       this._fetchOwnedVFolderBrief();
-
-      if (this.fantahseaEnabled) {
-        this._fetchOwnedGalleryBrief();
-      }
+      this._fetchOwnedGalleryBrief();
     });
   }
 
@@ -631,8 +626,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /** Reset all parameters used for searching, and the fetch the list */
   resetSearchParam(setFirstPage: boolean = true, fetchFileInfoList: boolean = true): void {
-    if (this.fantahseaEnabled) this.addToGalleryName = null;
-
+    this.addToGalleryName = null;
     this.curr = null;
     this.currId = -1;
 

@@ -157,20 +157,18 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <ng-container *ngIf="fantahseaEnabled">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>{{i18n('addToFantahseaGallery')}}</mat-label>
-                            <input matInput type="text" [(ngModel)]="addToGalleryName"
-                                (ngModelChange)="onAddToGalleryNameChanged()" [matAutocomplete]="auto2">
-                            <mat-autocomplete #auto2="matAutocomplete">
-                                <mat-option *ngFor="let option of autoCompAddToGalleryName" [value]="option">
-                                    {{option}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                </ng-container>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>{{i18n('addToFantahseaGallery')}}</mat-label>
+                        <input matInput type="text" [(ngModel)]="addToGalleryName"
+                            (ngModelChange)="onAddToGalleryNameChanged()" [matAutocomplete]="auto2">
+                        <mat-autocomplete #auto2="matAutocomplete">
+                            <mat-option *ngFor="let option of autoCompAddToGalleryName" [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
 
                 <div class="col">
                     <mat-form-field>
