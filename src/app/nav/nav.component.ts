@@ -28,15 +28,16 @@ export class NavComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userService.userInfoObservable.subscribe({
-      next: (user) => this.userInfo = user,
-    });
+      next: (user) => {
+        this.userInfo = user;
+        if (user) this.userService.fetchUserResources();
+      }});
     this.userService.isLoggedInObservable.subscribe({
       next: (isLoggedIn) => {
         if (!isLoggedIn) this.userInfo = null;
       },
     });
     this.userService.fetchUserInfo();
-    this.userService.fetchUserResources();
   }
 
   /** log out current user and navigate back to login page */
