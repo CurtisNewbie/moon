@@ -11,9 +11,7 @@ This git history of these two projects are being replayed in this repository usi
 
 ## Dependencies & Compatibility
 
-Compatible with:
-
-**Requirements:**
+**Compatible with:**
 
 - [file-server >= v1.2.7](https://github.com/CurtisNewbie/file-server/tree/v1.2.7)
 - [auth-service >= v1.1.6](https://github.com/CurtisNewbie/auth-service/tree/v1.1.6)
