@@ -1,21 +1,34 @@
 <ng-container *ngIf="userInfo">
     <button mat-button [matMenuTriggerFor]="menu">menu</button>
+
     <mat-menu #menu="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="user">User</button>
+        <button mat-menu-item [matMenuTriggerFor]="file">File & Gallery</button>
+        <button mat-menu-item [matMenuTriggerFor]="task" *ngIf="hasRes('manage-tasks')">Task</button>
+    </mat-menu>
+
+    <mat-menu #user="matMenu">
         <button mat-menu-item routerLink="/user-details" routerLinkActive="active">User Details</button>
         <button mat-menu-item routerLink="/manage-keys" routerLinkActive="active" *ngIf="hasRes('basic-user')">Manage Keys</button>
-        <button mat-menu-item routerLink="/manage-files" routerLinkActive="active" *ngIf="hasRes('manage-files')">Manage Files</button>
-        <button mat-menu-item routerLink="/gallery" routerLinkActive="active" *ngIf="hasRes('manage-files')">Fantahsea Gallery</button>
-        <button mat-menu-item routerLink="/folders" routerLinkActive="active" *ngIf="hasRes('manage-files')">Virtual Folders</button>
-        <button mat-menu-item routerLink="/file-task" routerLinkActive="active" *ngIf="hasRes('manage-files')">File Tasks</button>
-        <button mat-menu-item routerLink="/manage-fsgroup" routerLinkActive="active" *ngIf="hasRes('admin-file-service')">Manage FSGroup</button>
         <button mat-menu-item routerLink="/manage-user" routerLinkActive="active" *ngIf="hasRes('manage-users')">Manage Users</button>
         <button mat-menu-item routerLink="/manage-roles" routerLinkActive="active" *ngIf="hasRes('manage-resources')">Manage Roles</button>
         <button mat-menu-item routerLink="/manage-paths" routerLinkActive="active" *ngIf="hasRes('manage-resources')">Manage Paths</button>
         <button mat-menu-item routerLink="/manage-resources" routerLinkActive="active" *ngIf="hasRes('manage-resources')">Manage Resources</button>
         <button mat-menu-item routerLink="/access-log" routerLinkActive="active" *ngIf="hasRes('access-logs')">Access History</button>
         <button mat-menu-item routerLink="/operate-history" routerLinkActive="active" *ngIf="hasRes('operate-logs')">Operate History</button>
-        <button mat-menu-item routerLink="/manage-task" routerLinkActive="active" *ngIf="hasRes('manage-tasks')">Manage Tasks</button>
-        <button mat-menu-item routerLink="/task-history" routerLinkActive="active" *ngIf="hasRes('manage-tasks')">Task History</button>
+    </mat-menu>
+
+    <mat-menu #file="matMenu">
+        <button mat-menu-item routerLink="/manage-files" routerLinkActive="active" *ngIf="hasRes('manage-files')">Manage Files</button>
+        <button mat-menu-item routerLink="/gallery" routerLinkActive="active" *ngIf="hasRes('manage-files')">Fantahsea Gallery</button>
+        <button mat-menu-item routerLink="/folders" routerLinkActive="active" *ngIf="hasRes('manage-files')">Virtual Folders</button>
+        <button mat-menu-item routerLink="/file-task" routerLinkActive="active" *ngIf="hasRes('manage-files')">File Tasks</button>
+        <button mat-menu-item routerLink="/manage-fsgroup" routerLinkActive="active" *ngIf="hasRes('admin-file-service')">Manage FSGroup</button>
+    </mat-menu>
+
+    <mat-menu #task="matMenu">
+        <button mat-menu-item routerLink="/manage-task" routerLinkActive="active">Manage Tasks</button>
+        <button mat-menu-item routerLink="/task-history" routerLinkActive="active">Task History</button>
     </mat-menu>
 
     <button mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>
