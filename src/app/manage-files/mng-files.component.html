@@ -65,7 +65,7 @@
                     {{i18n("cancel")}}
                 </button>
             </div>
-            <div class="col">
+            <!-- <div class="col">
                 <section *ngIf="this.uploadParam.files && this.uploadParam.files.length > 1"
                     [matTooltip]="isCompressed ? i18n('multiUploadTip') : i18n('singleUploadTip')"
                     matTooltipPosition="below">
@@ -73,11 +73,11 @@
                         (ngModelChange)="onIsCompressedChanged()">{{i18n("compressed")}}
                     </mat-checkbox>
                 </section>
-            </div>
+            </div> -->
             <div class="col">
                 <section *ngIf="this.uploadParam.files && this.uploadParam.files.length > 0 && !isCompressed">
-                    <mat-checkbox class="m-1" [disabled]="isUploading" [(ngModel)]="ignoreOnDupName"
-                        (ngModelChange)="onIsCompressedChanged()">{{i18n("ignoreOnDupName")}}
+                    <mat-checkbox class="m-1" [disabled]="isUploading" [(ngModel)]="ignoreOnDupName">
+                        {{i18n("ignoreOnDupName")}}
                     </mat-checkbox>
                 </section>
             </div>
@@ -248,8 +248,8 @@
 
 
             <!-- export as zip -->
-            <button mat-raised-button class="m-2" *ngIf="anySelected"
-                (click)="exportAsZip()">{{i18n('exportAsZip')}}</button>
+            <!-- <button mat-raised-button class="m-2" *ngIf="anySelected"
+                (click)="exportAsZip()">{{i18n('exportAsZip')}}</button> -->
 
             <!-- go back to previous dir -->
             <button mat-raised-button class="m-2" *ngIf="inDirFileKey"

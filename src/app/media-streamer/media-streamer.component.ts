@@ -42,7 +42,7 @@ export class MediaStreamerComponent implements OnInit, OnDestroy {
     this.tokenRefresher = timer(60_000, 60_000).subscribe(
       () => {
         if (this.token) {
-          this.http.post<void>(environment.fileServicePath, "/file/token/renew", { token: this.token })
+          this.http.post<void>(environment.vfm, "/file/token/renew", { token: this.token })
             .subscribe({
               next: (r => console.log("Media streaming token refreshed"))
             });

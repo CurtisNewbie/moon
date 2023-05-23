@@ -15,7 +15,7 @@ export interface GrantAccessDialogData {
   fileId?: number;
   folderNo?: string;
   name: string;
-  target: GrantTarget;  
+  target: GrantTarget;
 }
 
 @Component({
@@ -47,7 +47,7 @@ export class GrantAccessDialogComponent implements OnInit {
   }
 
   grantAccess() {
-    if (this.isForFolder()) this.grantFolderAccess();      
+    if (this.isForFolder()) this.grantFolderAccess();
     else this.grantFileAccess();
   }
 
@@ -58,7 +58,7 @@ export class GrantAccessDialogComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.fileServicePath, "/file/grant-access",
+      environment.vfm, "/file/grant-access",
       {
         fileId: this.data.fileId,
         grantedTo: this.grantedTo,
@@ -78,7 +78,7 @@ export class GrantAccessDialogComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.fileServicePath, "/vfolder/share",
+      environment.vfm, "/vfolder/share",
       {
         folderNo: this.data.folderNo,
         username: this.grantedTo,
@@ -99,7 +99,7 @@ export class GrantAccessDialogComponent implements OnInit {
 
   fetchFolderAccessGranted() {
     this.http.post<any>(
-      environment.fileServicePath, "/vfolder/granted/list",
+      environment.vfm, "/vfolder/granted/list",
       {
         folderNo: this.data.folderNo,
         pagingVo: this.pagingController.paging,
@@ -120,7 +120,7 @@ export class GrantAccessDialogComponent implements OnInit {
 
   fetchFileAccessGranted() {
     this.http.post<any>(
-      environment.fileServicePath, "/file/list-granted-access",
+      environment.vfm, "/file/list-granted-access",
       {
         fileId: this.data.fileId,
         pagingVo: this.pagingController.paging,
@@ -150,7 +150,7 @@ export class GrantAccessDialogComponent implements OnInit {
 
   removeFolderAccess(userNo: string): void {
     this.http.post<void>(
-      environment.fileServicePath, "/vfolder/access/remove",
+      environment.vfm, "/vfolder/access/remove",
       { userNo: userNo, folderNo: this.data.folderNo },
     ).subscribe({
       next: () => {
@@ -161,7 +161,7 @@ export class GrantAccessDialogComponent implements OnInit {
 
   removeFileAccess(userId: number): void {
     this.http.post<void>(
-      environment.fileServicePath, "/file/remove-granted-access",
+      environment.vfm, "/file/remove-granted-access",
       { userId: userId, fileId: this.data.fileId },
     ).subscribe({
       next: () => {

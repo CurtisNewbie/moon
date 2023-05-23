@@ -68,7 +68,7 @@ export class ManageExtensionComponent implements OnInit {
     this.searchParam.pagingVo = this.pagingController.paging;
 
     this.http.post<any>(
-      environment.fileServicePath, "/file/extension/list",
+      environment.vfm, "/file/extension/list",
       this.searchParam,
     ).subscribe({
       next: (resp) => {
@@ -88,7 +88,7 @@ export class ManageExtensionComponent implements OnInit {
   /** Update file extension */
   updateFileExt(): void {
     this.http.post<FileExt[]>(
-      environment.fileServicePath, "/file/extension/update",
+      environment.vfm, "/file/extension/update",
       this.updateExt,
     ).subscribe({
       next: (resp) => {
@@ -137,7 +137,7 @@ export class ManageExtensionComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.fileServicePath, "/file/extension/add",
+      environment.vfm, "/file/extension/add",
       { name: ext },
     ).subscribe({
       next: (resp) => {

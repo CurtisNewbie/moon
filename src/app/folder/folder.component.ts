@@ -98,7 +98,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
     this.searchParam.pagingVo = this.pagingController.paging;
     this.http
       .post<Resp<any>>(
-        buildApiPath("/vfolder/list", environment.fileServicePath),
+        buildApiPath("/vfolder/list", environment.vfm),
         this.searchParam,
         buildOptions()
       )
@@ -132,7 +132,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
     this.creatingFolder = false;
     this.http
       .post<Resp<void>>(
-        buildApiPath("/vfolder/create", environment.fileServicePath),
+        buildApiPath("/vfolder/create", environment.vfm),
         { name: this.newFolderName },
         buildOptions()
       )

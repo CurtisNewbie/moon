@@ -35,7 +35,7 @@ export class FileTaskComponent implements OnInit {
   }
 
   fetchFileTaskList() {
-    this.hclient.post<any>(environment.fileServicePath, "/file/task/list", this.pagingController.paging)
+    this.hclient.post<any>(environment.vfm, "/file/task/list", this.pagingController.paging)
       .subscribe({
         next: (resp) => {
           this.fileTaskList = [];
@@ -54,17 +54,18 @@ export class FileTaskComponent implements OnInit {
       })
   }
 
+  // TODO: this doesn't work on vfm
   /**
    * Fetch download url and open it in a new tab
    */
   jumpToDownloadUrl(fileKey: string): void {
     this.hclient.post<string>(
-      environment.fileServicePath, "/file/token/generate",
+      environment.vfm, "/file/token/generate",
       { fileKey: fileKey, tokenType: "DOWNLOAD" },
     ).subscribe({
       next: (resp) => {
         const token = resp.data;
-        const url = buildApiPath("/file/token/download?token=" + token, environment.fileServicePath);
+        const url = buildApiPath("/file/token/download?token=" + token, environment.vfm);
         window.open(url, "_parent");
       },
     });

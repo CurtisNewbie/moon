@@ -58,7 +58,7 @@ export class ManageTagDialogComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.fileServicePath, "/file/tag/",
+      environment.vfm, "/file/tag/",
       { fileId: this.data.fileId, tagName: this.tagName },
     ).subscribe({
       next: (resp) => this.fetchTags(),
@@ -68,7 +68,7 @@ export class ManageTagDialogComponent implements OnInit {
 
   fetchTags(): void {
     this.http.post<any>(
-      environment.fileServicePath, "/file/tag/list-for-file",
+      environment.vfm, "/file/tag/list-for-file",
       { fileId: this.data.fileId, pagingVo: this.pagingController.paging },
     ).subscribe({
       next: (resp) => {
@@ -86,7 +86,7 @@ export class ManageTagDialogComponent implements OnInit {
 
   untag(tagName: string): void {
     this.http.post<void>(
-      environment.fileServicePath, "/file/untag/",
+      environment.vfm, "/file/untag/",
       { fileId: this.data.fileId, tagName: tagName },
     ).subscribe({
       next: (resp) => {

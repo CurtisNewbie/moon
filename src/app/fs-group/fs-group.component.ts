@@ -76,7 +76,7 @@ export class FsGroupComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.fileServicePath, "fsgroup/add", this.newFsGroup
+      environment.vfm, "fsgroup/add", this.newFsGroup
     ).subscribe({
       next: (resp) => {
         this.toaster.toast("FsGroup created");
@@ -89,7 +89,7 @@ export class FsGroupComponent implements OnInit {
 
   fetchFsGroups() {
     this.http.post<any>(
-      environment.fileServicePath, "/fsgroup/list",
+      environment.vfm, "/fsgroup/list",
       {
         fsGroup: this.searchParam,
         pagingVo: this.pagingController.paging,
@@ -116,7 +116,7 @@ export class FsGroupComponent implements OnInit {
   /** Update fs_group's mode */
   updateMode(fs: FsGroup): void {
     this.http.post<any>(
-      environment.fileServicePath, "/fsgroup/mode/update",
+      environment.vfm, "/fsgroup/mode/update",
       {
         id: fs.id,
         mode: fs.mode,

@@ -159,9 +159,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
-  Fantahsea gallery 
-  
+
+  Fantahsea gallery
+
   -----------------------
   */
 
@@ -174,9 +174,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
-  Virtual Folders 
-  
+
+  Virtual Folders
+
   -----------------------
   */
 
@@ -193,9 +193,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
+
   Directory
-  
+
   -----------------------
   */
 
@@ -217,9 +217,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
-  Uploading 
-  
+
+  Uploading
+
   -----------------------
   */
   /** whther the upload panel is expanded */
@@ -245,9 +245,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   ----------------------------------
-  
-  Labels 
-  
+
+  Labels
+
   ----------------------------------
   */
   refreshLabel = () => {
@@ -349,7 +349,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     this.newDirName = null;
     this.hclient.post(
-      environment.fileServicePath, "/file/make-dir",
+      environment.vfm, "/file/make-dir",
       {
         name: dirName,
         parentFile: findParentFileRes.fileKey,
@@ -434,7 +434,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     let curr = selected[offset];
     this.hclient.post(
-      environment.fileServicePath, "/file/move-to-dir",
+      environment.vfm, "/file/move-to-dir",
       {
         uuid: curr.uuid,
         parentFileUuid: dirFileKey,
@@ -476,7 +476,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.hclient.post(
-      environment.fileServicePath, "/file/move-to-dir",
+      environment.vfm, "/file/move-to-dir",
       {
         uuid: uuid,
         parentFileUuid: parentFileUuid,
@@ -491,7 +491,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.searchParam.parentFile = this.inDirFileKey;
 
     this.hclient.post<any>(
-      environment.fileServicePath, "/file/list",
+      environment.vfm, "/file/list",
       {
         pagingVo: this.pagingController.paging,
         filename: this.searchParam.name,
@@ -610,7 +610,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.expandUploadPanel = false;
-    this.hclient.get<any>(environment.fileServicePath, `/file/parent?fileKey=${this.inDirFileKey}`)
+    this.hclient.get<any>(environment.vfm, `/file/parent?fileKey=${this.inDirFileKey}`)
       .subscribe({
         next: (resp) => {
           // console.log("fetchParentFileKey", resp)
@@ -660,7 +660,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       // console.log(confirm);
       if (confirm) {
         this.hclient.post<any>(
-          environment.fileServicePath, "/file/delete",
+          environment.vfm, "/file/delete",
           { uuid: uuid },
         ).subscribe((resp) => {
           this.fetchFileInfoList()
@@ -700,7 +700,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     if (!u) return;
 
     this.hclient.post<any>(
-      environment.fileServicePath, "/file/info/update",
+      environment.vfm, "/file/info/update",
       {
         id: u.id,
         userGroup: u.userGroup,
@@ -737,15 +737,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         next: (resp) => {
           const token = resp.data;
 
-          const getDownloadUrl = () => buildApiPath(
-            "/file/token/download?token=" + token,
-            environment.fileServicePath
-          );
-
-          const getStreamingUrl = () => buildApiPath(
-            "/file/token/media/streaming?token=" + token,
-            environment.fileServicePath
-          );
+          const getDownloadUrl = () => environment.fstore + "/file/raw?key=" + token;
+          const getStreamingUrl = () => environment.fstore + "/file/stream?key=" + token;
 
           if (isStreaming) {
             this.dialog.open(MediaStreamerComponent, {
@@ -836,10 +829,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.generateFileTempToken(fileKey).subscribe({
       next: (resp) => {
         const token = resp.data;
-        const url = buildApiPath(
-          "/file/token/download?token=" + token,
-          environment.fileServicePath
-        );
+        const url = environment.fstore + "/file/raw?key=" + token;
         window.open(url, "_parent");
       },
     });
@@ -883,7 +873,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     this.hclient
       .post(
-        environment.fileServicePath, "/vfolder/file/add",
+        environment.vfm, "/vfolder/file/add",
         { folderNo: addToFolderNo, fileKeys: fileKeys, },
       )
       .subscribe({
@@ -1032,7 +1022,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       // console.log(confirm);
       if (confirm) {
         let fileIds = selected.map(f => f.id);
-        this.hclient.post<void>(environment.fileServicePath, '/file/export-as-zip', {
+        this.hclient.post<void>(environment.vfm, '/file/export-as-zip', {
           fileIds: fileIds
         }).subscribe({
           next: (r) => {
@@ -1069,7 +1059,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _fetchTags(): void {
     this.hclient.get<string[]>(
-      environment.fileServicePath, "/file/tag/list/all",
+      environment.vfm, "/file/tag/list/all",
     ).subscribe({
       next: (resp) => {
         this.tags = resp.data;
@@ -1079,10 +1069,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _concatTempFileDownloadUrl(tempToken: string): string {
-    return (
-      window.location.protocol + "//" + window.location.host + "/" +
-      buildApiPath("/file/token/download?token=" + tempToken, environment.fileServicePath)
-    );
+    return window.location.protocol + "//" + window.location.host + "/" + environment.fstore + "/file/raw?key=" + tempToken;
   }
 
   private _isPdf(filename: string): boolean {
@@ -1240,21 +1227,46 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       }
     }
 
-    const name = uploadParam.fileName;
+    const abortUpload = () => {
+      this.progress = null;
+      this.isUploading = false;
+      this.notifi.toast(`Failed to upload file ${name} `);
+      this._resetFileUploadParam();
+    };
 
+    const name = uploadParam.fileName;
     const uploadFileCallback = () => {
-      this.uploadSub = this.fileService.postFile(uploadParam).subscribe({
+      this.uploadSub = this.fileService.uploadToMiniFstore(uploadParam).subscribe({
         next: (event) => {
           if (event.type === HttpEventType.UploadProgress) {
             this._updateUploadProgress(uploadParam.fileName, event.loaded, event.total);
           }
+
+          // TODO: refactor this later, this is so ugly
+          if (event.type == HttpEventType.Response) {
+            let fstoreRes = event.body
+            if (fstoreRes.error) {
+              abortUpload();
+              return;
+            }
+
+            // create the record in vfm
+            this.hclient.post(environment.vfm, "/file/create", {
+              filename: uploadParam.fileName,
+              fstoreFileId: fstoreRes.data,
+              userGroup: uploadParam.userGroup,
+              tags: uploadParam.tags,
+              parentFile: uploadParam.parentFile
+            }).subscribe({
+              complete: onComplete,
+              error: () => {
+                abortUpload();
+              },
+            })
+          }
         },
-        complete: () => onComplete(),
         error: () => {
-          this.progress = null;
-          this.isUploading = false;
-          this.notifi.toast(`Failed to upload file ${name} `);
-          this._resetFileUploadParam();
+          abortUpload();
         },
       });
     }
@@ -1265,7 +1277,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       let pf = uploadParam.parentFile ? encodeURIComponent(uploadParam.parentFile) : ""
 
       // preflight check whether the filename exists already
-      this.hclient.get<boolean>(environment.fileServicePath,
+      this.hclient.get<boolean>(environment.vfm,
         `/file/upload/duplication/preflight?fileName=${encodeURIComponent(name)}&parentFileKey=${pf}`)
         .subscribe({
           next: (resp) => {
@@ -1311,7 +1323,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   // fetch dir brief list
   private _fetchDirBriefList() {
     this.hclient.get<DirBrief[]>(
-      environment.fileServicePath, "/file/dir/list",
+      environment.vfm, "/file/dir/list",
     ).subscribe({
       next: (resp) => {
         this.dirBriefList = resp.data;
@@ -1328,7 +1340,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _fetchOwnedVFolderBrief() {
     this.hclient.get<VFolderBrief[]>(
-      environment.fileServicePath, "/vfolder/brief/owned",
+      environment.vfm, "/vfolder/brief/owned",
     ).subscribe({
       next: (resp) => {
         this.vfolderBrief = resp.data;
@@ -1372,7 +1384,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
    */
   private generateFileTempToken(fileKey: string, tokenType: TokenType = TokenType.DOWNLOAD): Observable<Resp<string>> {
     return this.hclient.post<string>(
-      environment.fileServicePath, "/file/token/generate",
+      environment.vfm, "/file/token/generate",
       { fileKey: fileKey, tokenType: tokenType },
     );
   }
