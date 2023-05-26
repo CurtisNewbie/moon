@@ -19,7 +19,7 @@ export class FileInfoService {
       .append("Authorization", getToken())
 
     return this.http.put<HttpEvent<any>>(
-      environment.fstore + "/file/",
+      environment.fstore + "/file",
       uploadParam.files[0],
       {
         observe: "events",
