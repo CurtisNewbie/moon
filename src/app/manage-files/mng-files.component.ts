@@ -68,6 +68,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "selected",
     "fileType",
     "name",
+    "parentFileName",
     "uploader",
     "uploadTime",
     "size",
@@ -124,34 +125,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   isOwner = (f: FileInfo): boolean => f.isOwner;
   // isImage = (f: FileInfo): boolean => this._isImage(f);
   idEquals = isIdEqual;
-  handcopy = (f: FileInfo): FileInfo => {
-    return {
-      id: f.id,
-      uuid: f.uuid,
-      name: f.name,
-      uploaderName: f.uploaderName,
-      uploadTime: f.uploadTime,
-      sizeInBytes: f.sizeInBytes,
-      userGroup: f.userGroup,
-      isOwner: f.isOwner,
-      fileType: f.fileType,
-      updateTime: f.updateTime,
-      fileTypeLabel: f.fileTypeLabel,
-      sizeLabel: f.sizeLabel,
-      _selected: f._selected,
-      isFile: f.isFile,
-      isDir: f.isDir,
-      isFileAndIsOwner: f.isFileAndIsOwner,
-      isDirAndIsOwner: f.isDirAndIsOwner,
-      isDisplayable: f.isDisplayable,
-    }
-  }
 
   // getExpandedEle = (row): FileInfo => getExpanded(row, this.curr, this.isMobile);
   selectExpanded = (row): FileInfo => {
     if (this.isMobile) return null;
     // null means row is the expanded one, so we return null to make it collapsed
-    this.curr = (this.currId > -1 && row.id == this.currId) ? null : this.handcopy(row);
+    this.curr = (this.currId > -1 && row.id == this.currId) ? null : { ...row }
     this.currId = this.curr ? this.curr.id : -1;
   }
 
