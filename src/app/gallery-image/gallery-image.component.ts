@@ -67,10 +67,7 @@ export class GalleryImageComponent implements OnInit {
             this.images = [];
             for (let i = 0; i < imgs.length; i++) {
               let src = environment.fstore + "/file/raw?key=" + imgs[i].fileTempToken;
-              let thumb = buildApiPath(
-                "/gallery/image/download?token=" + imgs[i].thumbnailToken,
-                environment.fantahseaPath
-              );
+              let thumb = environment.fstore + "/file/raw?key=" + imgs[i].thumbnailToken;
               this.images.push({
                 src: src,
                 thumb: thumb,
