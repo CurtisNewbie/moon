@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  fantahseaPath: "fantahsea",
+  fantahsea: "fantahsea",
   vfm: "vfm",
-  authServicePath: "auth-service",
-  goauthPath: "goauth",
-  taskServicePath: "dtaskgo",
+  authService: "auth-service",
+  goauth: "goauth",
+  dtaskgo: "dtaskgo",
   fstore: "fstore",
 };

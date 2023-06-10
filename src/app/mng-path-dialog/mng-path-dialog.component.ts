@@ -37,7 +37,7 @@ export class MngPathDialogComponent implements OnInit {
   }
 
   update() {
-    this.hclient.post(environment.goauthPath, "/path/update", {
+    this.hclient.post(environment.goauth, "/path/update", {
       type: this.dat.path.ptype,
       pathNo: this.dat.path.pathNo,
       group: this.dat.path.pgroup
@@ -49,7 +49,7 @@ export class MngPathDialogComponent implements OnInit {
   }
 
   unbind() {
-    this.hclient.post(environment.goauthPath, "/path/resource/unbind", {
+    this.hclient.post(environment.goauth, "/path/resource/unbind", {
       pathNo: this.dat.path.pathNo,
     }).subscribe({
       complete: () => {
@@ -64,7 +64,7 @@ export class MngPathDialogComponent implements OnInit {
       return;
     }
 
-    this.hclient.post(environment.goauthPath, "/path/resource/bind", {
+    this.hclient.post(environment.goauth, "/path/resource/bind", {
       pathNo: this.dat.path.pathNo,
       resCode: this.bindToResCode
     }).subscribe({

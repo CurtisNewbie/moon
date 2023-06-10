@@ -54,7 +54,7 @@ export class ManageRoleComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.goauthPath, '/role/list', {
+    this.hclient.post<any>(environment.goauth, '/role/list', {
       pagingVo: this.pagingController.paging
     }).subscribe({
       next: (r) => {
@@ -96,7 +96,7 @@ export class ManageRoleComponent implements OnInit {
       return;
     }
 
-    this.hclient.post(environment.goauthPath, "/role/add", {
+    this.hclient.post(environment.goauth, "/role/add", {
       name: this.newRoleName
     }).subscribe({
       next: (res) => {

@@ -27,7 +27,7 @@ export class TaskService {
     param: ListTaskByPageReqVo
   ): Observable<Resp<ListTaskByPageRespVo>> {
     return this.http.post<ListTaskByPageRespVo>(
-      environment.taskServicePath, "/task/list",
+      environment.dtaskgo, "/task/list",
       param
     );
   }
@@ -39,7 +39,7 @@ export class TaskService {
    */
   public updateTask(param: UpdateTaskReqVo): Observable<Resp<void>> {
     return this.http.post<void>(
-      environment.taskServicePath, "/task/update",
+      environment.dtaskgo, "/task/update",
       param,
     );
   }
@@ -49,7 +49,7 @@ export class TaskService {
    */
   public triggerTask(param: TriggerTaskReqVo): Observable<Resp<void>> {
     return this.http.post<void>(
-      environment.taskServicePath, "/task/trigger",
+      environment.dtaskgo, "/task/trigger",
       param,
     );
   }
@@ -62,7 +62,7 @@ export class TaskService {
     param: ListTaskHistoryReqVo
   ): Observable<Resp<ListTaskHistoryRespVo>> {
     return this.http.post<ListTaskHistoryRespVo>(
-      environment.taskServicePath, "/task/history",
+      environment.dtaskgo, "/task/history",
       param,
     );
   }

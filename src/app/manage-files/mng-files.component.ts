@@ -889,7 +889,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.hclient.post(
-          environment.fantahseaPath, "/gallery/image/dir/transfer",
+          environment.fantahsea, "/gallery/image/dir/transfer",
           { fileKey: inDirFileKey, galleryNo: addToGalleryNo },
         ).subscribe({
           complete: () => {
@@ -946,7 +946,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         });
 
         this.hclient
-          .post(environment.fantahseaPath, "/gallery/image/transfer", { images: params, })
+          .post(environment.fantahsea, "/gallery/image/transfer", { images: params, })
           .subscribe({
             complete: () => {
               this.curr = null;
@@ -1309,7 +1309,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _fetchOwnedGalleryBrief() {
     this.hclient.get<GalleryBrief[]>(
-      environment.fantahseaPath, "/gallery/brief/owned",
+      environment.fantahsea, "/gallery/brief/owned",
     ).subscribe({
       next: (resp) => {
         this.galleryBriefs = resp.data;

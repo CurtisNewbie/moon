@@ -13,13 +13,12 @@ This git history of these two projects are being replayed in this repository usi
 
 **Compatible with:**
 
-- [vfm >= v0.0.1](https://github.com/CurtisNewbie/vfm/tree/v0.0.1)
-- [mini-fstore >= v0.0.1](https://github.com/CurtisNewbie/mini-fstore/tree/v0.0.1)
-- [auth-service >= v1.1.6](https://github.com/CurtisNewbie/auth-service/tree/v1.1.6)
-- [fantahsea >= v1.0.3.5](https://github.com/CurtisNewbie/fantahsea/tree/v1.0.3.5)
-- [dtask-go >= v1.0.0](https://github.com/CurtisNewbie/dtask-go/tree/v1.0)
-- [goauth >= v1.0.0](https://github.com/CurtisNewbie/goauth/tree/v1.0.0)
-- [auth-gateway >= v1.1.1](https://github.com/CurtisNewbie/auth-gateway/tree/v1.1.1) (no direct dependency, but of course you will need it)
+- [vfm >= v0.0.3](https://github.com/CurtisNewbie/vfm)
+- [mini-fstore >= v0.0.1](https://github.com/CurtisNewbie/mini-fstore)
+- [auth-service >= v1.1.6](https://github.com/CurtisNewbie/auth-service)
+- [fantahsea >= v1.0.7](https://github.com/CurtisNewbie/fantahsea)
+- [dtask-go >= v1.0.0](https://github.com/CurtisNewbie/dtask-go)
+- [goauth >= v1.0.0](https://github.com/CurtisNewbie/goauth)
 
 ## Known Issue (fixed tho)
 
