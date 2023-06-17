@@ -9,7 +9,7 @@ export interface ListedErrorLog {
   id?: number
   node?: string
   app?: string
-  func?: string
+  caller?: string
   traceId?: string
   spanId?: string
   errMsg?: string
