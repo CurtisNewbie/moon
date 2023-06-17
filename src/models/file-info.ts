@@ -49,7 +49,6 @@ export interface FileInfo {
     ---------------------------
 
     Used by frontend only
-
     ---------------------------
   */
 
@@ -73,6 +72,8 @@ export interface FileInfo {
    * whether fileType == 'DIR'
    */
   isDir: boolean;
+
+  parentFileName?: string;
 
   isFileAndIsOwner: boolean;
   isDirAndIsOwner: boolean;

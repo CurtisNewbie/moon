@@ -53,7 +53,7 @@ export class GalleryImageComponent implements OnInit {
 
     this.http
       .post<Resp<ListGalleryImagesResp>>(
-        buildApiPath("/gallery/images", environment.fantahseaPath),
+        buildApiPath("/gallery/images", environment.fantahsea),
         { galleryNo: this.galleryNo, pagingVo: this.pagingController.paging },
         buildOptions()
       )
@@ -67,10 +67,7 @@ export class GalleryImageComponent implements OnInit {
             this.images = [];
             for (let i = 0; i < imgs.length; i++) {
               let src = environment.fstore + "/file/raw?key=" + imgs[i].fileTempToken;
-              let thumb = buildApiPath(
-                "/gallery/image/download?token=" + imgs[i].thumbnailToken,
-                environment.fantahseaPath
-              );
+              let thumb = environment.fstore + "/file/raw?key=" + imgs[i].thumbnailToken;
               this.images.push({
                 src: src,
                 thumb: thumb,

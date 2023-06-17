@@ -34,13 +34,13 @@ export class AccessLogComponent implements OnInit {
    */
   fetchAccessLogList(): void {
     this.http.post<any>(
-      environment.authServicePath, "/access/history",
+      environment.authService, "/access/history",
       {
         pagingVo: this.pagingController.paging,
       }
     ).subscribe({
       next: (resp) => {
-        this.accessLogList = []; 
+        this.accessLogList = [];
         if (resp.data.payload) {
           for (let r of resp.data.payload) {
               if (r.accessTime) r.accessTime = new Date(r.accessTime);

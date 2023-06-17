@@ -68,6 +68,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "selected",
     "fileType",
     "name",
+    "parentFileName",
     "uploader",
     "uploadTime",
     "size",
@@ -124,34 +125,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   isOwner = (f: FileInfo): boolean => f.isOwner;
   // isImage = (f: FileInfo): boolean => this._isImage(f);
   idEquals = isIdEqual;
-  handcopy = (f: FileInfo): FileInfo => {
-    return {
-      id: f.id,
-      uuid: f.uuid,
-      name: f.name,
-      uploaderName: f.uploaderName,
-      uploadTime: f.uploadTime,
-      sizeInBytes: f.sizeInBytes,
-      userGroup: f.userGroup,
-      isOwner: f.isOwner,
-      fileType: f.fileType,
-      updateTime: f.updateTime,
-      fileTypeLabel: f.fileTypeLabel,
-      sizeLabel: f.sizeLabel,
-      _selected: f._selected,
-      isFile: f.isFile,
-      isDir: f.isDir,
-      isFileAndIsOwner: f.isFileAndIsOwner,
-      isDirAndIsOwner: f.isDirAndIsOwner,
-      isDisplayable: f.isDisplayable,
-    }
-  }
 
   // getExpandedEle = (row): FileInfo => getExpanded(row, this.curr, this.isMobile);
   selectExpanded = (row): FileInfo => {
     if (this.isMobile) return null;
     // null means row is the expanded one, so we return null to make it collapsed
-    this.curr = (this.currId > -1 && row.id == this.currId) ? null : this.handcopy(row);
+    this.curr = (this.currId > -1 && row.id == this.currId) ? null : { ...row }
     this.currId = this.curr ? this.curr.id : -1;
   }
 
@@ -228,8 +207,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   uploadParam: UploadFileParam = emptyUploadFileParam();
   /** displayed upload file name */
   displayedUploadName: string = null;
-  /** whether uploading involves compression (for multiple files) */
-  isCompressed: boolean = false;
   /** whether we are uploading */
   isUploading: boolean = false;
   /** name of directory that we may upload files into */
@@ -272,7 +249,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   onAddToVFolderNameChanged = () => this.autoCompAddToVFolderName = this.filterAlike(this.vfolderBrief.map(v => v.name), this.addToVFolderName);
   onMoveIntoDirNameChanged = () => this.autoCompMoveIntoDirs = this.filterAlike(this.dirBriefList.map(v => v.name), this.moveIntoDirName);
   onUploadDirNameChanged = () => this.autoCompUploadDirs = this.filterAlike(this.dirBriefList.map(v => v.name), this.uploadDirName);
-  onIsCompressedChanged = () => this._setDisplayedFileName();
 
   constructor(
     private userService: UserService,
@@ -288,7 +264,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   ngDoCheck(): void {
     this.anySelected = this.selectedCount > 0;
     this.displayedColumns = this._selectColumns();
-    if (this.isCompressed) this.uploadDirName = null;
   }
 
   ngOnDestroy(): void {
@@ -543,25 +518,27 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     let isSingleUpload = this._isSingleUpload();
-    let isZipCompressed = this._isZipCompressed();
 
-    // single file upload or multiple upload as a zip, name is required
-    if (!this.displayedUploadName && (isSingleUpload || isZipCompressed)) {
+    // single file upload name is required
+    if (!this.displayedUploadName && isSingleUpload) {
       this.notifi.toast(translate('msg:file:name:required'));
       return;
     }
 
-    if (this.uploadParam.userGroup == null)
+    if (this.uploadParam.userGroup == null) {
       this.uploadParam.userGroup = FileUserGroupEnum.USER_GROUP_PRIVATE;
+    }
 
     this.uploadParam.tags = this.selectedTags ? this.selectedTags : [];
     this.uploadParam.ignoreOnDupName = this.ignoreOnDupName;
 
-    if (isSingleUpload || isZipCompressed) {
+    if (isSingleUpload) {
+      // only need to upload a single file
       this.isUploading = true;
       this.uploadParam.fileName = this.displayedUploadName;
       this._doUpload(this.uploadParam);
     } else {
+      // upload one by one
       this.isUploading = true;
       this._doUpload(this._prepNextUpload(), false);
     }
@@ -836,7 +813,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   isFileNameInputDisabled(): boolean {
-    return this.isUploading || this._isBatchUpload();
+    return this.isUploading || this._isMultipleUpload();
   }
 
   addToVirtualFolder() {
@@ -912,7 +889,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.hclient.post(
-          environment.fantahseaPath, "/gallery/image/dir/transfer",
+          environment.fantahsea, "/gallery/image/dir/transfer",
           { fileKey: inDirFileKey, galleryNo: addToGalleryNo },
         ).subscribe({
           complete: () => {
@@ -925,7 +902,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   onPagingControllerReady(pagingController: PagingController) {
-    // console.log("onPagingControllerReady", time());
     this.pagingController = pagingController;
     this.pagingController.onPageChanged = () => this.fetchFileInfoList();
     this.fetchFileInfoList();
@@ -970,7 +946,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         });
 
         this.hclient
-          .post(environment.fantahseaPath, "/gallery/image/transfer", { images: params, })
+          .post(environment.fantahsea, "/gallery/image/transfer", { images: params, })
           .subscribe({
             complete: () => {
               this.curr = null;
@@ -1000,39 +976,41 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.selectedCount = this.isAllSelected ? total : 0;
   }
 
-  exportAsZip() {
-    let selected = this.filterSelected(this.isOwner);
-    if (!selected) {
-      this.notifi.toast("Please select files first")
-      return;
-    }
+  // TODO: not supported anymore
+  //
+  // exportAsZip() {
+  //   let selected = this.filterSelected(this.isOwner);
+  //   if (!selected) {
+  //     this.notifi.toast("Please select files first")
+  //     return;
+  //   }
 
-    let msgs = [`You have selected ${selected.length} file(s) to export, these files will be compressed as a zip file, it may take a while.`,
-      "Directories will be unpacked, files under it will be included in the zip file as well.",
-      "If you are already exporting, this request will be rejected."];
+  //   let msgs = [`You have selected ${selected.length} file(s) to export, these files will be compressed as a zip file, it may take a while.`,
+  //     "Directories will be unpacked, files under it will be included in the zip file as well.",
+  //     "If you are already exporting, this request will be rejected."];
 
-    this.dialog.open(ConfirmDialogComponent, {
-      width: "500px",
-      data: {
-        title: "Export Files As Zip",
-        msg: msgs,
-        isNoBtnDisplayed: true,
-      },
-    }).afterClosed().subscribe((confirm) => {
-      // console.log(confirm);
-      if (confirm) {
-        let fileIds = selected.map(f => f.id);
-        this.hclient.post<void>(environment.vfm, '/file/export-as-zip', {
-          fileIds: fileIds
-        }).subscribe({
-          next: (r) => {
-            this.notifi.toast("Exporting, this may take a while");
-          }
-        });
+  //   this.dialog.open(ConfirmDialogComponent, {
+  //     width: "500px",
+  //     data: {
+  //       title: "Export Files As Zip",
+  //       msg: msgs,
+  //       isNoBtnDisplayed: true,
+  //     },
+  //   }).afterClosed().subscribe((confirm) => {
+  //     // console.log(confirm);
+  //     if (confirm) {
+  //       let fileIds = selected.map(f => f.id);
+  //       this.hclient.post<void>(environment.vfm, '/file/export-as-zip', {
+  //         fileIds: fileIds
+  //       }).subscribe({
+  //         next: (r) => {
+  //           this.notifi.toast("Exporting, this may take a while");
+  //         }
+  //       });
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
   toggleMkdirPanel() {
     this.makingDir = !this.makingDir;
@@ -1098,23 +1076,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _setDisplayedFileName(): void {
-    if (!this.uploadParam || !this.uploadParam.files) {
-      return;
-    }
+    if (!this.uploadParam || !this.uploadParam.files) return;
 
     const files = this.uploadParam.files;
     const firstFile: File = files[0];
-    if (this._isSingleUpload()) {
-      this.displayedUploadName = firstFile.name;
-    } else {
-      const fn = firstFile.name;
-      if (this._isZipCompressed()) {
-        const j = fn.lastIndexOf(".");
-        this.displayedUploadName = (j > 0 ? fn.slice(0, j) : fn) + ".zip";
-      } else {
-        this.displayedUploadName = `Batch Upload: ${files.length} files in total`;
-      }
-    }
+    if (this._isSingleUpload()) this.displayedUploadName = firstFile.name;
+    else this.displayedUploadName = `Batch Upload: ${files.length} files in total`;
   }
 
   private _resetFileUploadParam(): void {
@@ -1122,7 +1089,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     this.isAllSelected = false;
     this.selectedTags = [];
-    this.isCompressed = false;
     this.uploadParam = emptyUploadFileParam();
 
     if (this.uploadFileInput) {
@@ -1143,7 +1109,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _prepNextUpload(): UploadFileParam {
     if (!this.isUploading) return null;
-    if (this._isSingleUpload() || this._isZipCompressed()) return null;
+    if (this._isSingleUpload()) return null;
 
     let i = this.uploadIndex; // if this is the first one, i will be -1
     let files = this.uploadParam.files;
@@ -1295,14 +1261,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
-  private _isZipCompressed() {
-    return this._isMultipleUpload() && this.isCompressed;
-  }
-
-  private _isBatchUpload() {
-    return this._isMultipleUpload() && !this.isCompressed;
-  }
-
   private _isSingleUpload() {
     return !this._isMultipleUpload();
   }
@@ -1351,7 +1309,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _fetchOwnedGalleryBrief() {
     this.hclient.get<GalleryBrief[]>(
-      environment.fantahseaPath, "/gallery/brief/owned",
+      environment.fantahsea, "/gallery/brief/owned",
     ).subscribe({
       next: (resp) => {
         this.galleryBriefs = resp.data;

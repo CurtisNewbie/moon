@@ -33,7 +33,7 @@ export class OperateHistoryComponent implements OnInit {
 
   fetchOperateLogList(): void {
     this.http.post<any>(
-      environment.authServicePath, "/operate/history",
+      environment.authService, "/operate/history",
       this.pagingController.paging
     ).subscribe({
       next: (resp) => {

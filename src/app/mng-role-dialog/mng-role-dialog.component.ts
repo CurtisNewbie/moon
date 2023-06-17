@@ -43,7 +43,7 @@ export class MngRoleDialogComponent implements OnInit {
   }
 
   fetchResourceCandidates() {
-    this.hclient.get<any>(environment.goauthPath, `/resource/brief/candidates?roleNo=${this.dat.roleNo}`)
+    this.hclient.get<any>(environment.goauth, `/resource/brief/candidates?roleNo=${this.dat.roleNo}`)
       .subscribe({
         next: (res) => {
           this.resBriefs = res.data;
@@ -57,7 +57,7 @@ export class MngRoleDialogComponent implements OnInit {
       return;
     }
 
-    this.hclient.post<any>(environment.goauthPath, "/role/resource/add", {
+    this.hclient.post<any>(environment.goauth, "/role/resource/add", {
       roleNo: this.dat.roleNo,
       resCode: this.addResCode
     }).subscribe({
@@ -70,7 +70,7 @@ export class MngRoleDialogComponent implements OnInit {
   }
 
   listResources() {
-    this.hclient.post<any>(environment.goauthPath, "/role/resource/list", {
+    this.hclient.post<any>(environment.goauth, "/role/resource/list", {
       roleNo: this.dat.roleNo,
       pagingVo: this.pagingController.paging
     }).subscribe({
@@ -88,13 +88,13 @@ export class MngRoleDialogComponent implements OnInit {
   }
 
   onPagingControllerReady(pc) {
-    this.pagingController = pc; 
+    this.pagingController = pc;
     this.pagingController.onPageChanged = () => this.listResources();
     this.listResources();
   }
 
   delRes(roleRes: ListedRoleRes) {
-    this.hclient.post<any>(environment.goauthPath, "/role/resource/remove", {
+    this.hclient.post<any>(environment.goauth, "/role/resource/remove", {
       roleNo: this.dat.roleNo,
       resCode: roleRes.resCode
     }).subscribe({

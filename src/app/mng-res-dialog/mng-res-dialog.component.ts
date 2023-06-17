@@ -7,7 +7,7 @@ import { ConfirmDialogComponent } from '../dialog/confirm/confirm-dialog.compone
 import { WPath } from '../manage-paths/manage-paths.component';
 import { WRes } from '../manage-resources/manage-resources.component';
 
-// TODO impl this 
+// TODO impl this
 
 export interface DialogDat {
   res: WRes;
@@ -35,7 +35,7 @@ export class MngResDialogComponent implements OnInit {
   }
 
   listPathsBound() {
-    this.hclient.post<any>(environment.goauthPath, '/path/list', {
+    this.hclient.post<any>(environment.goauth, '/path/list', {
       pagingVo: this.pagingController.paging,
       resCode: this.dat.res.code
     }).subscribe({
@@ -69,7 +69,7 @@ export class MngResDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirm) => {
       console.log(confirm);
       if (confirm) {
-        this.hclient.post(environment.goauthPath, "/resource/remove", {
+        this.hclient.post(environment.goauth, "/resource/remove", {
           resCode: this.dat.res.code
         }).subscribe({
           next: (r) => {

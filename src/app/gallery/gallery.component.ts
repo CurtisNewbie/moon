@@ -57,7 +57,7 @@ export class GalleryComponent implements OnInit {
   fetchGalleries() {
     this.http
       .post<ListGalleriesResp>(
-        environment.fantahseaPath, "/gallery/list",
+        environment.fantahsea, "/gallery/list",
         { pagingVo: this.pagingController.paging },
       )
       .subscribe({
@@ -77,7 +77,7 @@ export class GalleryComponent implements OnInit {
 
     this.http
       .post<any>(
-        environment.fantahseaPath, "/gallery/new",
+        environment.fantahsea, "/gallery/new",
         {
           name: this.newGalleryName,
         }
@@ -115,7 +115,7 @@ export class GalleryComponent implements OnInit {
       if (confirm) {
         this.http
           .post<any>(
-            environment.fantahseaPath, "/gallery/delete",
+            environment.fantahsea, "/gallery/delete",
             {
               galleryNo: galleryNo,
             },
@@ -143,7 +143,7 @@ export class GalleryComponent implements OnInit {
   updateGallery(galleryNo: string, name: string) {
     if (!galleryNo || !name) return;
 
-    this.http.post(environment.fantahseaPath, "/gallery/update", {
+    this.http.post(environment.fantahsea, "/gallery/update", {
       galleryNo: galleryNo,
       name: name
     }).subscribe({
