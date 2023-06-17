@@ -34,7 +34,7 @@ export interface ListErrorLogResp {
 })
 export class ManageLogsComponent implements OnInit {
 
-  readonly tabcol = ['ctime', 'app', 'errMsg']
+  readonly tabcol = ['ctime', 'app', 'caller', 'errMsg']
 
   qryApp = '';
   pagingController: PagingController;

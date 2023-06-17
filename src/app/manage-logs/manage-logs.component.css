@@ -5,3 +5,7 @@
 .mat-column-app {
   max-width: 15px;
 }
+
+.mat-column-caller {
+  max-width: 50px;
+}
