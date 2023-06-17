@@ -65,10 +65,10 @@ export class HClient {
   constructor(private httpClient: HttpClient) { }
 
   /** Do POST request */
-  post<T>(serviceBase: string, url: string, payload: any): Observable<Resp<T>> {
+  post<T>(serviceBase: string, url: string, payload: any, openApi: boolean = true): Observable<Resp<T>> {
+    url = openApi ? buildApiPath(url, serviceBase) : serviceBase + url;
     return this.httpClient.post<Resp<T>>(
-      buildApiPath(url, serviceBase), payload,
-      buildOptions()
+      url, payload, buildOptions()
     );
   }
 

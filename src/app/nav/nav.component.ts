@@ -26,6 +26,13 @@ export class NavComponent implements OnInit, OnDestroy {
 
   hasRes(code) { return this.userService.hasResource(code); }
 
+  hasAnyRes(...codes: string[]) {
+    for (let c of codes) {
+      if (this.hasRes(c)) return true;
+    }
+    return false;
+  }
+
   ngOnInit(): void {
     this.userService.userInfoObservable.subscribe({
       next: (user) => {

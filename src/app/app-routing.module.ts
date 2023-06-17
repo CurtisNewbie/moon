@@ -24,6 +24,7 @@ import { TaskHistoryComponent } from "./task-history/task-history.component";
 import { RegisterComponent } from "./register/register.component";
 import { ManageResourcesComponent } from "./manage-resources/manage-resources.component";
 import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
+import { ManageLogsComponent } from "./manage-logs/manage-logs.component";
 
 const routes: Routes = [
   {
@@ -121,6 +122,10 @@ const routes: Routes = [
   {
     path: NavType.MNG_RES,
     component: ManageResourcesComponent,
+  },
+  {
+    path: NavType.MNG_LOGS,
+    component: ManageLogsComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS},
 ];

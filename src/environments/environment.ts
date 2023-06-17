@@ -10,6 +10,7 @@ export const environment = {
   goauthPath: "goauth",
   taskServicePath: "dtaskgo",
   fstore: "fstore",
+  logbot:"logbot",
 };
 
 /*

@@ -13,6 +13,7 @@ export enum NavType {
     MNG_ROLES = "manage-roles",
     MNG_PATHS = "manage-paths",
     MNG_RES = "manage-resources",
+    MNG_LOGS = "manage-logs",
 
     MANAGE_FILES = "manage-files",
     LOGIN_PAGE = "login-page",
