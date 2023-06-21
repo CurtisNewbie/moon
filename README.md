@@ -19,6 +19,7 @@ This git history of these two projects are being replayed in this repository usi
 - [fantahsea >= v1.0.7](https://github.com/CurtisNewbie/fantahsea)
 - [dtask-go >= v1.0.0](https://github.com/CurtisNewbie/dtask-go)
 - [goauth >= v1.0.0](https://github.com/CurtisNewbie/goauth)
+- [logbot >= v0.0.1](https://github.com/CurtisNewbie/logbot)
 
 ## Known Issue (fixed tho)
 
