@@ -320,15 +320,14 @@
                     <td mat-cell *matCellDef="let f">
                         <!-- download / preview -->
                         <ng-container *ngIf="f.isFile">
-                            <button mat-button (click)="$event.stopPropagation() || jumpToDownloadUrl(f.uuid)"><small>{{i18n('download')}}</small></button>
+                            <button class="small-btn m-2" mat-raised-button (click)="$event.stopPropagation() || jumpToDownloadUrl(f.uuid)">{{i18n('download')}}</button>
                             <ng-container *ngIf="f.isDisplayable">
-                                <button mat-button
-                                    (click)="$event.stopPropagation() || preview(f)"><small>{{i18n('preview')}}</small></button>
+                                <button class="small-btn" mat-raised-button (click)="$event.stopPropagation() || preview(f)">{{i18n('preview')}}</button>
                             </ng-container>
                         </ng-container>
                         <!-- Go into dir  -->
                         <ng-container *ngIf="f.isDir">
-                            <button mat-button (click)="$event.stopPropagation() || goToDir(f.name, f.uuid)"><small>{{i18n('goInto')}}</small></button>
+                            <button class="small-btn" mat-raised-button (click)="$event.stopPropagation() || goToDir(f.name, f.uuid)">{{i18n('goInto')}}</button>
                         </ng-container>
                     </td>
                 </ng-container>
