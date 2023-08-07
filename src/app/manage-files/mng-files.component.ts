@@ -714,8 +714,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         next: (resp) => {
           const token = resp.data;
 
-          const getDownloadUrl = () => environment.fstore + "/file/raw?key=" + token;
-          const getStreamingUrl = () => environment.fstore + "/file/stream?key=" + token;
+          const getDownloadUrl = () => environment.fstore + "/file/raw?key=" + encodeURIComponent(token);
+          const getStreamingUrl = () => environment.fstore + "/file/stream?key=" + encodeURIComponent(token);
 
           if (isStreaming) {
             this.dialog.open(MediaStreamerComponent, {
@@ -806,7 +806,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.generateFileTempToken(fileKey).subscribe({
       next: (resp) => {
         const token = resp.data;
-        const url = environment.fstore + "/file/raw?key=" + token;
+        const url = environment.fstore + "/file/raw?key=" + encodeURIComponent(token);
         window.open(url, "_parent");
       },
     });
@@ -1047,7 +1047,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _concatTempFileDownloadUrl(tempToken: string): string {
-    return window.location.protocol + "//" + window.location.host + "/" + environment.fstore + "/file/raw?key=" + tempToken;
+    return window.location.protocol + "//" + window.location.host + "/" + environment.fstore + "/file/raw?key=" + encodeURIComponent(tempToken);
   }
 
   private _isPdf(filename: string): boolean {
