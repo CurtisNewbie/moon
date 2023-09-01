@@ -5,7 +5,6 @@
     <p>Description: {{dat.path.desc}}</p>
     <p *ngIf="dat.path.ptype == 'PUBLIC'">Path Type: <span class="status-green">Public</span></p>
     <p *ngIf="dat.path.ptype == 'PROTECTED'">Path Type: <span class="status-red">Protected</span></p>
-    <p *ngIf="dat.path.resCode">Resource Bounded: {{dat.path.resName}}</p>
 
 
     <div class="row row-cols-lg-auto g-3 align-items-center">
@@ -19,22 +18,9 @@
                 </mat-select>
             </mat-form-field>
         </div>
-
-        <div class="col-12">
-            <mat-form-field appearance="fill" *ngIf="!dat.path.resCode" class="">
-                <mat-label>Bind to Resource</mat-label>
-                <mat-select [(value)]="bindToResCode">
-                    <mat-option [value]="option.code" *ngFor="let option of resBrief">
-                        {{option.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
     </div>
 
     <div class="d-flex justify-content-md-end">
-        <button mat-raised-button class="m-2" (click)="bind()" *ngIf="!dat.path.resCode">Bind Resource</button>
-        <button mat-raised-button class="m-2" (click)="unbind()" *ngIf="dat.path.resCode">Unbind Resource</button>
         <button mat-raised-button class="m-2" (click)="update()">Update</button>
     </div>
 </div>

@@ -3,8 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { WPath } from '../manage-paths/manage-paths.component';
 import { MngResDialogComponent } from '../mng-res-dialog/mng-res-dialog.component';
-import { NotificationService } from '../notification.service';
-import { ResBrief, UserService } from '../user.service';
 import { HClient } from '../../common/api-util';
 
 export interface DialogDat {
@@ -18,7 +16,6 @@ export interface DialogDat {
 })
 export class MngPathDialogComponent implements OnInit {
 
-  resBrief: ResBrief[] = [];
   bindToResCode = "";
   PATH_TYPES = [
     { val: 'PROTECTED', name: 'Protected' },
@@ -28,12 +25,9 @@ export class MngPathDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MngResDialogComponent, DialogDat>, @Inject(MAT_DIALOG_DATA) public dat: DialogDat,
     private hclient: HClient,
-    private userService: UserService,
-    private toaster: NotificationService
   ) { }
 
   ngOnInit(): void {
-    this._fetchRoleBriefs();
   }
 
   update() {
@@ -47,42 +41,4 @@ export class MngPathDialogComponent implements OnInit {
       }
     });
   }
-
-  unbind() {
-    this.hclient.post(environment.goauth, "/path/resource/unbind", {
-      pathNo: this.dat.path.pathNo,
-    }).subscribe({
-      complete: () => {
-        this.dialogRef.close();
-      }
-    });
-  }
-
-  bind() {
-    if (!this.bindToResCode) {
-      this.toaster.toast("Please select resource");
-      return;
-    }
-
-    this.hclient.post(environment.goauth, "/path/resource/bind", {
-      pathNo: this.dat.path.pathNo,
-      resCode: this.bindToResCode
-    }).subscribe({
-      complete: () => {
-        this.dialogRef.close();
-      }
-    });
-  }
-
-  _fetchRoleBriefs(): void {
-    this.userService.fetchAllResBrief().subscribe({
-      next: (dat) => {
-        this.resBrief = [];
-        if (dat.data) {
-          this.resBrief = dat.data;
-        }
-      }
-    })
-  }
-
 }

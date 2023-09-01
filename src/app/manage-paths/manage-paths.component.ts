@@ -12,8 +12,6 @@ export interface WPath {
   id?: number;
   pgroup?: string;
   pathNo?: string;
-  resName?: string;
-  resCode?: string;
   method?: string;
   desc?: string;
   url?: string;
@@ -43,7 +41,7 @@ export class ManagePathsComponent implements OnInit {
   expandedElement: WPath = null;
   pagingController: PagingController;
 
-  readonly tabcol = ["id", "pgroup", "url", "method", "ptype", "desc", "resName", "createBy", "createTime"];
+  readonly tabcol = ["id", "pgroup", "url", "method", "ptype", "desc", "createBy", "createTime"];
   paths: WPath[] = [];
 
   idEquals = isIdEqual;

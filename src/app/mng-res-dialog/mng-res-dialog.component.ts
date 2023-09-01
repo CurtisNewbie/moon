@@ -6,6 +6,7 @@ import { HClient } from '../../common/api-util';
 import { ConfirmDialogComponent } from '../dialog/confirm/confirm-dialog.component';
 import { WPath } from '../manage-paths/manage-paths.component';
 import { WRes } from '../manage-resources/manage-resources.component';
+import { ConfirmDialog } from 'src/common/dialog';
 
 // TODO impl this
 
@@ -20,14 +21,15 @@ export interface DialogDat {
 })
 export class MngResDialogComponent implements OnInit {
 
-  readonly tabcol = ["id", "pgroup", "url", "ptype", "desc"];
+  readonly tabcol = ["id", "pgroup", "method", "url", "ptype", "desc", "option"];
   paths: WPath[] = [];
   pagingController: PagingController = null;
 
   constructor(
     public dialogRef: MatDialogRef<MngResDialogComponent, DialogDat>, @Inject(MAT_DIALOG_DATA) public dat: DialogDat,
     private hclient: HClient,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private confirmDialog: ConfirmDialog
   ) { }
 
   ngOnInit(): void {
@@ -77,6 +79,26 @@ export class MngResDialogComponent implements OnInit {
           }
         })
       }
+    });
+  }
+
+  unbind(pathNo: string, resCode: string, pathUrl: string, resName: string) {
+    if (!resCode || !pathNo) {
+      return;
+    }
+
+    const title = 'Unbind Resource Path';
+    const msg = [
+      `Resource '${resName}'`,
+      `Path: '${pathUrl}'`
+    ];
+
+    this.confirmDialog.show(title, msg, () => {
+      this.hclient.post(environment.goauth, "/path/resource/unbind", {
+        pathNo: pathNo,
+        resCode: resCode
+      })
+        .subscribe(() => this.listPathsBound());
     });
   }
 

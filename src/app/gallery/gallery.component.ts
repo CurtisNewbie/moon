@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
 import { environment } from "src/environments/environment";
@@ -9,7 +9,6 @@ import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.compone
 import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { NavType } from "../routes";
-import { UserService } from "../user.service";
 import { HClient } from "../util/api-util";
 import { isMobile } from "../util/env-util";
 
@@ -100,19 +99,21 @@ export class GalleryComponent implements OnInit {
   deleteGallery(galleryNo: string, galleryName: string) {
     if (!galleryNo) return;
 
-    const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
-      this.dialog.open(ConfirmDialogComponent, {
-        width: "500px",
-        data: {
-          title: 'Delete Gallery',
-          msg: [`You sure you want to delete '${galleryName}'`],
-          isNoBtnDisplayed: true,
-        },
-      });
+    this.dialog.open(ConfirmDialogComponent, {
+      width: "500px",
+      data: {
+        title: 'Delete Gallery',
+        msg: [`You sure you want to delete '${galleryName}'`],
+        isNoBtnDisplayed: true,
+      },
+    })
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (!confirm) {
+          this.expandedElement = null;
+          return;
+        }
 
-    dialogRef.afterClosed().subscribe((confirm) => {
-      console.log(confirm);
-      if (confirm) {
         this.http
           .post<any>(
             environment.fantahsea, "/gallery/delete",
@@ -123,9 +124,8 @@ export class GalleryComponent implements OnInit {
           .subscribe({
             complete: () => this.fetchGalleries(),
           });
-      }
-      this.expandedElement = null;
-    });
+        this.expandedElement = null;
+      });
   }
 
   browse(galleryNo: string) {
