@@ -63,7 +63,7 @@ export class ManageLogsComponent implements OnInit {
     this.hclient.post<any>(environment.logbot, '/log/error/list', {
       app: this.qryApp,
       page: this.pagingController.paging
-    }).subscribe({
+    }, false).subscribe({
       next: (r) => {
         this.tabdat = [];
         if (r.data && r.data.payload) {
