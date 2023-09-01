@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { UserToken } from "src/common/tokens";
 import { PagingController } from "src/common/paging";
-import { HClient } from "../../common/api-util";
+import { HClient } from "src/common/api-util";
 import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
 import { UserService } from "../user.service";
 import { NotificationService } from "../notification.service";
 import { environment } from "src/environments/environment";
-import { isEnterKey } from "../../common/condition";
+import { isEnterKey } from "src/common/condition";
 
 @Component({
   selector: "app-manage-keys",

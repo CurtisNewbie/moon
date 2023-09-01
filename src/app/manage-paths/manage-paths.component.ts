@@ -5,8 +5,8 @@ import { environment } from 'src/environments/environment';
 import { PagingController } from 'src/common/paging';
 import { MngPathDialogComponent } from '../mng-path-dialog/mng-path-dialog.component';
 import { UserService } from '../user.service';
-import { HClient } from '../../common/api-util';
-import { isEnterKey } from '../../common/condition';
+import { HClient } from 'src/common/api-util';
+import { isEnterKey } from 'src/common/condition';
 
 export interface WPath {
   id?: number;

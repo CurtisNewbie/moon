@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { getLLang, LLang, onLangChange, setLLang, translate } from "src/models/translate";
-import { UserInfo } from "src/models/user-info";
+import { getLLang, LLang, onLangChange, setLLang, translate } from "src/common/translate";
+import { UserInfo } from "src/common/user-info";
 import { UserService } from "../user.service";
 
 @Component({

@@ -3,7 +3,7 @@ import { environment } from "src/environments/environment";
 import { AccessLog } from "src/common/access-log";
 import { PagingController } from "src/common/paging";
 import { UserService } from "../user.service";
-import { HClient } from "../../common/api-util";
+import { HClient } from "src/common/api-util";
 
 @Component({
   selector: "app-access-log",

@@ -1,4 +1,3 @@
-import { Paging } from "./paging";
 
 /** Virtual Folder */
 export interface VFolder {

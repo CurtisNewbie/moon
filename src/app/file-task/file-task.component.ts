@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { PagingController } from 'src/models/paging';
+import { PagingController } from 'src/common/paging';
 import { UserService } from '../user.service';
-import { HClient, buildApiPath } from '../util/api-util';
-import { time } from '../util/date-util';
+import { HClient, buildApiPath } from 'src/common/api-util';
+import { time } from 'src/common/date-util';
 
 export interface FileTask {
   taskNo?: string

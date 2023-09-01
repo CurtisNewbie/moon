@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { environment } from "src/environments/environment";
-import { FileAccessGranted } from "src/models/file-info";
-import { PagingController } from "src/models/paging";
+import { FileAccessGranted } from "src/common/file-info";
+import { PagingController } from "src/common/paging";
 import { NotificationService } from "../notification.service";
-import { HClient } from "../util/api-util";
-import { isEnterKey } from "../util/condition";
+import { HClient } from "src/common/api-util";
+import { isEnterKey } from "src/common/condition";
 
 export enum GrantTarget {
   FILE, FOLDER

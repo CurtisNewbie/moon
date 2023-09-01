@@ -2,8 +2,8 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { Subscription, timer } from "rxjs";
 import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Resp } from "src/models/resp";
-import { ChangePasswordParam, UserInfo } from "src/models/user-info";
+import { Resp } from "src/common/resp";
+import { ChangePasswordParam, UserInfo } from "src/common/user-info";
 import { NavigationService } from "./navigation.service";
 import { NotificationService } from "./notification.service";
 import { NavType } from "./routes";
@@ -12,7 +12,7 @@ import {
   setToken,
   onEmptyToken,
   HClient,
-} from "./util/api-util";
+} from "src/common/api-util";
 
 export interface RoleBrief {
   roleNo?: string;

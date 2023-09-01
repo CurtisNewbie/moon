@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PagingController } from 'src/common/paging';
 import { environment } from 'src/environments/environment';
-import { HClient } from '../../common/api-util';
+import { HClient } from 'src/common/api-util';
 import { ConfirmDialogComponent } from '../dialog/confirm/confirm-dialog.component';
 import { WPath } from '../manage-paths/manage-paths.component';
 import { WRes } from '../manage-resources/manage-resources.component';

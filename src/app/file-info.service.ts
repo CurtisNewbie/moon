@@ -4,8 +4,8 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import {
   UploadFileParam,
-} from "src/models/file-info";
-import { getToken } from "./util/api-util";
+} from "src/common/file-info";
+import { getToken } from "src/common/api-util";
 
 @Injectable({
   providedIn: "root",

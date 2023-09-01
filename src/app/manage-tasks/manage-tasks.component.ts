@@ -15,7 +15,7 @@ import { Option } from "src/common/select-util";
 import { NotificationService } from "../notification.service";
 import { TaskService } from "../task.service";
 import { NavigationService } from "../navigation.service";
-import { isEnterKey } from "../../common/condition";
+import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
 
 @Component({

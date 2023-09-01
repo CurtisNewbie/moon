@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { WPath } from '../manage-paths/manage-paths.component';
 import { MngResDialogComponent } from '../mng-res-dialog/mng-res-dialog.component';
-import { HClient } from '../../common/api-util';
+import { HClient } from 'src/common/api-util';
 
 export interface DialogDat {
   path: WPath;

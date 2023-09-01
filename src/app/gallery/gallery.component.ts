@@ -3,14 +3,14 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
 import { environment } from "src/environments/environment";
-import { Gallery, ListGalleriesResp } from "src/models/gallery";
-import { PagingController } from "src/models/paging";
+import { Gallery, ListGalleriesResp } from "src/common/gallery";
+import { PagingController } from "src/common/paging";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { NavType } from "../routes";
-import { HClient } from "../util/api-util";
-import { isMobile } from "../util/env-util";
+import { HClient } from "src/common/api-util";
+import { isMobile } from "src/common/env-util";
 
 @Component({
   selector: "app-gallery",

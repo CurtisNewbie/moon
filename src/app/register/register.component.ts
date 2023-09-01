@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { UserService } from "../user.service";
-import { isEnterKey } from "../../common/condition";
+import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
 
 @Component({

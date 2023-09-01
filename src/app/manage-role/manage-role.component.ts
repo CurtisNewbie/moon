@@ -6,8 +6,8 @@ import { PagingController } from 'src/common/paging';
 import { MngRoleDialogComponent } from '../mng-role-dialog/mng-role-dialog.component';
 import { NotificationService } from '../notification.service';
 import { UserService } from '../user.service';
-import { HClient } from '../../common/api-util';
-import { isEnterKey } from '../../common/condition';
+import { HClient } from 'src/common/api-util';
+import { isEnterKey } from 'src/common/condition';
 
 
 export interface ERole {

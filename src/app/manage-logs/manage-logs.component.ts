@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
-import { HClient } from '../util/api-util';
+import { HClient } from 'src/common/api-util';
 import { Paging, PagingController } from 'src/common/paging';
 import { environment } from 'src/environments/environment';
-import { isEnterKey } from '../util/condition';
+import { isEnterKey } from 'src/common/condition';
 
 export interface ListedErrorLog {
   id?: number
@@ -63,7 +63,7 @@ export class ManageLogsComponent implements OnInit {
     this.hclient.post<any>(environment.logbot, '/log/error/list', {
       app: this.qryApp,
       page: this.pagingController.paging
-    }, false).subscribe({
+    }).subscribe({
       next: (r) => {
         this.tabdat = [];
         if (r.data && r.data.payload) {

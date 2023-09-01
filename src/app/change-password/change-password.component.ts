@@ -6,7 +6,7 @@ import {
 import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { UserService } from "../user.service";
-import { hasText } from "../../common/str-util";
+import { hasText } from "src/common/str-util";
 import { NavType } from "../routes";
 
 @Component({

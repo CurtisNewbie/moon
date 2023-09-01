@@ -6,13 +6,13 @@ import {
   FileExtIsEnabledOption,
   FILE_EXT_IS_ENABLED_OPTIONS,
   SearchFileExtParam,
-} from "src/models/file-ext";
-import { PagingController } from "src/models/paging";
+} from "src/common/file-ext";
+import { PagingController } from "src/common/paging";
 import { NotificationService } from "../notification.service";
 import { animateElementExpanding } from "../../animate/animate-util";
-import { isMobile } from "../util/env-util";
+import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
-import { HClient } from "../util/api-util";
+import { HClient } from "src/common/api-util";
 
 @Component({
   selector: "app-manage-extension",

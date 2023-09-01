@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { PagingController } from 'src/common/paging';
 import { NotificationService } from '../notification.service';
 import { ResBrief, UserService } from '../user.service';
-import { HClient } from '../../common/api-util';
+import { HClient } from 'src/common/api-util';
 
 export interface DialogDat {
   roleNo: string

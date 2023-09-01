@@ -4,17 +4,17 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatSelectionList, MatSelectionListChange } from "@angular/material/list";
 import { Subscription } from "rxjs";
 import { environment } from "src/environments/environment";
-import { VFolder } from "src/models/folder";
-import { PagingController } from "src/models/paging";
-import { Resp } from "src/models/resp";
-import { UserInfo } from "src/models/user-info";
+import { VFolder } from "src/common/folder";
+import { PagingController } from "src/common/paging";
+import { Resp } from "src/common/resp";
+import { UserInfo } from "src/common/user-info";
 import { GrantAccessDialogComponent, GrantTarget } from "../grant-access-dialog/grant-access-dialog.component";
 import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { NavType } from "../routes";
 import { UserService } from "../user.service";
-import { buildApiPath, buildOptions } from "../util/api-util";
-import { isEnterKey } from "../util/condition";
+import { buildApiPath, buildOptions } from "src/common/api-util";
+import { isEnterKey } from "src/common/condition";
 
 @Component({
   selector: "app-folder",

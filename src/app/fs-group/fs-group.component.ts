@@ -6,12 +6,12 @@ import {
   FS_GROUP_MODE_OPTIONS,
   FS_GROUP_TYPE_OPTIONS,
   NewFsGroup,
-} from "src/models/fs-group";
-import { PagingController } from "src/models/paging";
+} from "src/common/fs-group";
+import { PagingController } from "src/common/paging";
 import { animateElementExpanding, getExpanded, isIdEqual } from "../../animate/animate-util";
 import { NotificationService } from "../notification.service";
-import { HClient } from "../util/api-util";
-import { resolveSize } from "../util/file";
+import { HClient } from "src/common/api-util";
+import { resolveSize } from "src/common/file";
 
 @Component({
   selector: "app-fs-group",

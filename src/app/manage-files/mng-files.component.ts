@@ -22,29 +22,29 @@ import {
   getFileUserGroupOpts,
   getFileOwnershipOpts,
   getFileTypeOpts,
-} from "src/models/file-info";
-import { PagingController } from "src/models/paging";
+} from "src/common/file-info";
+import { PagingController } from "src/common/paging";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 import { NotificationService } from "../notification.service";
 import { UserService } from "../user.service";
 import { animateElementExpanding, isIdEqual } from "../../animate/animate-util";
-import { buildApiPath, HClient } from "../util/api-util";
+import { buildApiPath, HClient } from "src/common/api-util";
 import { FileInfoService } from "../file-info.service";
 import { GrantAccessDialogComponent, GrantTarget } from "../grant-access-dialog/grant-access-dialog.component";
 import { ManageTagDialogComponent } from "../manage-tag-dialog/manage-tag-dialog.component";
 import { NavigationService } from "../navigation.service";
-import { isMobile } from "../util/env-util";
+import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
 import { ActivatedRoute } from "@angular/router";
-import { Resp } from "src/models/resp";
-import { VFolderBrief } from "src/models/folder";
-import { GalleryBrief } from "src/models/gallery";
+import { Resp } from "src/common/resp";
+import { VFolderBrief } from "src/common/folder";
+import { GalleryBrief } from "src/common/gallery";
 import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
-import { onLangChange, translate } from "src/models/translate";
-import { resolveSize } from "../util/file";
+import { onLangChange, translate } from "src/common/translate";
+import { resolveSize } from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
-import { Option } from "src/models/select-util";
-import { isEnterKey } from "../util/condition";
+import { Option } from "src/common/select-util";
+import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
 
 export enum TokenType {

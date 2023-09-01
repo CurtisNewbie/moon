@@ -12,8 +12,8 @@ import {
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 import { NotificationService } from "../notification.service";
 import { RoleBrief, UserService } from "../user.service";
-import { HClient } from "../../common/api-util";
-import { isEnterKey } from "../../common/condition";
+import { HClient } from "src/common/api-util";
+import { isEnterKey } from "src/common/condition";
 
 @Component({
   selector: "app-manager-user",

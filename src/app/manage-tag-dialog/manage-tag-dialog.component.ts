@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { environment } from "src/environments/environment";
-import { ListTagsForFileResp, Tag } from "src/models/file-info";
-import { PagingController } from "src/models/paging";
-import { translate } from "src/models/translate";
+import { ListTagsForFileResp, Tag } from "src/common/file-info";
+import { PagingController } from "src/common/paging";
+import { translate } from "src/common/translate";
 import { NotificationService } from "../notification.service";
-import { HClient } from "../util/api-util";
+import { HClient } from "src/common/api-util";
 
 export interface ManageTagDialogData {
   fileId: number;

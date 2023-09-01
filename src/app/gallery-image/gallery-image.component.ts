@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { PagingController } from "src/models/paging";
-import { ListGalleryImagesResp } from "src/models/gallery";
-import { buildApiPath, buildOptions } from "../util/api-util";
+import { PagingController } from "src/common/paging";
+import { ListGalleryImagesResp } from "src/common/gallery";
+import { buildApiPath, buildOptions } from "src/common/api-util";
 import { environment } from "src/environments/environment";
-import { Resp } from "src/models/resp";
+import { Resp } from "src/common/resp";
 import { NavigationService } from "../navigation.service";
 import { IAlbum, Lightbox, LightboxConfig } from "ngx-lightbox";
 import { NavType } from "../routes";

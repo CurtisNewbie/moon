@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { HClient } from '../util/api-util';
+import { HClient } from 'src/common/api-util';
 
 export interface MediaStreamerDialogData {
   name: string;

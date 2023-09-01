@@ -48,6 +48,11 @@ export class PagingController {
     this.paginator.firstPage();
   }
 
+  /** is at first page */
+  public atFirstPage(): boolean {
+    return this.paginator.pageIndex == 0;
+  }
+
   /** set the paginator controlled by this controller */
   public control(paginator: MatPaginator) {
     this.paginator = paginator;

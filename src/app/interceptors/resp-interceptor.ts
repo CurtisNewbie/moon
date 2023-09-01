@@ -10,7 +10,7 @@ import {
 } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, filter } from "rxjs/operators";
-import { Resp } from "src/models/resp";
+import { Resp } from "src/common/resp";
 import { Router } from "@angular/router";
 import { NotificationService } from "../notification.service";
 

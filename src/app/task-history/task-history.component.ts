@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { PagingController } from "src/common/paging";
 import { TaskHistory } from "src/common/task";
 import { TaskService } from "../task.service";
-import { isEnterKey } from "../../common/condition";
+import { isEnterKey } from "src/common/condition";
 
 export interface TaskHistoryData {
   taskId: number;

@@ -10,7 +10,7 @@ import {
   TriggerTaskReqVo,
   UpdateTaskReqVo,
 } from "src/common/task";
-import { HClient } from "../common/api-util";
+import { HClient } from "src/common/api-util";
 
 @Injectable({
   providedIn: "root",

@@ -45,7 +45,7 @@ import { GalleryImageComponent } from "./gallery-image/gallery-image.component";
 import { MatCardModule } from "@angular/material/card";
 import { FolderComponent } from "./folder/folder.component";
 import { MatListModule } from "@angular/material/list";
-import { HClient as HttpWrapper } from "./util/api-util";
+import { HClient as HttpWrapper } from "src/common/api-util";
 import { ControlledPaginatorComponent } from './controlled-paginator/controlled-paginator.component';
 import { MediaStreamerComponent } from './media-streamer/media-streamer.component';
 import { FileTaskComponent } from './file-task/file-task.component';

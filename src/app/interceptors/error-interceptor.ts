@@ -10,7 +10,7 @@ import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { UserService } from "../user.service";
 import { NotificationService } from "../notification.service";
-import { Resp } from "src/models/resp";
+import { Resp } from "src/common/resp";
 
 /**
  * Intercept http error response
