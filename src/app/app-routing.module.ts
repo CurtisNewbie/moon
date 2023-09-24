@@ -99,10 +99,10 @@ const routes: Routes = [
     path: NavType.CHANGE_PASSWORD,
     component: ChangePasswordComponent,
   },
-  {
-    path: NavType.OPERATE_HISTORY,
-    component: OperateHistoryComponent,
-  },
+  // {
+  //   path: NavType.OPERATE_HISTORY,
+  //   component: OperateHistoryComponent,
+  // },
   {
     path: NavType.MANAGE_TASKS,
     component: ManageTasksComponent,
