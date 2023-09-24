@@ -37,7 +37,7 @@ export class GrantAccessDialogComponent implements OnInit {
   constructor(
     private http: HClient,
     private notifi: NotificationService,
-    public dialogRef: MatDialogRef< GrantAccessDialogComponent, GrantAccessDialogData >,
+    public dialogRef: MatDialogRef<GrantAccessDialogComponent, GrantAccessDialogData>,
     @Inject(MAT_DIALOG_DATA) public data: GrantAccessDialogData
   ) {
   }
@@ -128,8 +128,8 @@ export class GrantAccessDialogComponent implements OnInit {
     ).subscribe({
       next: (resp) => {
         this.grantedAccesses = [];
-        if (resp.data.list) {
-          for (let g of resp.data.list) {
+        if (resp.data.payload) {
+          for (let g of resp.data.payload) {
             g.createDate = new Date(g.createDate);
             this.grantedAccesses.push(g);
           }
@@ -139,7 +139,7 @@ export class GrantAccessDialogComponent implements OnInit {
     });
   }
 
-  isForFolder() : boolean {
+  isForFolder(): boolean {
     return this.data.target == GrantTarget.FOLDER;
   }
 
