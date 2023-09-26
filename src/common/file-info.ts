@@ -33,11 +33,6 @@ export interface FileInfo {
   userGroup: number;
 
   /**
-   * Where the file is owned by current user
-   */
-  isOwner: boolean;
-
-  /**
    * File Type
    */
   fileType: FileType;
@@ -75,8 +70,6 @@ export interface FileInfo {
 
   parentFileName?: string;
 
-  isFileAndIsOwner: boolean;
-  isDirAndIsOwner: boolean;
   isDisplayable: boolean;
 }
 

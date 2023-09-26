@@ -344,8 +344,7 @@
                                         <div class="col">
                                             <mat-form-field style="width: 100%;">
                                                 <mat-label>{{i18n('filename')}}</mat-label>
-                                                <input matInput type="text" [(ngModel)]="curr.name"
-                                                    [disabled]="!curr.isOwner">
+                                                <input matInput type="text" [(ngModel)]="curr.name">
                                             </mat-form-field>
                                         </div>
                                         <ng-container *ngIf="curr.isFile">
@@ -357,7 +356,7 @@
                                         </ng-container>
 
                                         <!-- duplicate Update button is just for the ordering positions -->
-                                        <ng-container *ngIf="curr.isDirAndIsOwner">
+                                        <ng-container *ngIf="curr.isDir">
                                             <div class="col">
                                                 <button mat-raised-button (click)="update(curr)">
                                                     {{i18n('updateBtn')}}
@@ -365,7 +364,7 @@
                                             </div>
                                         </ng-container>
 
-                                        <ng-container *ngIf="curr.isOwner">
+                                        <ng-container>
                                             <div class="col">
                                                 <button mat-raised-button (click)="deleteFile(curr.uuid, curr.name)">
                                                     {{i18n('deleteBtn')}}
@@ -377,8 +376,8 @@
 
                                     <!-- second row start -->
                                     <div class="row row-cols-lg-auto g-3 align-items-center">
-                                        <!-- isOwner and isFile start -->
-                                        <ng-container *ngIf="curr.isFileAndIsOwner">
+                                        <!-- isFile start -->
+                                        <ng-container *ngIf="curr.isFile">
                                             <div class="col">
                                                 <mat-form-field>
                                                     <mat-label>{{i18n('userGroup')}}</mat-label>

@@ -121,7 +121,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   /** currently displayed columns */
   displayedColumns: string[] = this._selectColumns();
 
-  isOwner = (f: FileInfo): boolean => f.isOwner;
   // isImage = (f: FileInfo): boolean => this._isImage(f);
   idEquals = isIdEqual;
 
@@ -369,13 +368,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    let nonOwnerFile = selected.find(f => f.isOwner ? null : f);
-    if (nonOwnerFile) {
-      this.notifi.toast(`You are not the owner of '${nonOwnerFile.name}'`);
-      return;
-    }
-
-
     let msgs = [];
     let first = into ? `You sure you want to move these files to '${moveIntoDirName}'?` :
       `You sure you want to move these files out of current directory?`
@@ -487,8 +479,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             f.isFile = f.fileType == FileType.FILE;
             f.isDir = !f.isFile;
             f.sizeLabel = f.isDir ? "" : resolveSize(f.sizeInBytes);
-            f.isFileAndIsOwner = f.isOwner && f.isFile;
-            f.isDirAndIsOwner = f.isOwner && f.isDir;
+            f.isFileAndIsOwner = f.isFile;
+            f.isDirAndIsOwner = f.isDir;
             f.isDisplayable = this.isDisplayable(f);
             if (f.updateTime) f.updateTime = new Date(f.updateTime);
             if (f.uploadTime) f.uploadTime = new Date(f.uploadTime);
@@ -828,7 +820,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     let fileKeys = this.fileInfoList
-      .map((v) => (v._selected && v.isOwner) ? v : null)
+      .map((v) => (v._selected) ? v : null)
       .filter((v) => v != null)
       .map((f) => f.uuid);
 
@@ -897,7 +889,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     const addToGalleryNo = this._extractToGalleryNo()
     if (!addToGalleryNo) return;
 
-    let selected = this.filterSelected(this.isOwner, (f: FileInfo): boolean => this._isImage(f) || f.isDir);
+    let selected = this.filterSelected((f: FileInfo): boolean => this._isImage(f) || f.isDir);
 
     if (!selected) {
       this.notifi.toast("Please select images or directory first")
