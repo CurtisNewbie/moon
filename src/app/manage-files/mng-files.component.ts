@@ -28,9 +28,8 @@ import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.compone
 import { NotificationService } from "../notification.service";
 import { UserService } from "../user.service";
 import { animateElementExpanding, isIdEqual } from "../../animate/animate-util";
-import { buildApiPath, HClient } from "src/common/api-util";
+import { HClient } from "src/common/api-util";
 import { FileInfoService } from "../file-info.service";
-import { GrantAccessDialogComponent, GrantTarget } from "../grant-access-dialog/grant-access-dialog.component";
 import { ManageTagDialogComponent } from "../manage-tag-dialog/manage-tag-dialog.component";
 import { NavigationService } from "../navigation.service";
 import { isMobile } from "src/common/env-util";
@@ -776,19 +775,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     });
   }
 
-  popToGrantAccess(u: FileInfo): void {
-    if (!u) return;
-
-    const dialogRef: MatDialogRef<GrantAccessDialogComponent, boolean> =
-      this.dialog.open(GrantAccessDialogComponent, {
-        width: "700px",
-        data: { fileId: u.id, name: u.name, target: GrantTarget.FILE },
-      });
-
-    dialogRef.afterClosed().subscribe((confirm) => {
-      // do nothing
-    });
-  }
 
   popToManageTag(u: FileInfo): void {
     if (!u) return;

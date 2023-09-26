@@ -8,7 +8,7 @@ import { VFolder } from "src/common/folder";
 import { PagingController } from "src/common/paging";
 import { Resp } from "src/common/resp";
 import { UserInfo } from "src/common/user-info";
-import { GrantAccessDialogComponent, GrantTarget } from "../grant-access-dialog/grant-access-dialog.component";
+import { GrantAccessDialogComponent } from "../grant-access-dialog/grant-access-dialog.component";
 import { NavigationService } from "../navigation.service";
 import { NotificationService } from "../notification.service";
 import { NavType } from "../routes";
@@ -76,7 +76,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
     const dialogRef: MatDialogRef<GrantAccessDialogComponent, boolean> =
       this.dialog.open(GrantAccessDialogComponent, {
         width: "700px",
-        data: { folderNo: f.folderNo, name: f.name, target: GrantTarget.FOLDER },
+        data: { folderNo: f.folderNo, name: f.name },
       });
 
     dialogRef.afterClosed().subscribe((confirm) => {

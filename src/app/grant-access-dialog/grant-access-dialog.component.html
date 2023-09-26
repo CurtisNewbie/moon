@@ -14,7 +14,7 @@
     <p *ngIf="!grantedAccesses" class="mt-2 mb-3">You haven't granted access to any one yet</p>
 
     <ng-container>
-        <h6 class="mb-3">Users Granted Access To This {{ isForFolder() ? "Virtual Folder" : "File" }} :</h6>
+        <h6 class="mb-3">Users Granted Access To This Virtual Folder:</h6>
 
         <table mat-table [dataSource]="grantedAccesses" class="mat-elevation-z8 mb-4" style="width: 100%;"
             multiTemplateDataRows>

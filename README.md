@@ -1,21 +1,14 @@
 # bolobao (Pineapple Bun)
 
-The bolobao (another Angular frontend project). Previously [file-service-front](https://github.com/CurtisNewbie/file-service-front) and [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
-
-This project attempts to merge the following two frontend projects together, making it easier (for me) to develop and maintain :D
-
-- [file-service-front](https://github.com/CurtisNewbie/file-service-front)
-- [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
-
-This git history of these two projects are being replayed in this repository using git patch.
+Bolobao, angular frontend project for my personal website (hosted in private network).
 
 ## Dependencies & Compatibility
 
 **Compatible with:**
 
-- [vfm >= v0.0.3](https://github.com/CurtisNewbie/vfm)
+- [vfm >= v0.0.8](https://github.com/CurtisNewbie/vfm)
 - [mini-fstore >= v0.0.1](https://github.com/CurtisNewbie/mini-fstore)
-- [auth-service >= v1.1.6](https://github.com/CurtisNewbie/auth-service)
+- [user-vault >= v0.0.1](https://github.com/CurtisNewbie/user-vault)
 - [fantahsea >= v1.0.7](https://github.com/CurtisNewbie/fantahsea)
 - [dtask-go >= v1.0.0](https://github.com/CurtisNewbie/dtask-go)
 - [goauth >= v1.0.0](https://github.com/CurtisNewbie/goauth)
@@ -42,3 +35,15 @@ ngx-lightbox2 is used in this project. When image rotate, the background may be 
 ## Updates
 
 - Since v0.0.1, [file-server v1.2.7](https://github.com/CurtisNewbie/file-server/tree/v1.2.7) has been replaced with [vfm](https://github.com/curtisnewbie/vfm) and [mini-fstore](https://github.com/curtisnewbie/mini-fstore).
+- Since v0.0.5, [auth-service](https://github.com/CurtisNewbie/auth-service) has been replaced with [user-vault](https://github.com/curtisnewbie/user-vault).
+
+## About This Repo
+
+Previously [file-service-front](https://github.com/CurtisNewbie/file-service-front) and [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
+
+This project attempts to merge the following two frontend projects together, making it easier (for me) to develop and maintain :D
+
+- [file-service-front](https://github.com/CurtisNewbie/file-service-front)
+- [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
+
+This git history of these two projects are being replayed in this repository using git patch.
