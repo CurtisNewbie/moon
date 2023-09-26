@@ -28,11 +28,6 @@ export interface FileInfo {
   sizeInBytes: number;
 
   /**
-   * file user group, 0-public, 1-private
-   */
-  userGroup: number;
-
-  /**
    * File Type
    */
   fileType: FileType;
@@ -89,44 +84,6 @@ export function transFileType(ft: FileType): string {
   return fileTypeTransMap.get(ft);
 }
 
-/** Enum for FileInfo.userGroup */
-export enum FileUserGroupEnum {
-  /** public user group, anyone can access to th file */
-  USER_GROUP_PUBLIC = 0,
-
-  /** private user group, only the uploader can access the file */
-  USER_GROUP_PRIVATE = 1,
-}
-
-/** Enum for file's ownership */
-export enum FileOwnershipEnum {
-  /** all files  */
-  FILE_OWNERSHIP_ALL_FILES = 0,
-  /** my files  */
-  FILE_OWNERSHIP_MY_FILES = 1,
-}
-
-export interface FileUserGroupOption {
-  name: string;
-  value: FileUserGroupEnum | number;
-}
-
-export function getFileUserGroupOpts(includesAll: boolean = true): Option<FileUserGroupEnum>[] {
-  let l = [];
-  if (includesAll) l.push({ name: translate("all"), value: null });
-
-  l.push({ name: translate("privateGroup"), value: FileUserGroupEnum.USER_GROUP_PRIVATE });
-  l.push({ name: translate("publicGroup"), value: FileUserGroupEnum.USER_GROUP_PUBLIC });
-  return l;
-}
-
-export function getFileOwnershipOpts(): Option<FileOwnershipEnum>[] {
-  return [
-    { name: translate("allFiles"), value: FileOwnershipEnum.FILE_OWNERSHIP_ALL_FILES },
-    { name: translate("myFiles"), value: FileOwnershipEnum.FILE_OWNERSHIP_MY_FILES },
-  ]
-}
-
 export function getFileTypeOpts(includesAll: boolean = true): Option<FileType>[] {
   let l = [];
   if (includesAll) l.push({ name: translate("all"), value: null });
@@ -148,10 +105,6 @@ export interface DirBrief {
 export interface SearchFileInfoParam {
   /** filename */
   name?: string;
-  /** user group */
-  userGroup?: number;
-  /** ownership */
-  ownership?: number;
   /** name of tag */
   tagName?: string;
   /** folder no */
@@ -168,8 +121,6 @@ export interface UploadFileParam {
   fileName?: string;
   /** file */
   files?: File[];
-  /** user group that the file belongs to */
-  userGroup?: number;
   /** tags */
   tags?: string[];
   /** parent file uuid */
@@ -182,12 +133,8 @@ export interface UploadFileParam {
 export interface FetchFileInfoListParam {
   /** filename */
   filename?: string;
-  /** user group */
-  userGroup?: number;
   /** paging  */
   pagingVo?: Paging;
-  /** ownership */
-  ownership?: number;
   /** tagName */
   tagName?: string;
   /** folder no */
@@ -203,20 +150,8 @@ export function emptyUploadFileParam(): UploadFileParam {
   return {
     files: [],
     fileName: null,
-    userGroup: FileUserGroupEnum.USER_GROUP_PRIVATE,
     tags: [],
   };
-}
-
-export interface UpdateFileUserGroupParam {
-  /** file's id*/
-  id: number;
-
-  /** file's userGroup */
-  userGroup: number | FileUserGroupEnum;
-
-  /** file's name */
-  name: string;
 }
 
 export interface FileAccessGranted {

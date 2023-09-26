@@ -14,13 +14,9 @@ import {
   DirBrief,
   emptyUploadFileParam,
   FileInfo,
-  FileOwnershipEnum,
   FileType,
-  FileUserGroupEnum,
   SearchFileInfoParam,
   UploadFileParam,
-  getFileUserGroupOpts,
-  getFileOwnershipOpts,
   getFileTypeOpts,
 } from "src/common/file-info";
 import { PagingController } from "src/common/paging";
@@ -59,10 +55,6 @@ export enum TokenType {
 })
 export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
-  readonly OWNERSHIP_ALL_FILES = FileOwnershipEnum.FILE_OWNERSHIP_ALL_FILES;
-  readonly OWNERSHIP_MY_FILES = FileOwnershipEnum.FILE_OWNERSHIP_MY_FILES;
-  readonly PRIVATE_GROUP = FileUserGroupEnum.USER_GROUP_PRIVATE;
-  readonly PUBLIC_GROUP = FileUserGroupEnum.USER_GROUP_PUBLIC;
   readonly DESKTOP_COLUMNS = [
     "selected",
     "fileType",
@@ -71,7 +63,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "uploader",
     "uploadTime",
     "size",
-    "userGroup",
     "updateTime",
     "operation",
   ];
@@ -80,7 +71,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "uploader",
     "uploadTime",
     "size",
-    "userGroup",
     "operation",
   ];
   readonly MOBILE_COLUMNS = ["fileType", "name", "operation"];
@@ -88,10 +78,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   readonly TXT_SUFFIX = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
   readonly i18n = translate;
 
-  allUserGroupOpts: Option<FileUserGroupEnum>[] = [];
   allFileTypeOpts: Option<FileType>[] = [];
-  userGroupOpts: Option<FileUserGroupEnum>[] = [];
-  fileOwnershipOpts: Option<FileOwnershipEnum>[] = [];
 
   /** expanded fileInfo */
   curr: FileInfo;
@@ -226,9 +213,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   ----------------------------------
   */
   refreshLabel = () => {
-    this.allUserGroupOpts = getFileUserGroupOpts(true);
-    this.userGroupOpts = getFileUserGroupOpts(false);
-    this.fileOwnershipOpts = getFileOwnershipOpts();
     this.allFileTypeOpts = getFileTypeOpts(true);
   };
   onLangChangeSub = onLangChange.subscribe((evt) => {
@@ -239,9 +223,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   @ViewChild("uploadFileInput")
   uploadFileInput: ElementRef;
 
-  setSearchOwnership = (ownership) => this.searchParam.ownership = ownership;
   setSearchFileType = (fileType) => this.searchParam.fileType = fileType;
-  setSearchUserGroup = (userGroup) => this.searchParam.userGroup = userGroup;
   setTag = (tag) => this.searchParam.tagName = tag;
   onAddToGalleryNameChanged = () => this.autoCompAddToGalleryName = this.filterAlike(this.galleryBriefs.map(v => v.name), this.addToGalleryName);
   onAddToVFolderNameChanged = () => this.autoCompAddToVFolderName = this.filterAlike(this.vfolderBrief.map(v => v.name), this.addToVFolderName);
@@ -326,7 +308,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       {
         name: dirName,
         parentFile: findParentFileRes.fileKey,
-        userGroup: FileUserGroupEnum.USER_GROUP_PRIVATE
       },
     ).subscribe({
       next: () => {
@@ -461,8 +442,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       {
         pagingVo: this.pagingController.paging,
         filename: this.searchParam.name,
-        userGroup: this.searchParam.userGroup,
-        ownership: this.searchParam.ownership,
         tagName: this.searchParam.tagName,
         folderNo: this.inFolderNo,
         parentFile: this.searchParam.parentFile,
@@ -479,8 +458,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             f.isFile = f.fileType == FileType.FILE;
             f.isDir = !f.isFile;
             f.sizeLabel = f.isDir ? "" : resolveSize(f.sizeInBytes);
-            f.isFileAndIsOwner = f.isFile;
-            f.isDirAndIsOwner = f.isDir;
             f.isDisplayable = this.isDisplayable(f);
             if (f.updateTime) f.updateTime = new Date(f.updateTime);
             if (f.uploadTime) f.uploadTime = new Date(f.uploadTime);
@@ -514,10 +491,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     if (!this.displayedUploadName && isSingleUpload) {
       this.notifi.toast(translate('msg:file:name:required'));
       return;
-    }
-
-    if (this.uploadParam.userGroup == null) {
-      this.uploadParam.userGroup = FileUserGroupEnum.USER_GROUP_PRIVATE;
     }
 
     this.uploadParam.tags = this.selectedTags ? this.selectedTags : [];
@@ -556,18 +529,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     if (!environment.production) {
       console.log("uploadParam.files", this.uploadParam.files);
     }
-  }
-
-  /**
-   * Convert userGroup in number to the corresponding name
-   */
-  resolveUserGroupName(userGroup: number): string {
-    if (userGroup === FileUserGroupEnum.USER_GROUP_PUBLIC) {
-      return "public";
-    } else if (userGroup === FileUserGroupEnum.USER_GROUP_PRIVATE) {
-      return "private";
-    }
-    return "";
   }
 
   goPrevDir() {
@@ -671,7 +632,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       environment.vfm, "/file/info/update",
       {
         id: u.id,
-        userGroup: u.userGroup,
         name: u.name,
       },
     ).subscribe({
@@ -1103,7 +1063,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     return {
       fileName: next.name,
       files: [next],
-      userGroup: this.uploadParam.userGroup,
       tags: this.uploadParam.tags,
       ignoreOnDupName: this.uploadParam.ignoreOnDupName
     };
@@ -1198,7 +1157,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             this.hclient.post(environment.vfm, "/file/create", {
               filename: uploadParam.fileName,
               fstoreFileId: fstoreRes.data,
-              userGroup: uploadParam.userGroup,
               tags: uploadParam.tags,
               parentFile: uploadParam.parentFile
             }).subscribe({

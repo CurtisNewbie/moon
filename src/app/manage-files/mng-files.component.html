@@ -33,17 +33,6 @@
             </div>
 
             <div class="col">
-                <mat-form-field>
-                    <mat-label>{{i18n('userGroup')}}</mat-label>
-                    <mat-select [(value)]="uploadParam.userGroup" [disabled]="isUploading">
-                        <mat-option [value]="option.value" *ngFor="let option of userGroupOpts">
-                            {{option.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-
-            <div class="col">
                 <mat-form-field class="mb-1">
                     <mat-label>{{i18n("uploadToDirectory")}}:</mat-label>
                     <input matInput type="text" [(ngModel)]="uploadDirName" (ngModelChange)="onUploadDirNameChanged()"
@@ -106,28 +95,6 @@
                 </mat-form-field>
             </div>
             <div class="row row-cols-lg-auto g-3 align-items-center">
-                <div class="col">
-                    <mat-form-field>
-                        <mat-label>{{i18n("userGroup")}}</mat-label>
-                        <mat-select (valueChange)="setSearchUserGroup($event)" [value]="searchParam.userGroup">
-                            <mat-option [value]="option.value" *ngFor="let option of allUserGroupOpts">
-                                {{option.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <ng-container *ngIf="!inDirFileName">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>{{i18n("owner")}}</mat-label>
-                            <mat-select (valueChange)="setSearchOwnership($event)" [value]="searchParam.ownership">
-                                <mat-option [value]="option.value" *ngFor="let option of fileOwnershipOpts">
-                                    {{option.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </ng-container>
                 <div class="col">
                     <mat-form-field>
                         <mat-label>{{i18n('fileType')}}</mat-label>
@@ -301,14 +268,6 @@
                     <td mat-cell *matCellDef="let f"> {{f.fileTypeLabel}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="userGroup">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n('userGroup')}} </th>
-                    <td mat-cell *matCellDef="let f">
-                        <span *ngIf="f.userGroup === PUBLIC_GROUP" class="status-green">{{i18n('publicGroup')}}</span>
-                        <span *ngIf="f.userGroup === PRIVATE_GROUP" class="status-blue">{{i18n('privateGroup')}}</span>
-                    </td>
-                </ng-container>
-
                 <ng-container matColumnDef="updateTime">
                     <th mat-header-cell *matHeaderCellDef> {{i18n("updateTime")}} </th>
                     <td mat-cell *matCellDef="let f"> {{f.updateTime | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
@@ -378,17 +337,6 @@
                                     <div class="row row-cols-lg-auto g-3 align-items-center">
                                         <!-- isFile start -->
                                         <ng-container *ngIf="curr.isFile">
-                                            <div class="col">
-                                                <mat-form-field>
-                                                    <mat-label>{{i18n('userGroup')}}</mat-label>
-                                                    <mat-select [(value)]="curr.userGroup">
-                                                        <mat-option [value]="option.value"
-                                                            *ngFor="let option of userGroupOpts">
-                                                            {{option.name}}
-                                                        </mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
                                             <div class="col">
                                                 <button mat-raised-button (click)="update(curr)">
                                                     {{i18n('updateBtn')}}
