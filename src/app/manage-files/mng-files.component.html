@@ -130,19 +130,6 @@
                 </div>
 
                 <div class="col">
-                    <mat-form-field>
-                        <mat-label>{{i18n("virtualFolder")}}</mat-label>
-                        <input matInput type="text" [(ngModel)]="addToVFolderName"
-                            (ngModelChange)="onAddToVFolderNameChanged()" [matAutocomplete]="auto1">
-                        <mat-autocomplete #auto1="matAutocomplete">
-                            <mat-option *ngFor="let option of autoCompAddToVFolderName" [value]="option">
-                                {{option}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-
-                <div class="col">
                     <mat-form-field style="width: 100%;" class="mb-1" *ngIf="!isMobile">
                         <mat-label>{{i18n('dir')}}</mat-label>
                         <input matInput type="text" [(ngModel)]="moveIntoDirName"
@@ -183,10 +170,8 @@
                 <button mat-raised-button class="m-2" *ngIf="anySelected"
                     (click)="transferSelectedToGallery()">{{i18n('hostOnFantahsea')}}</button>
 
-                <!-- add to vfolder -->
                 <button mat-raised-button class="m-2" (click)="addToVirtualFolder()">Add To Virtual Folder</button>
 
-                <!-- move into dir -->
                 <button mat-raised-button class="m-2" (click)="moveSelectedToDir(true)">{{i18n('moveIntoDir')}}</button>
 
                 <!-- move out of dir -->
@@ -196,40 +181,24 @@
 
 
             <ng-container *ngIf="!inFolderNo && !anySelected">
-                <!-- toggale upload panel -->
-                <button mat-raised-button class="m-2" [class.status-green]="expandUploadPanel"
-                    (click)="toggleUploadPanel()">{{i18n('uploadPanel')}}</button>
-
-                <!-- make directory -->
-                <button mat-raised-button class="m-2" (click)="toggleMkdirPanel()"
-                    [class.status-green]="makingDir">{{i18n('makeDirectory')}}</button>
+                <button mat-raised-button class="m-2" [class.status-green]="expandUploadPanel" (click)="toggleUploadPanel()">Upload Panal</button>
+                <button mat-raised-button class="m-2" (click)="toggleMkdirPanel()" [class.status-green]="makingDir">Make Directory</button>
             </ng-container>
 
+            <button mat-raised-button class="m-2" *ngIf="inDirFileKey" (click)="goPrevDir()">Go Back</button>
+            <button mat-raised-button class="m-2" *ngIf="inFolderNo" (click)="leaveFolder()">Go Back</button>
 
-            <!-- TODO: not supported anymore -->
-            <!-- export as zip -->
-            <!-- <button mat-raised-button class="m-2" *ngIf="anySelected"
-                (click)="exportAsZip()">{{i18n('exportAsZip')}}</button> -->
-
-            <!-- go back to previous dir -->
-            <button mat-raised-button class="m-2" *ngIf="inDirFileKey"
-                (click)="goPrevDir()">{{i18n('goPrevDir')}}</button>
-            <!-- go back to folder list page -->
-            <button mat-raised-button class="m-2" *ngIf="inFolderNo"
-                (click)="leaveFolder()">{{i18n('leaveFolder')}}</button>
-
-            <!-- Fetch  -->
-            <button mat-raised-button class="m-2" (click)="fetchFileInfoList()">{{i18n('fetch')}}</button>
-            <!-- Reset  -->
-            <button mat-raised-button class="m-2" (click)="resetSearchParam()">{{i18n('reset')}}</button>
+            <button mat-raised-button class="m-2" (click)="fetchFileInfoList()">Fetch</button>
+            <button mat-raised-button class="m-2" (click)="resetSearchParam()">Reset</button>
         </div>
 
         <!-- <div style="overflow: auto; max-height: 550px;" class="mat-elevation-z8 mb-2"> -->
         <div style="overflow: auto; max-height: 550px;" class="mb-2">
             <table mat-table [dataSource]="fileInfoList" style="width: 100%; height: 70%" multiTemplateDataRows>
                 <ng-container matColumnDef="selected">
-                    <th mat-header-cell *matHeaderCellDef> <span (click)="selectAll()">{{anySelected ?
-                            i18n('selected') + " (" + selectedCount + ")": i18n('selected')}}</span>
+                    <th mat-header-cell *matHeaderCellDef> <span (click)="selectAll()" [matTooltip]="'Select records for more operations'"
+                        >{{anySelected ?
+                            'Selected' + " (" + selectedCount + ")": 'Selected'}}</span>
                     </th>
                     <td mat-cell *matCellDef="let f">
                         <mat-checkbox [checked]="f._selected" (change)="selectFile($event, f)"
@@ -238,59 +207,57 @@
                 </ng-container>
 
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n('name')}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
                     <td mat-cell *matCellDef="let f"> <span class="pl-1 pr-1">{{f.name}}
                         </span></td>
                 </ng-container>
 
                 <ng-container matColumnDef="parentFileName">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n('parentFileName')}} </th>
+                    <th mat-header-cell *matHeaderCellDef [matTooltip]="'Name of directory that each file belongs to'"> In Directory </th>
                     <td mat-cell *matCellDef="let f"> <span class="pl-1 pr-1">{{f.parentFileName}}
                         </span></td>
                 </ng-container>
 
                 <ng-container matColumnDef="uploader">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n('uploader')}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Uploader </th>
                     <td mat-cell *matCellDef="let f"> {{f.uploaderName}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="uploadTime">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n('uploadTime')}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Upload Time </th>
                     <td mat-cell *matCellDef="let f"> {{f.uploadTime | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="size">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n('fileSize')}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Size </th>
                     <td mat-cell *matCellDef="let f"> {{f.sizeLabel}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="fileType">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n("fileType")}} </th>
+                    <th mat-header-cell *matHeaderCellDef [matTooltip]="'File or directory that contains more files'"> Type </th>
                     <td mat-cell *matCellDef="let f"> {{f.fileTypeLabel}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="updateTime">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n("updateTime")}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Update Time </th>
                     <td mat-cell *matCellDef="let f"> {{f.updateTime | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
                 </ng-container>
 
 
                 <ng-container matColumnDef="operation">
-                    <th mat-header-cell *matHeaderCellDef> {{i18n("operation")}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Operation </th>
                     <td mat-cell *matCellDef="let f">
-                        <!-- download / preview -->
+
                         <ng-container *ngIf="f.isFile">
-                            <button class="small-btn m-2" mat-raised-button
-                                (click)="$event.stopPropagation() || jumpToDownloadUrl(f.uuid)">{{i18n('download')}}</button>
+                            <button class="small-btn m-2" mat-raised-button (click)="$event.stopPropagation() || jumpToDownloadUrl(f.uuid)">Download</button>
                             <ng-container *ngIf="f.isDisplayable">
-                                <button class="small-btn" mat-raised-button
-                                    (click)="$event.stopPropagation() || preview(f)">{{i18n('preview')}}</button>
+                                <button class="small-btn" mat-raised-button (click)="$event.stopPropagation() || preview(f)">Preview</button>
                             </ng-container>
                         </ng-container>
-                        <!-- Go into dir  -->
+
                         <ng-container *ngIf="f.isDir">
                             <button class="small-btn" mat-raised-button
-                                (click)="$event.stopPropagation() || goToDir(f.name, f.uuid)">{{i18n('goInto')}}</button>
+                            (click)="$event.stopPropagation() || goToDir(f.name, f.uuid)">Go Into</button>
                         </ng-container>
                     </td>
                 </ng-container>
@@ -301,8 +268,6 @@
                             <div class="element-detail"
                                 [@detailExpand]="(currId > -1 && u.id == currId) ? 'expanded' : 'collapsed'">
                                 <div class="container-fluid m-4">
-
-                                    <!-- first row start -->
                                     <div class="row row-cols-lg-auto g-3 align-items-center">
                                         <div class="col">
                                             <mat-form-field style="width: 100%;">
@@ -310,51 +275,31 @@
                                                 <input matInput type="text" [(ngModel)]="curr.name">
                                             </mat-form-field>
                                         </div>
-                                        <ng-container *ngIf="curr.isFile">
+
+                                        <ng-container *ngIf="curr.isDir">
                                             <div class="col">
-                                                <button mat-raised-button (click)="popToManageTag(curr)">
-                                                    {{i18n('manageTagBtn')}}
-                                                </button>
+                                                <button mat-raised-button (click)="update(curr)"> Update </button>
                                             </div>
                                         </ng-container>
 
-                                        <!-- duplicate Update button is just for the ordering positions -->
-                                        <ng-container *ngIf="curr.isDir">
+                                        <ng-container *ngIf="curr.isFile">
                                             <div class="col">
-                                                <button mat-raised-button (click)="update(curr)">
-                                                    {{i18n('updateBtn')}}
-                                                </button>
+                                                <button mat-raised-button (click)="update(curr)"> Update </button>
+                                            </div>
+                                            <div class="col">
+                                                <button mat-raised-button (click)="generateTempToken(curr)"> Share By Link </button>
+                                            </div>
+                                            <div class="col">
+                                                <button mat-raised-button (click)="popToManageTag(curr)">Tags</button>
                                             </div>
                                         </ng-container>
 
                                         <ng-container>
                                             <div class="col">
-                                                <button mat-raised-button (click)="deleteFile(curr.uuid, curr.name)">
-                                                    {{i18n('deleteBtn')}}
-                                                </button>
+                                                <button mat-raised-button (click)="deleteFile(curr.uuid, curr.name)"> Delete </button>
                                             </div>
                                         </ng-container>
                                     </div>
-                                    <!-- first row end -->
-
-                                    <!-- second row start -->
-                                    <div class="row row-cols-lg-auto g-3 align-items-center">
-                                        <!-- isFile start -->
-                                        <ng-container *ngIf="curr.isFile">
-                                            <div class="col">
-                                                <button mat-raised-button (click)="update(curr)">
-                                                    {{i18n('updateBtn')}}
-                                                </button>
-                                            </div>
-                                            <div class="col">
-                                                <button mat-raised-button (click)="generateTempToken(curr)">
-                                                    {{i18n('shareByLinkBtn')}}
-                                                </button>
-                                            </div>
-                                        </ng-container>
-                                        <!-- isOwner and isFile end -->
-                                    </div>
-                                    <!-- second row end -->
                                 </div>
                             </div>
                         </ng-container>

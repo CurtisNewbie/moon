@@ -61,7 +61,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "fileType",
     "name",
     "parentFileName",
-    "uploader",
     "uploadTime",
     "size",
     "updateTime",
