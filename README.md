@@ -1,18 +1,18 @@
 # bolobao (Pineapple Bun)
 
-Bolobao, angular frontend project for my personal website (hosted in private network).
+Bolobao, angular frontend project for my personal website (hosted on private network).
 
 ## Dependencies & Compatibility
 
 **Compatible with:**
 
-- [vfm >= v0.0.8](https://github.com/CurtisNewbie/vfm)
-- [mini-fstore >= v0.0.1](https://github.com/CurtisNewbie/mini-fstore)
-- [user-vault >= v0.0.1](https://github.com/CurtisNewbie/user-vault)
-- [fantahsea >= v1.0.7](https://github.com/CurtisNewbie/fantahsea)
-- [dtask-go >= v1.0.0](https://github.com/CurtisNewbie/dtask-go)
-- [goauth >= v1.0.0](https://github.com/CurtisNewbie/goauth)
-- [logbot >= v0.0.1](https://github.com/CurtisNewbie/logbot)
+- [vfm](https://github.com/CurtisNewbie/vfm)
+- [mini-fstore](https://github.com/CurtisNewbie/mini-fstore)
+- [user-vault](https://github.com/CurtisNewbie/user-vault)
+- [fantahsea](https://github.com/CurtisNewbie/fantahsea)
+- [dtask-go](https://github.com/CurtisNewbie/dtask-go)
+- [goauth](https://github.com/CurtisNewbie/goauth)
+- [logbot](https://github.com/CurtisNewbie/logbot)
 
 ## Known Issue (fixed tho)
 
