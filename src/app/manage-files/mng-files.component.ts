@@ -32,8 +32,6 @@ import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
 import { ActivatedRoute } from "@angular/router";
 import { Resp } from "src/common/resp";
-import { VFolderBrief } from "src/common/folder";
-import { GalleryBrief } from "src/common/gallery";
 import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
 import { onLangChange, translate } from "src/common/translate";
 import { resolveSize } from "src/common/file";
@@ -42,6 +40,7 @@ import { Option, filterAlike } from "src/common/select-util";
 import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
 import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.component";
+import { HostOnGalleryComponent } from "../host-on-gallery/host-on-gallery.component";
 
 export enum TokenType {
   DOWNLOAD = "DOWNLOAD",
@@ -120,21 +119,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   isEnterKeyPressed = isEnterKey;
-
-  /*
-  -----------------------
-
-  Fantahsea gallery
-
-  -----------------------
-  */
-
-  /** list of brief info of all galleries that we created */
-  galleryBriefs: GalleryBrief[] = [];
-  /** name of fantahsea gallery that we may transfer files to */
-  addToGalleryName: string = null;
-  /** Auto complete for fantahsea gallery that we may transfer files to */
-  autoCompAddToGalleryName: string[];
 
   /*
   -----------------------
@@ -219,7 +203,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   setSearchFileType = (fileType) => this.searchParam.fileType = fileType;
   setTag = (tag) => this.searchParam.tagName = tag;
-  onAddToGalleryNameChanged = () => this.autoCompAddToGalleryName = filterAlike(this.galleryBriefs.map(v => v.name), this.addToGalleryName);
+
   onMoveIntoDirNameChanged = () => this.autoCompMoveIntoDirs = filterAlike(this.dirBriefList.map(v => v.name), this.moveIntoDirName);
   onUploadDirNameChanged = () => this.autoCompUploadDirs = filterAlike(this.dirBriefList.map(v => v.name), this.uploadDirName);
 
@@ -275,7 +259,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       this.userService.fetchUserInfo();
       this._fetchTags();
       this._fetchDirBriefList();
-      this._fetchOwnedGalleryBrief();
     });
   }
 
@@ -547,7 +530,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /** Reset all parameters used for searching, and the fetch the list */
   resetSearchParam(setFirstPage: boolean = true, fetchFileInfoList: boolean = true): void {
-    this.addToGalleryName = null;
     this.curr = null;
     this.currId = -1;
 
@@ -629,7 +611,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       complete: () => {
         this.fetchFileInfoList();
         this.curr = null;
-        this.addToGalleryName = null;
       },
     });
   }
@@ -770,45 +751,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       .subscribe();
   }
 
-  transferDirToGallery() {
-    const inDirFileKey = this.searchParam.parentFile;
-    if (!inDirFileKey) {
-      this.fetchFileInfoList();
-      return;
-    }
-
-    const addToGalleryNo = this._extractToGalleryNo();
-    if (!addToGalleryNo) return;
-
-    let msgs = [];
-    msgs.push(`You sure you want to host all images in '${this.inDirFileName}' on gallery '${this.addToGalleryName}'? It may take a while.`);
-    msgs.push("");
-
-    const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
-      this.dialog.open(ConfirmDialogComponent, {
-        width: "500px",
-        data: {
-          title: `Host All Images On Gallery '${this.addToGalleryName}'`,
-          msg: msgs,
-          isNoBtnDisplayed: true,
-        },
-      });
-
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        this.hclient.post(
-          environment.fantahsea, "/gallery/image/dir/transfer",
-          { fileKey: inDirFileKey, galleryNo: addToGalleryNo },
-        ).subscribe({
-          complete: () => {
-            this.curr = null;
-            this.notifi.toast("Request success! It may take a while.");
-          },
-        });
-      }
-    });
-  }
-
   onPagingControllerReady(pagingController: PagingController) {
     this.pagingController = pagingController;
     this.pagingController.onPageChanged = () => this.fetchFileInfoList();
@@ -816,54 +758,22 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   transferSelectedToGallery() {
-    const addToGalleryNo = this._extractToGalleryNo()
-    if (!addToGalleryNo) return;
 
-    let selected = this.filterSelected((f: FileInfo): boolean => this._isImage(f) || f.isDir);
+    let selected = this.filterSelected((f: FileInfo): boolean => this._isImage(f) || f.isDir)
+      .map((f, i) => {
+        return { name: `${i}. ${f.name}`, fileKey: f.uuid }
+      });
 
-    if (!selected) {
+    if (!selected || selected.length < 1) {
       this.notifi.toast("Please select images or directory first")
       return;
     }
 
-    let icnt = selected.filter(f => this._isImage(f)).length;
-    let dcnt = selected.length - icnt;
-
-    let msgs = [];
-    msgs.push(`You have selected ${icnt} images and ${dcnt} directores.`);
-    msgs.push(`All images will transferred and hosted on gallery '${this.addToGalleryName}', it may take a while.`);
-    msgs.push("");
-
-    const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
-      this.dialog.open(ConfirmDialogComponent, {
-        width: "500px",
-        data: {
-          title: `Hosting Images On Fantahsea Gallery '${this.addToGalleryName}'`,
-          msg: msgs,
-          isNoBtnDisplayed: true,
-        },
-      });
-
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        let params = selected.map((f) => {
-          return {
-            fileKey: f.uuid,
-            galleryNo: addToGalleryNo,
-          };
-        });
-
-        this.hclient
-          .post(environment.fantahsea, "/gallery/image/transfer", { images: params, })
-          .subscribe({
-            complete: () => {
-              this.curr = null;
-              this.fetchFileInfoList();
-              this.notifi.toast("Request success! It may take a while.");
-            },
-          });
-      }
-    });
+    this.dialog.open(HostOnGalleryComponent, {
+      width: "500px",
+      data: { files: selected },
+    }).afterClosed()
+      .subscribe();
   }
 
   selectFile(event: any, f: FileInfo) {
@@ -883,42 +793,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     });
     this.selectedCount = this.isAllSelected ? total : 0;
   }
-
-  // TODO: not supported anymore
-  //
-  // exportAsZip() {
-  //   let selected = this.filterSelected(this.isOwner);
-  //   if (!selected) {
-  //     this.notifi.toast("Please select files first")
-  //     return;
-  //   }
-
-  //   let msgs = [`You have selected ${selected.length} file(s) to export, these files will be compressed as a zip file, it may take a while.`,
-  //     "Directories will be unpacked, files under it will be included in the zip file as well.",
-  //     "If you are already exporting, this request will be rejected."];
-
-  //   this.dialog.open(ConfirmDialogComponent, {
-  //     width: "500px",
-  //     data: {
-  //       title: "Export Files As Zip",
-  //       msg: msgs,
-  //       isNoBtnDisplayed: true,
-  //     },
-  //   }).afterClosed().subscribe((confirm) => {
-  //     // console.log(confirm);
-  //     if (confirm) {
-  //       let fileIds = selected.map(f => f.id);
-  //       this.hclient.post<void>(environment.vfm, '/file/export-as-zip', {
-  //         fileIds: fileIds
-  //       }).subscribe({
-  //         next: (r) => {
-  //           this.notifi.toast("Exporting, this may take a while");
-  //         }
-  //       });
-
-  //     }
-  //   });
-  // }
 
   toggleMkdirPanel() {
     this.makingDir = !this.makingDir;
@@ -1191,36 +1065,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   private _selectColumns() {
     if (isMobile()) return this.MOBILE_COLUMNS;
     return this.inFolderNo ? this.DESKTOP_FOLDER_COLUMNS : this.DESKTOP_COLUMNS;
-  }
-
-  private _fetchOwnedGalleryBrief() {
-    this.hclient.get<GalleryBrief[]>(
-      environment.fantahsea, "/gallery/brief/owned",
-    ).subscribe({
-      next: (resp) => {
-        this.galleryBriefs = resp.data;
-        this.onAddToGalleryNameChanged();
-      }
-    });
-  }
-
-  private _extractToGalleryNo(): string {
-    const gname = this.addToGalleryName;
-    if (!gname) {
-      this.notifi.toast(translate('msg:select:gallery'));
-      return;
-    }
-
-    let matched: GalleryBrief[] = this.galleryBriefs.filter(v => v.name === gname)
-    if (!matched || matched.length < 1) {
-      this.notifi.toast("Gallery not found, please check and try again")
-      return null;
-    }
-    if (matched.length > 1) {
-      this.notifi.toast("Found multiple galleries with the same name, please try again")
-      return null;
-    }
-    return matched[0].galleryNo
   }
 
   /**

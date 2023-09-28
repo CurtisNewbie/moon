@@ -116,19 +116,7 @@
                     </mat-form-field>
                 </div>
 
-                <!-- <div class="col">
-                    <mat-form-field>
-                        <mat-label>{{i18n('addToFantahseaGallery')}}</mat-label>
-                        <input matInput type="text" [(ngModel)]="addToGalleryName"
-                            (ngModelChange)="onAddToGalleryNameChanged()" [matAutocomplete]="auto2">
-                        <mat-autocomplete #auto2="matAutocomplete">
-                            <mat-option *ngFor="let option of autoCompAddToGalleryName" [value]="option">
-                                {{option}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-
+                <!-- TODO
                 <div class="col">
                     <mat-form-field style="width: 100%;" class="mb-1" *ngIf="!isMobile">
                         <mat-label>{{i18n('dir')}}</mat-label>
@@ -153,12 +141,11 @@
             <mat-form-field style="width: 100%;">
                 <mat-label>{{i18n('dirName')}}</mat-label>
                 <input matInput type="text" (keyup)="isEnterKeyPressed($event) && mkdir()" [(ngModel)]="newDirName">
-                <button *ngIf="newDirName" class="btn-close" matSuffix aria-label="Clear" (click)="newDirName=''">
-                </button>
+                <button *ngIf="newDirName" class="btn-close" matSuffix aria-label="Clear" (click)="newDirName=''"></button>
             </mat-form-field>
 
             <div class="justify-content-md-end d-md-flex">
-                <button mat-raised-button class="mt-2" (click)="mkdir()">{{i18n('submit')}}</button>
+                <button mat-raised-button class="mt-2" (click)="mkdir()">Submit</button>
             </div>
         </div>
 
@@ -166,17 +153,12 @@
 
             <ng-container *ngIf="!inFolderName && anySelected">
 
-                <!-- transfer selected to fantahsea -->
-                <button mat-raised-button class="m-2" *ngIf="anySelected"
-                    (click)="transferSelectedToGallery()">{{i18n('hostOnFantahsea')}}</button>
-
-                <button mat-raised-button class="m-2" (click)="addToVirtualFolder()">Add To Virtual Folder</button>
-
-                <button mat-raised-button class="m-2" (click)="moveSelectedToDir(true)">{{i18n('moveIntoDir')}}</button>
+                <button mat-raised-button class="m-2" *ngIf="anySelected" (click)="transferSelectedToGallery()">Add To Gallery</button>
+                <button mat-raised-button class="m-2" (click)="addToVirtualFolder()">Add To Folder</button>
+                <button mat-raised-button class="m-2" (click)="moveSelectedToDir(true)">Move Into Directory</button>
 
                 <!-- move out of dir -->
-                <button mat-raised-button class="m-2" *ngIf="inDirFileName"
-                    (click)="moveSelectedToDir(false)">{{i18n('moveOutOfDir')}}</button>
+                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">{{i18n('moveOutOfDir')}}</button>
             </ng-container>
 
 
