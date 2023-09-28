@@ -33,19 +33,6 @@
             </div>
 
             <div class="col">
-                <mat-form-field class="mb-1">
-                    <mat-label>{{i18n("uploadToDirectory")}}:</mat-label>
-                    <input matInput type="text" [(ngModel)]="uploadDirName" (ngModelChange)="onUploadDirNameChanged()"
-                        [matAutocomplete]="auto0" [disabled]="isUploading || inDirFileName">
-                    <mat-autocomplete #auto0="matAutocomplete">
-                        <mat-option *ngFor="let option of autoCompUploadDirs" [value]="option">
-                            {{option}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </div>
-
-            <div class="col">
                 <button class="ml-2 mr-2" mat-raised-button (click)="upload()" [disabled]="isUploading"
                     *ngIf="!isUploading">
                     {{i18n("upload")}}
@@ -115,24 +102,9 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-
-                <!-- TODO
-                <div class="col">
-                    <mat-form-field style="width: 100%;" class="mb-1" *ngIf="!isMobile">
-                        <mat-label>{{i18n('dir')}}</mat-label>
-                        <input matInput type="text" [(ngModel)]="moveIntoDirName"
-                            (ngModelChange)="onMoveIntoDirNameChanged()" [matAutocomplete]="auto1">
-                        <mat-autocomplete #auto1="matAutocomplete">
-                            <mat-option *ngFor="let option of autoCompMoveIntoDirs" [value]="option">
-                                {{option}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div> -->
             </div>
         </div>
         <!-- search param ned -->
-
 
         <!-- create directory  -->
         <div class="container-fluid bootstrap p-3 mt-3 shadow rounded border" *ngIf="makingDir">
@@ -155,10 +127,8 @@
 
                 <button mat-raised-button class="m-2" *ngIf="anySelected" (click)="transferSelectedToGallery()">Add To Gallery</button>
                 <button mat-raised-button class="m-2" (click)="addToVirtualFolder()">Add To Folder</button>
-                <button mat-raised-button class="m-2" (click)="moveSelectedToDir(true)">Move Into Directory</button>
-
-                <!-- move out of dir -->
-                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">{{i18n('moveOutOfDir')}}</button>
+                <button mat-raised-button class="m-2" *ngIf="!inDirFileName" (click)="moveSelectedToDir(true)">Move Into Directory</button>
+                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out Of Directory</button>
             </ng-container>
 
 

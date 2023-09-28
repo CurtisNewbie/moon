@@ -41,6 +41,7 @@ import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
 import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.component";
 import { HostOnGalleryComponent } from "../host-on-gallery/host-on-gallery.component";
+import { DirectoryMoveFileComponent } from "../directory-move-file/directory-move-file.component";
 
 export enum TokenType {
   DOWNLOAD = "DOWNLOAD",
@@ -141,16 +142,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   -----------------------
   */
 
-  /** list of brief info of all directories that we can access */
-  dirBriefList: DirBrief[] = [];
+
   /** the name of the directory that we are currently in */
   inDirFileName: string = null;
   /** the file key of the directory that we are currently in */
   inDirFileKey: string = null;
-  /** auto complete for dirs that we may move file into */
-  autoCompMoveIntoDirs: string[] = [];
-  /** name of dir that we may move file into */
-  moveIntoDirName: string = null;
+
   /** whether we are making directory */
   makingDir: boolean = false;
   /** name of new dir */
@@ -204,9 +201,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   setSearchFileType = (fileType) => this.searchParam.fileType = fileType;
   setTag = (tag) => this.searchParam.tagName = tag;
 
-  onMoveIntoDirNameChanged = () => this.autoCompMoveIntoDirs = filterAlike(this.dirBriefList.map(v => v.name), this.moveIntoDirName);
-  onUploadDirNameChanged = () => this.autoCompUploadDirs = filterAlike(this.dirBriefList.map(v => v.name), this.uploadDirName);
-
   constructor(
     private userService: UserService,
     private notifi: NotificationService,
@@ -258,7 +252,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
       this.userService.fetchUserInfo();
       this._fetchTags();
-      this._fetchDirBriefList();
+
     });
   }
 
@@ -270,24 +264,16 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    // console.log("inDirFileName", this.inDirFileName, "dirBriefList", this.dirBriefList);
-    let findParentFileRes = this._findUploadParentFile(this.inDirFileName);
-    if (findParentFileRes.errMsg) {
-      this.notifi.toast(findParentFileRes.errMsg);
-      return;
-    }
-
     this.newDirName = null;
     this.hclient.post(
       environment.vfm, "/file/make-dir",
       {
         name: dirName,
-        parentFile: findParentFileRes.fileKey,
+        parentFile: this.inDirFileKey,
       },
     ).subscribe({
       next: () => {
         this.fetchFileInfoList();
-        this._fetchDirBriefList();
         this.makingDir = false;
       }
     });
@@ -303,49 +289,44 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     ]);
   }
 
+  // TODO
   // Move selected to dir
   moveSelectedToDir(into: boolean = true) {
-    const moveIntoDirName = this.moveIntoDirName;
-    let key;
-    if (into) {
-      if (!moveIntoDirName) {
-        this.notifi.toast(translate('msg:dir:name:required'));
-        return;
-      }
-      key = this.findMoveIntoDirFileKey(moveIntoDirName);
-      if (!key) return;
-    } else {
-      key = "";
-    }
-
     const selected = this.filterSelected();
     if (!selected || selected.length < 1) {
       this.notifi.toast("Please select files first");
       return;
     }
 
-    let msgs = [];
-    let first = into ? `You sure you want to move these files to '${moveIntoDirName}'?` :
-      `You sure you want to move these files out of current directory?`
-    msgs.push(first);
-    msgs.push("");
+    if (!into) {
+      let msgs = ["You sure you want to move these files out of current directory?", ""];
+      let c = 0;
+      for (let f of selected) {
+        msgs.push(` ${++c}. ${f.name}`);
+      }
 
-    let c = 0;
-    for (let f of selected) {
-      msgs.push(` ${++c}. ${f.name}`);
+      this.dialog.open(ConfirmDialogComponent, {
+        width: "500px",
+        data: {
+          title: "Move Files",
+          msg: msgs,
+          isNoBtnDisplayed: true,
+        },
+      }).afterClosed()
+        .subscribe((confirm) => {
+          if (!confirm) return;
+          this._moveEachToDir(selected, "", 0);
+        });
+      return;
     }
 
-    this.dialog.open(ConfirmDialogComponent, {
+    this.dialog.open(DirectoryMoveFileComponent, {
       width: "500px",
       data: {
-        title: "Move Files",
-        msg: msgs,
-        isNoBtnDisplayed: true,
+        files: selected.map((f, i) => { return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid } })
       },
-    }).afterClosed().subscribe((confirm) => {
-      // console.log(confirm);
-      if (confirm) this._moveEachToDir(selected, key, 0);
-    });
+    }).afterClosed()
+      .subscribe(() => this.fetchFileInfoList());
   }
 
   private _moveEachToDir(selected: FileInfo[], dirFileKey: string, offset: number) {
@@ -365,46 +346,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       next: (resp) => {
         this._moveEachToDir(selected, dirFileKey, offset + 1);
       }
-    });
-  }
-
-  findMoveIntoDirFileKey(dirName: string) {
-    let matched: DirBrief[] = this.dirBriefList.filter(v => v.name === dirName)
-    if (!matched || matched.length < 1) {
-      this.notifi.toast("Directory not found, please check and try again")
-      return
-    }
-    if (matched.length > 1) {
-      this.notifi.toast("Found multiple directories with the same name, please update their names and try again")
-      return
-    }
-    return matched[0].uuid;
-  }
-
-  // Move (into/out of) dir
-  doMoveToDir(uuid: string, dirName: string, into: boolean = true) {
-    if (!uuid) {
-      this.notifi.toast("Please select a file first")
-      return
-    }
-
-    let parentFileUuid;
-    if (into) {
-      let key = this.findMoveIntoDirFileKey(dirName);
-      if (!key) return;
-      parentFileUuid = key;
-    } else {
-      parentFileUuid = "";
-    }
-
-    this.hclient.post(
-      environment.vfm, "/file/move-to-dir",
-      {
-        uuid: uuid,
-        parentFileUuid: parentFileUuid,
-      },
-    ).subscribe({
-      complete: () => this.fetchFileInfoList()
     });
   }
 
@@ -534,7 +475,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.currId = -1;
 
     this.searchParam = {};
-    this.moveIntoDirName = null;
     if (setFirstPage && !this.pagingController.atFirstPage()) {
       this.pagingController.firstPage(); // this also triggers fetchFileInfoList
       // console.log("resetSearchParam.firstPage", time())
@@ -566,7 +506,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
           { uuid: uuid },
         ).subscribe((resp) => {
           this.fetchFileInfoList()
-          this._fetchDirBriefList();
         });
       }
     });
@@ -736,7 +675,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       .filter((f) => f._selected)
       .filter(f => f.isFile)
       .map((f, i) => {
-        return { name: `${i}. ${f.name}`, fileKey: f.uuid }
+        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
       });
 
     if (!selected || selected.length < 1) {
@@ -761,7 +700,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     let selected = this.filterSelected((f: FileInfo): boolean => this._isImage(f) || f.isDir)
       .map((f, i) => {
-        return { name: `${i}. ${f.name}`, fileKey: f.uuid }
+        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
       });
 
     if (!selected || selected.length < 1) {
@@ -885,7 +824,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       this.uploadDirName = null;
     }
 
-    this.onUploadDirNameChanged();
     this.pagingController.firstPage();
   }
 
@@ -936,29 +874,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.progress = ps;
   }
 
-  /** Find parent file for uploading / makding dir */
-  private _findUploadParentFile(dirName: string): { fileKey?: string, errMsg?: string } {
-    if (dirName) {
-      let matched: DirBrief[] = this.dirBriefList.filter(v => v.name === dirName)
-      if (!matched || matched.length < 1) {
-        return { errMsg: `Directory(${dirName}) not found, please check and try again` }
-      }
-      if (matched.length > 1) {
-        return { errMsg: `Found multiple directories with the same name(${dirName}), please update their names and try again` }
-      }
-      return { fileKey: matched[0].uuid }
-    }
-    return {}
-  }
-
   private _doUpload(uploadParam: UploadFileParam, fetchOnComplete: boolean = true) {
-    let findParentFileRes = this._findUploadParentFile(this.uploadDirName);
-    if (findParentFileRes.errMsg) {
-      this.notifi.toast(findParentFileRes.errMsg);
-      return;
-    }
-
-    uploadParam.parentFile = findParentFileRes.fileKey;
+    uploadParam.parentFile = this.inDirFileKey;
     const onComplete = () => {
       if (fetchOnComplete)
         setTimeout(() => this.fetchFileInfoList(), 1_000);
@@ -1047,19 +964,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _isMultipleUpload() {
     return this.uploadParam.files.length > 1;
-  }
-
-  // fetch dir brief list
-  private _fetchDirBriefList() {
-    this.hclient.get<DirBrief[]>(
-      environment.vfm, "/file/dir/list",
-    ).subscribe({
-      next: (resp) => {
-        this.dirBriefList = resp.data;
-        this.onMoveIntoDirNameChanged();
-        this.onUploadDirNameChanged();
-      }
-    });
   }
 
   private _selectColumns() {

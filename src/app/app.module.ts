@@ -68,6 +68,7 @@ import { AccessLogComponent } from "./access-log/access-log.component";
 import { ManageLogsComponent } from './manage-logs/manage-logs.component';
 import { VfolderAddFileComponent } from './vfolder-add-file/vfolder-add-file.component';
 import { HostOnGalleryComponent } from './host-on-gallery/host-on-gallery.component';
+import { DirectoryMoveFileComponent } from './directory-move-file/directory-move-file.component';
 
 @NgModule({
   exports: [],
@@ -108,6 +109,7 @@ import { HostOnGalleryComponent } from './host-on-gallery/host-on-gallery.compon
     ManageLogsComponent,
     VfolderAddFileComponent,
     HostOnGalleryComponent,
+    DirectoryMoveFileComponent,
   ],
   imports: [
     MatTabsModule,
