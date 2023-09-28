@@ -8,8 +8,6 @@ import { WPath } from '../manage-paths/manage-paths.component';
 import { WRes } from '../manage-resources/manage-resources.component';
 import { ConfirmDialog } from 'src/common/dialog';
 
-// TODO impl this
-
 export interface DialogDat {
   res: WRes;
 }

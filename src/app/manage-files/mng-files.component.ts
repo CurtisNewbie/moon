@@ -38,9 +38,10 @@ import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
 import { onLangChange, translate } from "src/common/translate";
 import { resolveSize } from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
-import { Option } from "src/common/select-util";
+import { Option, filterAlike } from "src/common/select-util";
 import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
+import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.component";
 
 export enum TokenType {
   DOWNLOAD = "DOWNLOAD",
@@ -144,12 +145,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   -----------------------
   */
 
-  /** list of brief info of all vfolder that we created */
-  vfolderBrief: VFolderBrief[] = [];
-  /** Auto complete for vfolders that we may add file into */
-  autoCompAddToVFolderName: string[];
-  /** name of the folder that we may add files into */
-  addToVFolderName: string = null;
   /** the folderNo of the folder that we are currently in */
   inFolderNo: string = "";
   /** the name of the folder that we are currently in */
@@ -225,10 +220,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   setSearchFileType = (fileType) => this.searchParam.fileType = fileType;
   setTag = (tag) => this.searchParam.tagName = tag;
-  onAddToGalleryNameChanged = () => this.autoCompAddToGalleryName = this.filterAlike(this.galleryBriefs.map(v => v.name), this.addToGalleryName);
-  onAddToVFolderNameChanged = () => this.autoCompAddToVFolderName = this.filterAlike(this.vfolderBrief.map(v => v.name), this.addToVFolderName);
-  onMoveIntoDirNameChanged = () => this.autoCompMoveIntoDirs = this.filterAlike(this.dirBriefList.map(v => v.name), this.moveIntoDirName);
-  onUploadDirNameChanged = () => this.autoCompUploadDirs = this.filterAlike(this.dirBriefList.map(v => v.name), this.uploadDirName);
+  onAddToGalleryNameChanged = () => this.autoCompAddToGalleryName = filterAlike(this.galleryBriefs.map(v => v.name), this.addToGalleryName);
+  onMoveIntoDirNameChanged = () => this.autoCompMoveIntoDirs = filterAlike(this.dirBriefList.map(v => v.name), this.moveIntoDirName);
+  onUploadDirNameChanged = () => this.autoCompUploadDirs = filterAlike(this.dirBriefList.map(v => v.name), this.uploadDirName);
 
   constructor(
     private userService: UserService,
@@ -282,7 +276,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       this.userService.fetchUserInfo();
       this._fetchTags();
       this._fetchDirBriefList();
-      this._fetchOwnedVFolderBrief();
       this._fetchOwnedGalleryBrief();
     });
   }
@@ -560,7 +553,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.currId = -1;
 
     this.searchParam = {};
-    this.addToVFolderName = null;
     this.moveIntoDirName = null;
     if (setFirstPage && !this.pagingController.atFirstPage()) {
       this.pagingController.firstPage(); // this also triggers fetchFileInfoList
@@ -755,49 +747,28 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   addToVirtualFolder() {
-
-    const vfolderName = this.addToVFolderName
-    if (!vfolderName) {
-      this.notifi.toast("Please select a folder first")
-      return
-    }
-
-    let addToFolderNo;
-    let matched: VFolderBrief[] = this.vfolderBrief.filter(v => v.name === vfolderName)
-    if (!matched || matched.length < 1) {
-      this.notifi.toast("Virtual Folder not found, please check and try again")
-      return
-    }
-    if (matched.length > 1) {
-      this.notifi.toast("Found multiple virtual folder with the same name, please try again")
-      return
-    }
-    addToFolderNo = matched[0].folderNo
-
     if (!this.fileInfoList) {
       this.notifi.toast("Please select files first");
       return;
     }
 
-    let fileKeys = this.fileInfoList
-      .map((v) => (v._selected) ? v : null)
-      .filter((v) => v != null)
-      .map((f) => f.uuid);
-
-    if (!fileKeys) return;
-
-    this.hclient
-      .post(
-        environment.vfm, "/vfolder/file/add",
-        { folderNo: addToFolderNo, fileKeys: fileKeys, },
-      )
-      .subscribe({
-        complete: () => {
-          this.curr = null;
-          this.fetchFileInfoList();
-          this.notifi.toast("Success");
-        },
+    let selected = this.fileInfoList
+      .filter((f) => f._selected)
+      .filter(f => f.isFile)
+      .map((f, i) => {
+        return { name: `${i}. ${f.name}`, fileKey: f.uuid }
       });
+
+    if (!selected || selected.length < 1) {
+      this.notifi.toast("Please select files first");
+      return;
+    }
+
+    this.dialog.open(VfolderAddFileComponent, {
+      width: "500px",
+      data: { files: selected },
+    }).afterClosed()
+      .subscribe();
   }
 
   transferDirToGallery() {
@@ -1205,15 +1176,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     return this.uploadParam.files.length > 1;
   }
 
-  /** filter candidates that contains the value */
-  private filterAlike(candidates: string[], value: string): string[] {
-    if (!value) return candidates;
-
-    return candidates.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
   // fetch dir brief list
   private _fetchDirBriefList() {
     this.hclient.get<DirBrief[]>(
@@ -1230,17 +1192,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   private _selectColumns() {
     if (isMobile()) return this.MOBILE_COLUMNS;
     return this.inFolderNo ? this.DESKTOP_FOLDER_COLUMNS : this.DESKTOP_COLUMNS;
-  }
-
-  private _fetchOwnedVFolderBrief() {
-    this.hclient.get<VFolderBrief[]>(
-      environment.vfm, "/vfolder/brief/owned",
-    ).subscribe({
-      next: (resp) => {
-        this.vfolderBrief = resp.data;
-        this.onAddToVFolderNameChanged();
-      }
-    });
   }
 
   private _fetchOwnedGalleryBrief() {

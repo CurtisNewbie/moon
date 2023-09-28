@@ -66,6 +66,7 @@ import { MngRoleDialogComponent } from "./mng-role-dialog/mng-role-dialog.compon
 import { ChangePasswordComponent } from "./change-password/change-password.component";
 import { AccessLogComponent } from "./access-log/access-log.component";
 import { ManageLogsComponent } from './manage-logs/manage-logs.component';
+import { VfolderAddFileComponent } from './vfolder-add-file/vfolder-add-file.component';
 
 @NgModule({
   exports: [],
@@ -104,6 +105,7 @@ import { ManageLogsComponent } from './manage-logs/manage-logs.component';
     ChangePasswordComponent,
     AccessLogComponent,
     ManageLogsComponent,
+    VfolderAddFileComponent,
   ],
   imports: [
     MatTabsModule,
