@@ -248,8 +248,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true">
                 </tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns" class="element-row"
-                    [class.expanded-row]="currId > -1 && row.id == currId" (click)="onRowClicked(row)"
-                    [class.dir-row]="row.isDir">
+                    [class.expanded-row]="currId > -1 && row.id == currId" (click)="onRowClicked(row)">
                 </tr>
                 <tr mat-row *matRowDef="let element; columns: ['expandedElement']" class="detail-row">
             </table>
