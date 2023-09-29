@@ -994,4 +994,14 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       })
       .filter(v => v != null);
   }
+
+  onRowClicked(row: FileInfo) {
+    if (row.isDir) {
+      this.goToDir(row.name, row.uuid);
+      return;
+    }
+    if (row.isDisplayable) {
+      this.preview(row);
+    }
+  }
 }
