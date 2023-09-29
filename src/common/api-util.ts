@@ -59,6 +59,7 @@ export class HClient {
   /** Do POST request */
   post<T>(serviceBase: string, url: string, payload: any, openApi: boolean = true): Observable<Resp<T>> {
     url = openApi ? buildApiPath(url, serviceBase) : serviceBase + url;
+    console.log("url", url)
     return this.httpClient.post<Resp<T>>(
       url, payload, buildOptions()
     );

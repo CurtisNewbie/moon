@@ -58,7 +58,7 @@ export class ManageTagDialogComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.vfm, "/file/tag/",
+      environment.vfm, "/file/tag",
       { fileId: this.data.fileId, tagName: this.tagName },
     ).subscribe({
       next: (resp) => this.fetchTags(),
@@ -86,7 +86,7 @@ export class ManageTagDialogComponent implements OnInit {
 
   untag(tagName: string): void {
     this.http.post<void>(
-      environment.vfm, "/file/untag/",
+      environment.vfm, "/file/untag",
       { fileId: this.data.fileId, tagName: tagName },
     ).subscribe({
       next: (resp) => {
@@ -102,6 +102,9 @@ export class ManageTagDialogComponent implements OnInit {
 
   private filter(value: string): string[] {
     if (!value) return this.acTags;
+    if (!this.acTags) {
+      return [];
+    }
 
     return this.acTags.filter((option) =>
       option.toLowerCase().includes(value.toLowerCase())
