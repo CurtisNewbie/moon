@@ -124,12 +124,11 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
 
             <ng-container *ngIf="!inFolderName && anySelected">
-
                 <button mat-raised-button class="m-2" *ngIf="anySelected" (click)="transferSelectedToGallery()">Add To Gallery</button>
                 <button mat-raised-button class="m-2" (click)="addToVirtualFolder()">Add To Folder</button>
                 <button mat-raised-button class="m-2" (click)="deleteSelected()"> Delete </button>
-                <button mat-raised-button class="m-2" *ngIf="!inDirFileName" (click)="moveSelectedToDir(true)">Move Into Directory</button>
-                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out Of Directory</button>
+                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(true)">Move To Directory</button>
+                <!-- <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out Of Directory</button> -->
             </ng-container>
 
 

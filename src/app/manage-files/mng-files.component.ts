@@ -63,8 +63,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "parentFileName",
     "uploadTime",
     "size",
-    "updateTime",
     "operation",
+    // "updateTime",
   ];
   readonly DESKTOP_FOLDER_COLUMNS = [
     "name",
