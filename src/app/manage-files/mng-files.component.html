@@ -150,8 +150,8 @@
             <table mat-table [dataSource]="fileInfoList" style="width: 100%; height: 70%" multiTemplateDataRows>
                 <ng-container matColumnDef="selected">
                     <th mat-header-cell *matHeaderCellDef> <span (click)="selectAll()" [matTooltip]="'Select records for more operations'"
-                        >{{anySelected ?
-                            'Selected' + " (" + selectedCount + ")": 'Selected'}}</span>
+                        ><b>{{anySelected ?
+                            'Selected' + " (" + selectedCount + ")": 'Selected'}}</b></span>
                     </th>
                     <td mat-cell *matCellDef="let f">
                         <mat-checkbox [checked]="f._selected" (change)="selectFile($event, f)"
@@ -160,45 +160,48 @@
                 </ng-container>
 
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <th mat-header-cell *matHeaderCellDef> <b>Name</b> </th>
                     <td mat-cell *matCellDef="let f"> <span class="pl-1 pr-1">{{f.name}}
                         </span></td>
                 </ng-container>
 
                 <ng-container matColumnDef="parentFileName">
-                    <th mat-header-cell *matHeaderCellDef [matTooltip]="'Name of directory that each file belongs to'"> In Directory </th>
+                    <th mat-header-cell *matHeaderCellDef [matTooltip]="'Name of directory that each file belongs to'"> <b>In Directory</b> </th>
                     <td mat-cell *matCellDef="let f"> <span class="pl-1 pr-1">{{f.parentFileName}}
                         </span></td>
                 </ng-container>
 
                 <ng-container matColumnDef="uploader">
-                    <th mat-header-cell *matHeaderCellDef> Uploader </th>
+                    <th mat-header-cell *matHeaderCellDef> <b>Uploader</b></th>
                     <td mat-cell *matCellDef="let f"> {{f.uploaderName}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="uploadTime">
-                    <th mat-header-cell *matHeaderCellDef> Upload Time </th>
+                    <th mat-header-cell *matHeaderCellDef> <b>Upload Time</b> </th>
                     <td mat-cell *matCellDef="let f"> {{f.uploadTime | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="size">
-                    <th mat-header-cell *matHeaderCellDef> Size </th>
+                    <th mat-header-cell *matHeaderCellDef> <b>Size</b></th>
                     <td mat-cell *matCellDef="let f"> {{f.sizeLabel}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="fileType">
-                    <th mat-header-cell *matHeaderCellDef [matTooltip]="'File or directory that contains more files'"> Type </th>
-                    <td mat-cell *matCellDef="let f"> {{f.fileTypeLabel}} </td>
+                    <th mat-header-cell *matHeaderCellDef [matTooltip]="'File or directory that contains more files'"> <b>Type</b> </th>
+                    <td mat-cell *matCellDef="let f">
+                        <ng-container *ngIf="f.isDir"><b><i>{{f.fileTypeLabel}}</i></b></ng-container>
+                        <ng-container *ngIf="!f.isDir">{{f.fileTypeLabel}}</ng-container>
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="updateTime">
-                    <th mat-header-cell *matHeaderCellDef> Update Time </th>
+                    <th mat-header-cell *matHeaderCellDef> <b>Update Time</b> </th>
                     <td mat-cell *matCellDef="let f"> {{f.updateTime | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
                 </ng-container>
 
 
                 <ng-container matColumnDef="operation">
-                    <th mat-header-cell *matHeaderCellDef> Operation </th>
+                    <th mat-header-cell *matHeaderCellDef> <b>Operation</b> </th>
                     <td mat-cell *matCellDef="let f">
                         <button class="small-btn m-2" mat-raised-button (click)="$event.stopPropagation() || selectExpanded(f)">Edit</button>
                         <ng-container *ngIf="f.isFile">
