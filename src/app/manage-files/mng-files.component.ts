@@ -484,6 +484,55 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
+  deleteSelected(): void {
+
+    let selected = this.fileInfoList
+      .filter((f) => f._selected)
+      .map((f, i) => {
+        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
+      });
+
+    if (!selected || selected.length < 1) {
+      this.notifi.toast("Select files first (not including directory).")
+      return;
+    }
+
+    let msgs = [`You sure you want to delete the following files?`, ""]
+    for (let s of selected) {
+      msgs.push(s.name);
+    }
+
+    const doDelete = (i) => {
+      if (i >= selected.length) {
+        this.fetchFileInfoList()
+        return;
+      }
+
+      this.hclient.post<any>(
+        environment.vfm, "/file/delete",
+        { uuid: selected[i].fileKey },
+      ).subscribe((resp) => {
+        console.log("deleted", selected[i].name);
+        doDelete(i + 1);
+      });
+    };
+
+    this.dialog.open(ConfirmDialogComponent, {
+      width: "500px",
+      data: {
+        title: 'Delete Files',
+        msg: msgs,
+        isNoBtnDisplayed: true,
+      },
+    }).afterClosed().subscribe((confirm) => {
+      console.log(confirm);
+      if (!confirm) {
+        return;
+      }
+      doDelete(0);
+    });
+  }
+
   /**
    * Delete file
    */
@@ -673,7 +722,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     let selected = this.fileInfoList
       .filter((f) => f._selected)
-      .filter(f => f.isFile)
+      .filter(f => {
+        if (!f.isFile) {
+          f._selected = false;
+        }
+        return f.isFile;
+      })
       .map((f, i) => {
         return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
       });

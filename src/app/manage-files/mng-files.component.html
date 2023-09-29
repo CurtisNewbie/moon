@@ -127,6 +127,7 @@
 
                 <button mat-raised-button class="m-2" *ngIf="anySelected" (click)="transferSelectedToGallery()">Add To Gallery</button>
                 <button mat-raised-button class="m-2" (click)="addToVirtualFolder()">Add To Folder</button>
+                <button mat-raised-button class="m-2" (click)="deleteSelected()"> Delete </button>
                 <button mat-raised-button class="m-2" *ngIf="!inDirFileName" (click)="moveSelectedToDir(true)">Move Into Directory</button>
                 <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out Of Directory</button>
             </ng-container>
@@ -235,12 +236,6 @@
                                             </div>
                                             <div class="col">
                                                 <button mat-raised-button (click)="popToManageTag(curr)">Tags</button>
-                                            </div>
-                                        </ng-container>
-
-                                        <ng-container>
-                                            <div class="col">
-                                                <button mat-raised-button (click)="deleteFile(curr.uuid, curr.name)"> Delete </button>
                                             </div>
                                         </ng-container>
                                     </div>
