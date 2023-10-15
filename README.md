@@ -13,6 +13,7 @@ Bolobao, angular frontend project for my personal website (hosted on private net
 - [dtask-go](https://github.com/CurtisNewbie/dtask-go)
 - [goauth](https://github.com/CurtisNewbie/goauth)
 - [logbot](https://github.com/CurtisNewbie/logbot)
+- [doc-indexer](https://github.com/CurtisNewbie/doc-indexer)
 
 ## Known Issue (fixed tho)
 

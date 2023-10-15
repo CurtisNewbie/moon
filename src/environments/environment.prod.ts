@@ -6,5 +6,6 @@ export const environment = {
   goauth: "goauth",
   dtaskgo: "dtaskgo",
   fstore: "fstore",
-  logbot: "logbot"
+  logbot: "logbot",
+  docindexer:"docindexer",
 };

@@ -25,6 +25,7 @@ import { RegisterComponent } from "./register/register.component";
 import { ManageResourcesComponent } from "./manage-resources/manage-resources.component";
 import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
 import { ManageLogsComponent } from "./manage-logs/manage-logs.component";
+import { ManageBookmarksComponent } from "./manage-bookmarks/manage-bookmarks.component";
 
 const routes: Routes = [
   {
@@ -126,6 +127,10 @@ const routes: Routes = [
   {
     path: NavType.MNG_LOGS,
     component: ManageLogsComponent,
+  },
+  {
+    path: NavType.MNG_BOOKMARKS,
+    component: ManageBookmarksComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS},
 ];

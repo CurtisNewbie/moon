@@ -6,6 +6,7 @@
         <button mat-menu-item [matMenuTriggerFor]="user">User</button>
         <button mat-menu-item [matMenuTriggerFor]="file" *ngIf="hasRes('manage-files')">File & Gallery</button>
         <button mat-menu-item [matMenuTriggerFor]="task" *ngIf="hasRes('manage-tasks')">Task</button>
+        <button mat-menu-item [matMenuTriggerFor]="doc" *ngIf="hasRes('manage-bookmarks')">Documents</button>
     </mat-menu>
 
     <mat-menu #user="matMenu">
@@ -27,6 +28,10 @@
         <button mat-menu-item routerLink="/manage-files" routerLinkActive="active">Manage Files</button>
         <button mat-menu-item routerLink="/gallery" routerLinkActive="active">Fantahsea Gallery</button>
         <button mat-menu-item routerLink="/folders" routerLinkActive="active">Virtual Folders</button>
+    </mat-menu>
+
+    <mat-menu #doc="matMenu">
+        <button mat-menu-item routerLink="/manage-bookmarks" routerLinkActive="active">Bookmarks</button>
     </mat-menu>
 
     <mat-menu #task="matMenu">

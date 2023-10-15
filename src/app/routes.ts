@@ -14,6 +14,7 @@ export enum NavType {
     MNG_PATHS = "manage-paths",
     MNG_RES = "manage-resources",
     MNG_LOGS = "manage-logs",
+    MNG_BOOKMARKS = "manage-bookmarks",
 
     MANAGE_FILES = "manage-files",
     LOGIN_PAGE = "login-page",
