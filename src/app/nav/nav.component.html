@@ -36,7 +36,8 @@
 
     <button mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>
     <mat-menu #userMenu="matMenu" class="m-2">
-        <button mat-menu-item>Role: {{userInfo.roleName}}</button>
+        <button mat-menu-item (click)="copyToClipboard(userInfo.userNo)">Role: {{userInfo.roleName}}</button>
+        <button mat-menu-item (click)="copyToClipboard(userInfo.userNo)">User No: {{userInfo.userNo}}</button>
     </mat-menu>
 
     <button mat-button (click)="changeLang()">{{i18n('lang')}}: {{i18n(lang)}}</button>

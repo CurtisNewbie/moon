@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { getLLang, LLang, onLangChange, setLLang, translate } from "src/common/translate";
 import { UserInfo } from "src/common/user-info";
 import { UserService } from "../user.service";
+import { copyToClipboard } from "src/common/clipboard";
 
 @Component({
   selector: "app-nav",
@@ -17,6 +18,7 @@ export class NavComponent implements OnInit, OnDestroy {
       this.lang = e.lang;
     }
   });
+  copyToClipboard = copyToClipboard;
 
   constructor(private userService: UserService) { }
 

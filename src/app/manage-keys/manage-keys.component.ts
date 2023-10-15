@@ -7,6 +7,7 @@ import { UserService } from "../user.service";
 import { NotificationService } from "../notification.service";
 import { environment } from "src/environments/environment";
 import { isEnterKey } from "src/common/condition";
+import { copyToClipboard } from "src/common/clipboard";
 
 @Component({
   selector: "app-manage-keys",
@@ -36,6 +37,7 @@ export class ManageKeysComponent implements OnInit {
   getExpandedEle = (row) => getExpanded(row, this.expandedElement);
   isEnter = isEnterKey;
   mask = (k: string) => k.length > 0 ? k.substring(0, 5) + "*********" + k.substring(k.length - 5) : "";
+  copyToClipboard = copyToClipboard;
 
   constructor(
     private http: HClient,
@@ -130,24 +132,6 @@ export class ManageKeysComponent implements OnInit {
     this.password = null;
   }
 
-  copyToClipboard(t: string) {
-    if (!t) return;
-
-    // src: https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-    var textarea = document.createElement("textarea");
-    textarea.textContent = t;
-    textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in Microsoft Edge.
-    document.body.appendChild(textarea);
-    textarea.select();
-
-    try {
-      return document.execCommand("copy"); // Security exception may be thrown by some browsers.
-    } catch (ex) {
-      console.warn("Copy to clipboard failed.", ex);
-    } finally {
-      document.body.removeChild(textarea);
-    }
-  }
 
   onPagingControllerReady(pc) {
     this.pagingController = pc;

@@ -69,6 +69,7 @@ import { ManageLogsComponent } from './manage-logs/manage-logs.component';
 import { VfolderAddFileComponent } from './vfolder-add-file/vfolder-add-file.component';
 import { HostOnGalleryComponent } from './host-on-gallery/host-on-gallery.component';
 import { DirectoryMoveFileComponent } from './directory-move-file/directory-move-file.component';
+import { ManageBookmarksComponent } from './manage-bookmarks/manage-bookmarks.component';
 
 @NgModule({
   exports: [],
@@ -110,6 +111,7 @@ import { DirectoryMoveFileComponent } from './directory-move-file/directory-move
     VfolderAddFileComponent,
     HostOnGalleryComponent,
     DirectoryMoveFileComponent,
+    ManageBookmarksComponent,
   ],
   imports: [
     MatTabsModule,
