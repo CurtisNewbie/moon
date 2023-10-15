@@ -15,11 +15,15 @@ import { NotificationService } from '../notification.service';
 })
 export class ManageBookmarksComponent implements OnInit {
 
+  readonly isEnterKeyPressed = isEnterKey;
   readonly tabcol = ['id', 'name', 'operation']
+
   pagingController: PagingController;
   tabdat = []
   isEnter = isEnterKey;
   file = null;
+
+  searchName = null;
   showUploadPanel = false;
 
   @ViewChild("uploadFileInput")
@@ -43,7 +47,7 @@ export class ManageBookmarksComponent implements OnInit {
 
   fetchList() {
     this.hclient.post<any>(environment.docindexer,
-      '/bookmark/list', { paging: this.pagingController.paging }, false).
+      '/bookmark/list', { paging: this.pagingController.paging, name: this.searchName }, false).
       subscribe({
         next: (r) => {
           this.tabdat = r.data.payload;
@@ -97,6 +101,11 @@ export class ManageBookmarksComponent implements OnInit {
         headers: headers,
       }
     );
+  }
+
+  resetSearchName() {
+    this.searchName = null;
+    this.fetchList();
   }
 
 }
