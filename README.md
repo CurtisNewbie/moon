@@ -2,9 +2,7 @@
 
 Bolobao, angular frontend project for my personal website (hosted on private network).
 
-## Dependencies & Compatibility
-
-**Compatible with:**
+## Dependencies
 
 - [vfm](https://github.com/CurtisNewbie/vfm)
 - [mini-fstore](https://github.com/CurtisNewbie/mini-fstore)
