@@ -120,6 +120,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   isEnterKeyPressed = isEnterKey;
+  inSensitiveMode = false;
 
   /*
   -----------------------
@@ -361,7 +362,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         tagName: this.searchParam.tagName,
         folderNo: this.inFolderNo,
         parentFile: this.searchParam.parentFile,
-        fileType: this.searchParam.fileType
+        fileType: this.searchParam.fileType,
+        sensitve: this.inSensitiveMode
       }
     ).subscribe({
       next: (resp) => {
