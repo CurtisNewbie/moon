@@ -13,7 +13,6 @@ import { HClient } from "src/common/api-util";
 export class AccessLogComponent implements OnInit {
   readonly COLUMNS_TO_BE_DISPLAYED: string[] = [
     "id",
-    "userId",
     "user",
     "accessTime",
     "ipAddress",
@@ -35,16 +34,16 @@ export class AccessLogComponent implements OnInit {
   fetchAccessLogList(): void {
     this.http.post<any>(
       environment.authService, "/access/history",
-      {
-        pagingVo: this.pagingController.paging,
-      }
+      { pagingVo: this.pagingController.paging, }
     ).subscribe({
       next: (resp) => {
         this.accessLogList = [];
         if (resp.data.payload) {
           for (let r of resp.data.payload) {
-              if (r.accessTime) r.accessTime = new Date(r.accessTime);
-              this.accessLogList.push(r);
+            if (r.accessTime) {
+              r.accessTime = new Date(r.accessTime);
+            }
+            this.accessLogList.push(r);
           }
         }
         this.pagingController.onTotalChanged(resp.data.pagingVo);

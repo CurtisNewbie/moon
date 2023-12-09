@@ -13,9 +13,6 @@ export interface AccessLog {
   /** username */
   username: string;
 
-  /** primary key of user */
-  userId: number;
-
   /** url */
   url: string;
 
