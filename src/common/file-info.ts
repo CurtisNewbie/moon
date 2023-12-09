@@ -3,37 +3,15 @@ import { Option } from "./select-util";
 import { translate } from "./translate";
 
 export interface FileInfo {
-  /**
-   * file's id
-   */
   id: number;
-  /**
-   * uuid
-   */
   uuid: string;
-  /**
-   * fileName
-   */
   name: string;
-
-  /** name of uploader */
   uploaderName: string;
-
-  /** upload time */
   uploadTime: Date;
-
-  /**
-   * size in bytes
-   */
   sizeInBytes: number;
-
-  /**
-   * File Type
-   */
   fileType: FileType;
-
-  /** Update time */
   updateTime: Date;
+  sensitiveMode: string;
 
   /*
     ---------------------------

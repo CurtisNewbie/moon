@@ -36,7 +36,7 @@ import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
 import { onLangChange, translate } from "src/common/translate";
 import { resolveSize } from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
-import { Option, filterAlike } from "src/common/select-util";
+import { Option } from "src/common/select-util";
 import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
 import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.component";
@@ -64,7 +64,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "uploadTime",
     "size",
     "operation",
-    // "updateTime",
   ];
   readonly DESKTOP_FOLDER_COLUMNS = [
     "name",
@@ -363,7 +362,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         folderNo: this.inFolderNo,
         parentFile: this.searchParam.parentFile,
         fileType: this.searchParam.fileType,
-        sensitve: this.inSensitiveMode
+        sensitive: this.inSensitiveMode
       }
     ).subscribe({
       next: (resp) => {
@@ -596,11 +595,13 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       {
         id: u.id,
         name: u.name,
+        sensitiveMode: u.sensitiveMode,
       },
     ).subscribe({
       complete: () => {
         this.fetchFileInfoList();
         this.curr = null;
+        this.currId = 0;
       },
     });
   }
@@ -1059,5 +1060,10 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     if (row.isDisplayable) {
       this.preview(row);
     }
+  }
+
+  sensitiveModeChecked(event, file) {
+    file.sensitiveMode = event.checked ? 'Y' : 'N';
+    console.log("checked?", file);
   }
 }
