@@ -75,7 +75,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   readonly MOBILE_COLUMNS = ["fileType", "name", "operation"];
   readonly IMAGE_SUFFIX = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
   readonly TXT_SUFFIX = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
-  readonly i18n = translate;
 
   allFileTypeOpts: Option<FileType>[] = [];
 
@@ -369,11 +368,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         this.fileInfoList = [];
         if (resp.data.payload) {
           for (let f of resp.data.payload) {
-            if (f.fileType) {
-              f.fileTypeLabel = translate(f.fileType.toLowerCase());
-            }
             f.isFile = f.fileType == FileType.FILE;
             f.isDir = !f.isFile;
+            f.fileTypeLabel = f.isFile ? "File" : "Directory";
             f.sizeLabel = f.isDir ? "" : resolveSize(f.sizeInBytes);
             f.isDisplayable = this.isDisplayable(f);
             if (f.updateTime) f.updateTime = new Date(f.updateTime);
