@@ -59,6 +59,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   readonly DESKTOP_COLUMNS = [
     "selected",
     "fileType",
+    "thumbnail",
     "name",
     "parentFileName",
     "uploadTime",
@@ -66,13 +67,14 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "operation",
   ];
   readonly DESKTOP_FOLDER_COLUMNS = [
+    "thumbnail",
     "name",
     "uploader",
     "uploadTime",
     "size",
     "operation",
   ];
-  readonly MOBILE_COLUMNS = ["fileType", "name", "operation"];
+  readonly MOBILE_COLUMNS = ["fileType", "thumbnail", "name", "operation"];
   readonly IMAGE_SUFFIX = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
   readonly TXT_SUFFIX = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
 
@@ -376,6 +378,10 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             if (f.updateTime) f.updateTime = new Date(f.updateTime);
             if (f.uploadTime) f.uploadTime = new Date(f.uploadTime);
             this.fileInfoList.push(f);
+
+            if (f.thumbnailToken) {
+              f.thumbnailUrl = environment.fstore + "/file/raw?key=" + encodeURIComponent(f.thumbnailToken);
+            }
           }
         }
 

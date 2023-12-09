@@ -12,6 +12,7 @@ export interface FileInfo {
   fileType: FileType;
   updateTime: Date;
   sensitiveMode: string;
+  thumbnailToken: string;
 
   /*
     ---------------------------
@@ -44,6 +45,8 @@ export interface FileInfo {
   parentFileName?: string;
 
   isDisplayable: boolean;
+
+  thumbnailUrl: string;
 }
 
 export enum FileType {

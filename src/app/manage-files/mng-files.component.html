@@ -172,6 +172,13 @@
                         </span></td>
                 </ng-container>
 
+                <ng-container matColumnDef="thumbnail">
+                    <th mat-header-cell *matHeaderCellDef> <b>Thumbnail</b> </th>
+                    <td mat-cell *matCellDef="let f">
+                        <img style="max-height:50px" [src]="f.thumbnailUrl" />
+                    </td>
+                </ng-container>
+
                 <ng-container matColumnDef="parentFileName">
                     <th mat-header-cell *matHeaderCellDef [matTooltip]="'Name of directory that each file belongs to'">
                         <b>In Directory</b>
