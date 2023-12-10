@@ -15,6 +15,7 @@ import { NavType } from "../routes";
 import { UserService } from "../user.service";
 import { buildApiPath, buildOptions } from "src/common/api-util";
 import { isEnterKey } from "src/common/condition";
+import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 
 @Component({
   selector: "app-folder",
@@ -68,6 +69,42 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
 
   isOwner(f: VFolder): boolean {
     return f.createBy == this.user.username;
+  }
+
+  popToRemoveVFolder(f: VFolder): void {
+    if (!f) return;
+
+    const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
+      this.dialog.open(ConfirmDialogComponent, {
+        width: "700px",
+        data: {
+          title: 'Delete Virtual Folder',
+          msg: [`You sure you want to delete '${f.name}'`],
+          isNoBtnDisplayed: true,
+        },
+      });
+
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (!confirm) {
+        return;
+      }
+      this.removeVFolder(f.folderNo);
+    });
+  }
+
+  removeVFolder(folderNo: string) {
+    this.http
+      .post<Resp<any>>(
+        buildApiPath("/vfolder/remove", environment.vfm),
+        { folderNo: folderNo },
+        buildOptions()
+      ).
+      subscribe({
+        next: (resp) => {
+          this.notification.toast("Virtual Folder Removed");
+          this.fetchFolders();
+        }
+      })
   }
 
   popToGrantAccess(f: VFolder): void {
