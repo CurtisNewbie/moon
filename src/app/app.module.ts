@@ -70,6 +70,7 @@ import { VfolderAddFileComponent } from './vfolder-add-file/vfolder-add-file.com
 import { HostOnGalleryComponent } from './host-on-gallery/host-on-gallery.component';
 import { DirectoryMoveFileComponent } from './directory-move-file/directory-move-file.component';
 import { ManageBookmarksComponent } from './manage-bookmarks/manage-bookmarks.component';
+import { GalleryAccessComponent } from './gallery-access/gallery-access.component';
 
 @NgModule({
   exports: [],
@@ -112,6 +113,7 @@ import { ManageBookmarksComponent } from './manage-bookmarks/manage-bookmarks.co
     HostOnGalleryComponent,
     DirectoryMoveFileComponent,
     ManageBookmarksComponent,
+    GalleryAccessComponent,
   ],
   imports: [
     MatTabsModule,

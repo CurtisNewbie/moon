@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
 import { environment } from "src/environments/environment";
@@ -11,6 +11,7 @@ import { NotificationService } from "../notification.service";
 import { NavType } from "../routes";
 import { HClient } from "src/common/api-util";
 import { isMobile } from "src/common/env-util";
+import { GalleryAccessComponent, GrantGalleryAccessDialogData } from "../gallery-access/gallery-access.component";
 
 @Component({
   selector: "app-gallery",
@@ -151,6 +152,20 @@ export class GalleryComponent implements OnInit {
         this.expandedElement = null;
         this.fetchGalleries();
       }
+    });
+  }
+
+  popToGrantAccess(g: Gallery): void {
+    if (!g) return;
+
+    const dialogRef: MatDialogRef<GalleryAccessComponent, boolean> =
+      this.dialog.open(GalleryAccessComponent, {
+        width: "700px",
+        data: { galleryNo: g.galleryNo, name: g.name },
+      });
+
+    dialogRef.afterClosed().subscribe((confirm) => {
+      // do nothing
     });
   }
 }

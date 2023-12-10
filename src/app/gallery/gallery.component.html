@@ -66,20 +66,20 @@
                         </div>
                         <ng-container *ngIf="u.isOwner">
                             <div class="col-12 m-2">
-                                <button mat-raised-button (click)="updateGallery(u.galleryNo, expandedElement.name)">
+                                <button mat-raised-button (click)="updateGallery(u.galleryNo, u.name)">
                                     Update
                                 </button>
                             </div>
                             <div class="col-12 m-2">
-                                <button mat-raised-button (click)="deleteGallery(u.galleryNo, expandedElement.name)">
+                                <button mat-raised-button (click)="deleteGallery(u.galleryNo, u.name)">
                                     Delete
                                 </button>
                             </div>
-                            <!-- <div class="col-12 m-2">
-                                <button mat-raised-button (click)="shareGallery(u)">
+                            <div class="col-12 m-2">
+                                <button mat-raised-button (click)="popToGrantAccess(u)">
                                     Share
                                 </button>
-                            </div> -->
+                            </div>
                         </ng-container>
                         <div class="col-12 m-2">
                             <button mat-raised-button (click)="browse(expandedElement.galleryNo)">
