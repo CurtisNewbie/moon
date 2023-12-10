@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { NotificationService } from '../notification.service';
+import { ConfirmDialog } from 'src/common/dialog';
 
 @Component({
   selector: 'app-manage-bookmarks',
@@ -32,7 +33,9 @@ export class ManageBookmarksComponent implements OnInit {
   constructor(private hclient: HClient,
     private userService: UserService,
     private http: HttpClient,
-    private toaster: NotificationService) { }
+    private toaster: NotificationService,
+    private confirmDialog: ConfirmDialog,
+  ) { }
 
   ngOnInit(): void {
     this.userService.fetchUserResources();
@@ -78,6 +81,12 @@ export class ManageBookmarksComponent implements OnInit {
       return;
     }
     this.file = files[0];
+  }
+
+  popToRemove(id, name) {
+    this.confirmDialog.show("Remove Bookmark", [`Removing Bookmark ${name}`], () => {
+      this.remove(id);
+    });
   }
 
   remove(id) {
