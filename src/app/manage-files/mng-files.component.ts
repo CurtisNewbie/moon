@@ -728,12 +728,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     let selected = this.fileInfoList
       .filter((f) => f._selected)
-      .filter(f => {
-        if (!f.isFile) {
-          f._selected = false;
-        }
-        return f.isFile;
-      })
       .map((f, i) => {
         return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
       });
