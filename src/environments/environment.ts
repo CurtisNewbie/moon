@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  fantahsea: "fantahsea",
+  fantahsea: "vfm",
   vfm: "vfm",
   authService: "user-vault",
   goauth: "goauth",

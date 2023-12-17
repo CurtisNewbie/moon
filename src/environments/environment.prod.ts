@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  fantahsea: "fantahsea",
+  fantahsea: "vfm",
   vfm: "vfm",
   authService: "user-vault",
   goauth: "goauth",
