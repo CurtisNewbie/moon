@@ -374,7 +374,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             f.isFile = f.fileType == FileType.FILE;
             f.isDir = !f.isFile;
             f.fileTypeLabel = f.isFile ? "File" : "Directory";
-            f.sizeLabel = f.isDir ? "" : resolveSize(f.sizeInBytes);
+            f.sizeLabel = resolveSize(f.sizeInBytes);
             f.isDisplayable = this.isDisplayable(f);
             if (f.updateTime) f.updateTime = new Date(f.updateTime);
             if (f.uploadTime) f.uploadTime = new Date(f.uploadTime);
