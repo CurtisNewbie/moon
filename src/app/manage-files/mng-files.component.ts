@@ -75,6 +75,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     "operation",
   ];
   readonly MOBILE_COLUMNS = ["fileType", "thumbnail", "name", "operation"];
+  readonly VIDEO_SUFFIX = new Set(["mp4", "mov", "webm", "ogg"]);
   readonly IMAGE_SUFFIX = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
   readonly TXT_SUFFIX = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
 
@@ -830,7 +831,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _isStreamableVideo(filename: string): boolean {
-    return filename.toLowerCase().indexOf(".mp4") != -1;
+    return this._fileSuffixAnyMatch(filename, this.VIDEO_SUFFIX);
   }
 
   private _isImageByName(filename: string): boolean {
