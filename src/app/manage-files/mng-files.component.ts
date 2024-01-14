@@ -179,8 +179,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   uploadIndex = -1;
   /** subscription of current uploading */
   uploadSub: Subscription = null;
-  /** Ignore upload on duplicate name found*/
-  ignoreOnDupName: boolean = true;
 
   /*
   ----------------------------------
@@ -415,7 +413,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.uploadParam.tags = this.selectedTags ? this.selectedTags : [];
-    this.uploadParam.ignoreOnDupName = this.ignoreOnDupName;
 
     if (isSingleUpload) {
       // only need to upload a single file
@@ -901,7 +898,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       fileName: next.name,
       files: [next],
       tags: this.uploadParam.tags,
-      ignoreOnDupName: this.uploadParam.ignoreOnDupName
     };
   }
 
@@ -989,28 +985,29 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       });
     }
 
-    if (!uploadParam.ignoreOnDupName) {
-      uploadFileCallback();
-    } else {
-      let pf = uploadParam.parentFile ? encodeURIComponent(uploadParam.parentFile) : ""
+    uploadFileCallback();
 
-      // preflight check whether the filename exists already
-      this.hclient.get<boolean>(environment.vfm,
-        `/file/upload/duplication/preflight?fileName=${encodeURIComponent(name)}&parentFileKey=${pf}`)
-        .subscribe({
-          next: (resp) => {
-            let isDuplicate = resp.data;
-            if (!isDuplicate) {
-              uploadFileCallback();
-            } else {
-              this._updateUploadProgress(uploadParam.fileName, 100, 100);
+    // if (!uploadParam.ignoreOnDupName) {
+    // } else {
+    //   let pf = uploadParam.parentFile ? encodeURIComponent(uploadParam.parentFile) : ""
 
-              // skip this file, it exists already
-              onComplete();
-            }
-          }
-        })
-    }
+    //   // preflight check whether the filename exists already
+    //   this.hclient.get<boolean>(environment.vfm,
+    //     `/file/upload/duplication/preflight?fileName=${encodeURIComponent(name)}&parentFileKey=${pf}`)
+    //     .subscribe({
+    //       next: (resp) => {
+    //         let isDuplicate = resp.data;
+    //         if (!isDuplicate) {
+    //           uploadFileCallback();
+    //         } else {
+    //           this._updateUploadProgress(uploadParam.fileName, 100, 100);
+
+    //           // skip this file, it exists already
+    //           onComplete();
+    //         }
+    //       }
+    //     })
+    // }
   }
 
   private _isSingleUpload() {
