@@ -1,6 +1,5 @@
 import { Paging } from "./paging";
 import { Option } from "./select-util";
-import { translate } from "./translate";
 
 export interface FileInfo {
   id: number;
@@ -56,21 +55,12 @@ export enum FileType {
   DIR = "DIR"
 }
 
-const fileTypeTransMap: Map<FileType, string> = new Map<FileType, string>()
-  .set(FileType.FILE, "File")
-  .set(FileType.DIR, "Directory");
-
-/** Translate FileType */
-export function transFileType(ft: FileType): string {
-  return fileTypeTransMap.get(ft);
-}
-
 export function getFileTypeOpts(includesAll: boolean = true): Option<FileType>[] {
   let l = [];
-  if (includesAll) l.push({ name: translate("all"), value: null });
+  if (includesAll) l.push({ name: "All", value: null });
 
-  l.push({ name: translate("file"), value: FileType.FILE });
-  l.push({ name: translate("dir"), value: FileType.DIR });
+  l.push({ name: "File", value: FileType.FILE });
+  l.push({ name: "Directory", value: FileType.DIR });
   return l;
 }
 

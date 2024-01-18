@@ -6,7 +6,6 @@ import { NotificationService } from '../notification.service';
 import { filterAlike } from 'src/common/select-util';
 import { GalleryBrief } from 'src/common/gallery';
 import { environment } from 'src/environments/environment';
-import { translate } from 'src/common/translate';
 
 type GlFile = {
   fileKey: string
@@ -79,7 +78,7 @@ export class HostOnGalleryComponent implements OnInit {
   private extractToGalleryNo(): string {
     const gname = this.addToGalleryName;
     if (!gname) {
-      this.notifi.toast(translate('msg:select:gallery'));
+      this.notifi.toast("Please select gallery");
       return;
     }
 

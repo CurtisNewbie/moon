@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { environment } from "src/environments/environment";
-import { ListTagsForFileResp, Tag } from "src/common/file-info";
+import { Tag } from "src/common/file-info";
 import { PagingController } from "src/common/paging";
-import { translate } from "src/common/translate";
 import { NotificationService } from "../notification.service";
 import { HClient } from "src/common/api-util";
 
@@ -20,7 +19,6 @@ export interface ManageTagDialogData {
 })
 export class ManageTagDialogComponent implements OnInit {
 
-  readonly i18n = translate;
   readonly COLUMN_TO_BE_DISPLAYED: string[] = [
     "id",
     "tagName",

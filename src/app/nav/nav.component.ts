@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { getLLang, LLang, onLangChange, setLLang, translate } from "src/common/translate";
 import { UserInfo } from "src/common/user-info";
 import { UserService } from "../user.service";
 import { copyToClipboard } from "src/common/clipboard";
@@ -11,19 +10,11 @@ import { copyToClipboard } from "src/common/clipboard";
 })
 export class NavComponent implements OnInit, OnDestroy {
   userInfo: UserInfo = null;
-  lang: LLang = getLLang();
-  i18n = translate;
-  onLangChangeSub = onLangChange.subscribe({
-    next: (e) => {
-      this.lang = e.lang;
-    }
-  });
   copyToClipboard = copyToClipboard;
 
   constructor(private userService: UserService) { }
 
   ngOnDestroy(): void {
-    this.onLangChangeSub.unsubscribe();
   }
 
   hasRes(code) { return this.userService.hasResource(code); }
@@ -40,7 +31,8 @@ export class NavComponent implements OnInit, OnDestroy {
       next: (user) => {
         this.userInfo = user;
         if (user) this.userService.fetchUserResources();
-      }});
+      }
+    });
     this.userService.isLoggedInObservable.subscribe({
       next: (isLoggedIn) => {
         if (!isLoggedIn) this.userInfo = null;
@@ -52,10 +44,5 @@ export class NavComponent implements OnInit, OnDestroy {
   /** log out current user and navigate back to login page */
   logout(): void {
     this.userService.logout();
-  }
-
-  changeLang() {
-    this.lang = this.lang == LLang.EN ? LLang.CN : LLang.EN;
-    setLLang(this.lang);
   }
 }

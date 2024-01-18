@@ -11,7 +11,6 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Observable, Subscription } from "rxjs";
 
 import {
-  DirBrief,
   emptyUploadFileParam,
   FileInfo,
   FileType,
@@ -33,7 +32,6 @@ import { environment } from "src/environments/environment";
 import { ActivatedRoute } from "@angular/router";
 import { Resp } from "src/common/resp";
 import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
-import { onLangChange, translate } from "src/common/translate";
 import { resolveSize } from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
 import { Option } from "src/common/select-util";
@@ -192,10 +190,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   refreshLabel = () => {
     this.allFileTypeOpts = getFileTypeOpts(true);
   };
-  onLangChangeSub = onLangChange.subscribe((evt) => {
-    this.refreshLabel();
-    this.fetchFileInfoList();
-  });
 
   @ViewChild("uploadFileInput")
   uploadFileInput: ElementRef;
@@ -220,7 +214,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   ngOnDestroy(): void {
-    this.onLangChangeSub.unsubscribe();
   }
 
   ngOnInit() {
@@ -397,12 +390,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   /** Upload file */
   upload(): void {
     if (this.isUploading) {
-      this.notifi.toast(translate('msg:file:uploading'));
+      this.notifi.toast( "Uploading, please wait for a moment");
       return;
     }
 
     if (this.uploadParam.files.length < 1) {
-      this.notifi.toast(translate('msg:file:upload:required'));
+      this.notifi.toast( "Please select a file to upload");
       return;
     }
 
@@ -410,7 +403,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     // single file upload name is required
     if (!this.displayedUploadName && isSingleUpload) {
-      this.notifi.toast(translate('msg:file:name:required'));
+      this.notifi.toast("Please enter filename");
       return;
     }
 
