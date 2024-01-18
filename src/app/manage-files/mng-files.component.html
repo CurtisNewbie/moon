@@ -40,7 +40,7 @@
                 </button>
             </div>
             <div class="col">
-                <section *ngIf="this.uploadParam.files && this.uploadParam.files.length > 0">
+                <section *ngIf="this.uploadParam.files">
                     <mat-checkbox class="m-1" [disabled]="isUploading" [(ngModel)]="ignoreOnDupName">
                         Skip Uploaded Files (By Name)
                     </mat-checkbox>
