@@ -5,7 +5,7 @@
         <button mat-menu-item [matMenuTriggerFor]="admin" *ngIf="hasAnyRes('manage-users', 'manage-resources', 'operate-logs', 'manage-logbot')">Admin</button>
         <button mat-menu-item [matMenuTriggerFor]="user">User</button>
         <button mat-menu-item [matMenuTriggerFor]="file" *ngIf="hasRes('manage-files')">File & Gallery</button>
-        <button mat-menu-item [matMenuTriggerFor]="task" *ngIf="hasRes('manage-tasks')">Task</button>
+        <!-- <button mat-menu-item [matMenuTriggerFor]="task" *ngIf="hasRes('manage-tasks')">Task</button> -->
         <button mat-menu-item [matMenuTriggerFor]="doc" *ngIf="hasRes('manage-bookmarks')">Documents</button>
     </mat-menu>
 
@@ -35,10 +35,11 @@
         <button mat-menu-item routerLink="/manage-bookmarks" routerLinkActive="active">Bookmarks</button>
     </mat-menu>
 
+    <!-- 
     <mat-menu #task="matMenu">
         <button mat-menu-item routerLink="/manage-task" routerLinkActive="active">Manage Tasks</button>
         <button mat-menu-item routerLink="/task-history" routerLinkActive="active">Task History</button>
-    </mat-menu>
+    </mat-menu> -->
 
     <button mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>
     <mat-menu #userMenu="matMenu" class="m-2">
