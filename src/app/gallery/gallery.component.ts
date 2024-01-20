@@ -26,6 +26,7 @@ export class GalleryComponent implements OnInit {
     "name",
     "userNo",
     "createTime",
+    "updateTime",
     "createBy",
   ];
   readonly MOBILE_COLUMNS = ["galleryNo", "name", "userNo"];
