@@ -500,21 +500,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       msgs.push(s.name);
     }
 
-    const doDelete = (i) => {
-      if (i >= selected.length) {
-        this.fetchFileInfoList()
-        return;
-      }
-
-      this.hclient.post<any>(
-        environment.vfm, "/file/delete",
-        { uuid: selected[i].fileKey },
-      ).subscribe((resp) => {
-        console.log("deleted", selected[i].name);
-        doDelete(i + 1);
-      });
-    };
-
     this.dialog.open(ConfirmDialogComponent, {
       width: "500px",
       data: {
@@ -527,7 +512,18 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       if (!confirm) {
         return;
       }
-      doDelete(0);
+      let fks = [];
+      for (let f of selected) {
+        fks.push(f.fileKey);
+      }
+
+      this.hclient.post<any>(
+        environment.vfm, "/file/delete/batch",
+        { fileKeys: fks },
+      ).subscribe((resp) => {
+        this.fetchFileInfoList();
+        console.log("deleted", fks);
+      });
     });
   }
 
