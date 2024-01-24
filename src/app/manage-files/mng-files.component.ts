@@ -390,12 +390,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   /** Upload file */
   upload(): void {
     if (this.isUploading) {
-      this.notifi.toast( "Uploading, please wait for a moment");
+      this.notifi.toast("Uploading, please wait for a moment");
       return;
     }
 
     if (this.uploadParam.files.length < 1) {
-      this.notifi.toast( "Please select a file to upload");
+      this.notifi.toast("Please select a file to upload");
       return;
     }
 
@@ -1056,5 +1056,22 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   sensitiveModeChecked(event, file) {
     file.sensitiveMode = event.checked ? 'Y' : 'N';
     console.log("checked?", file);
+  }
+
+  canUnpack(fi: FileInfo): boolean {
+    return fi.name && fi.name.toLowerCase().endsWith('.zip');
+  }
+
+  unpack(fi: FileInfo) {
+    this.hclient.post(environment.vfm, "/file/unpack", {
+      fileKey: fi.uuid,
+      parentFileKey: this.inDirFileKey,
+    }).subscribe({
+      next: () => {
+        this.fetchFileInfoList();
+        this.notifi.toast(`Unpacking ${fi.name}, please be patient.`);
+      }
+    })
+    return false
   }
 }

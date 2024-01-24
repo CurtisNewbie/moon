@@ -265,6 +265,10 @@
                                             <div class="col">
                                                 <button mat-raised-button (click)="popToManageTag(curr)">Tags</button>
                                             </div>
+
+                                            <div class="col" *ngIf="canUnpack(curr)">
+                                                <button mat-raised-button (click)="unpack(curr)">Unpack</button>
+                                            </div>
                                         </ng-container>
                                     </div>
                                 </div>
