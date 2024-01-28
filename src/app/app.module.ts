@@ -71,6 +71,7 @@ import { HostOnGalleryComponent } from './host-on-gallery/host-on-gallery.compon
 import { DirectoryMoveFileComponent } from './directory-move-file/directory-move-file.component';
 import { ManageBookmarksComponent } from './manage-bookmarks/manage-bookmarks.component';
 import { GalleryAccessComponent } from './gallery-access/gallery-access.component';
+import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share-file-qrcode-dialog.component';
 
 @NgModule({
   exports: [],
@@ -114,6 +115,7 @@ import { GalleryAccessComponent } from './gallery-access/gallery-access.componen
     DirectoryMoveFileComponent,
     ManageBookmarksComponent,
     GalleryAccessComponent,
+    ShareFileQrcodeDialogComponent,
   ],
   imports: [
     MatTabsModule,

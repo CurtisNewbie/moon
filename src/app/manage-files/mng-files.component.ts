@@ -40,6 +40,7 @@ import { NavType } from "../routes";
 import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.component";
 import { HostOnGalleryComponent } from "../host-on-gallery/host-on-gallery.component";
 import { DirectoryMoveFileComponent } from "../directory-move-file/directory-move-file.component";
+import { ShareFileQrcodeDialogComponent } from "../share-file-qrcode-dialog/share-file-qrcode-dialog.component";
 
 export enum TokenType {
   DOWNLOAD = "DOWNLOAD",
@@ -653,26 +654,20 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       });
   }
 
-  /**
-   * Generate temporary token for downloading
-   */
-  generateTempToken(u: FileInfo): void {
-    if (!u) return;
+  generateTempTokenQrCode(fi: FileInfo): void {
+    if (!fi) return;
 
-    this.generateFileTempToken(u.uuid).subscribe({
+    this.generateFileTempToken(fi.uuid).subscribe({
       next: (resp) => {
-        const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
-          this.dialog.open(ConfirmDialogComponent, {
-            width: "700px",
+        const dialogRef: MatDialogRef<ShareFileQrcodeDialogComponent, boolean> =
+          this.dialog.open(ShareFileQrcodeDialogComponent, {
             data: {
-              title: 'Share File',
+              title: 'Share File By QRCode',
               msg: [
-                'Link to download this file:',
-                this._concatTempFileDownloadUrl(
-                  resp.data
-                )
+                'Scan QRCode to download the file',
               ],
-              isNoBtnDisplayed: false,
+              img: window.location.protocol + "//" + window.location.host + "/" + environment.vfm
+                + "/open/api/file/token/qrcode?token=" + encodeURIComponent(resp.data)
             },
           });
 
@@ -1070,4 +1065,35 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     })
     return false
   }
+
+  /**
+   * Generate temporary token for downloading
+   */
+  generateTempToken(u: FileInfo): void {
+    if (!u) return;
+
+    this.generateFileTempToken(u.uuid).subscribe({
+      next: (resp) => {
+        const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
+          this.dialog.open(ConfirmDialogComponent, {
+            width: "700px",
+            data: {
+              title: 'Share File',
+              msg: [
+                'Link to download this file:',
+                this._concatTempFileDownloadUrl(
+                  resp.data
+                )
+              ],
+              isNoBtnDisplayed: false,
+            },
+          });
+
+        dialogRef.afterClosed().subscribe((confirm) => {
+          // do nothing
+        });
+      },
+    });
+  }
 }
+
