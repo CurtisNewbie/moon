@@ -1,6 +1,6 @@
-# bolobao (Pineapple Bun)
+# Moon 
 
-Bolobao, angular frontend project for my personal website (hosted on private network).
+Angular frontend project for a privately hosted website.
 
 ## Dependencies
 
@@ -35,14 +35,4 @@ ngx-lightbox2 is used in this project. When image rotate, the background may be 
 - Since v0.0.5, [auth-service](https://github.com/CurtisNewbie/auth-service) has been replaced by [user-vault](https://github.com/curtisnewbie/user-vault).
 - Since v0.0.8, [fantahsea](https://github.com/curtisnewbie/fantahsea) has been replaced by [vfm](https://github.com/curtisnewbie/vfm).
 - Since v0.0.12, [dtask-go](https://github.com/curtisnewbie/dtask-go) is removed.
-
-## About This Repo
-
-Previously [file-service-front](https://github.com/CurtisNewbie/file-service-front) and [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
-
-This project attempts to merge the following two frontend projects together, making it easier (for me) to develop and maintain :D
-
-- [file-service-front](https://github.com/CurtisNewbie/file-service-front)
-- [auth-service-front](https://github.com/CurtisNewbie/auth-service-front).
-
-This git history of these two projects are being replayed in this repository using git patch.
+- Since v0.0.13, this project is renamed to moon.

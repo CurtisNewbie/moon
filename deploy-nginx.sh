@@ -6,7 +6,7 @@ remote="alphaboi@curtisnewbie.com"
 remote_path="/home/alphaboi/services/nginx/html/bolobao/"
 
 NODE_OPTIONS=--openssl-legacy-provider ng build --prod;
-scp -r ./dist/bolobao/* "${remote}:${remote_path}"
+scp -r ./dist/moon/* "${remote}:${remote_path}"
 
 
 
