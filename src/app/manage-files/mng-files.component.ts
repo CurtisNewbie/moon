@@ -55,28 +55,29 @@ export enum TokenType {
 })
 export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
-  readonly DESKTOP_COLUMNS = [
-    "selected",
-    "fileType",
-    "thumbnail",
-    "name",
-    "parentFileName",
-    "uploadTime",
-    "size",
-    "operation",
-  ];
-  readonly DESKTOP_FOLDER_COLUMNS = [
-    "thumbnail",
-    "name",
-    "uploader",
-    "uploadTime",
-    "size",
-    "operation",
-  ];
-  readonly MOBILE_COLUMNS = ["fileType", "thumbnail", "name", "operation"];
-  readonly VIDEO_SUFFIX = new Set(["mp4", "mov", "webm", "ogg"]);
-  readonly IMAGE_SUFFIX = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
-  readonly TXT_SUFFIX = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
+  readonly desktopColumns = ["selected", "thumbnail", "name", "parentFileName", "uploadTime", "size", "operation"];
+  readonly desktopFolderColumns = ["thumbnail", "name", "uploader", "uploadTime", "size", "operation"];
+  readonly mobileColumns = ["fileType", "thumbnail", "name", "operation"];
+  readonly videoSuffix = new Set(["mp4", "mov", "webm", "ogg"]);
+  readonly imageSuffix = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
+  readonly textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
+  readonly suffixIcon = new Map<string, string>()
+    .set("pdf", "./assets/pdf.png")
+    .set("zip", "./assets/zip.png")
+    .set("txt", "./assets/text.png")
+    .set("7z", "./assets/zip.png")
+    .set("csv", "./assets/csv.png")
+    .set("dmg", "./assets/dmg.png")
+    .set("doc", "./assets/doc.png")
+    .set("docx", "./assets/docx.png")
+    .set("exe", "./assets/exe.png")
+    .set("iso", "./assets/iso.png")
+    .set("xls", "./assets/xls.png")
+    .set("jar", "./assets/jar.png")
+    .set("ppt", "./assets/ppt.png")
+    .set("pptx", "./assets/pptx.png")
+    .set("xlsx", "./assets/xlsx.png")
+    ;
 
   allFileTypeOpts: Option<FileType>[] = [];
 
@@ -611,7 +612,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   _isTxt(fname: string): boolean {
-    return this._fileSuffixAnyMatch(fname, this.TXT_SUFFIX);
+    return this._fileSuffixAnyMatch(fname, this.textSuffix);
   }
 
   /** Display the file */
@@ -815,11 +816,11 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _isStreamableVideo(filename: string): boolean {
-    return this._fileSuffixAnyMatch(filename, this.VIDEO_SUFFIX);
+    return this._fileSuffixAnyMatch(filename, this.videoSuffix);
   }
 
   private _isImageByName(filename: string): boolean {
-    return this._fileSuffixAnyMatch(filename, this.IMAGE_SUFFIX);
+    return this._fileSuffixAnyMatch(filename, this.imageSuffix);
   }
 
   private _fileSuffixAnyMatch(name: string, candidates: Set<string>): boolean {
@@ -1007,8 +1008,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _selectColumns() {
-    if (isMobile()) return this.MOBILE_COLUMNS;
-    return this.inFolderNo ? this.DESKTOP_FOLDER_COLUMNS : this.DESKTOP_COLUMNS;
+    if (isMobile()) return this.mobileColumns;
+    return this.inFolderNo ? this.desktopFolderColumns : this.desktopColumns;
   }
 
   /**
@@ -1096,5 +1097,28 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       },
     });
   }
+
+  suffix(name: string): string {
+    let i = name.lastIndexOf(".");
+    if (i < 0 || i == name.length - 1) return "";
+
+    let suffix = name.slice(i + 1);
+    return suffix.toLowerCase();
+  }
+
+  guessFileThumbnail(f: FileInfo): string {
+    if (f.isDir) {
+      return "./assets/dir.png"
+    }
+    if (f.thumbnailUrl) {
+      return f.thumbnailUrl
+    }
+    let suffix = this.suffix(f.name);
+    if (this.suffixIcon.has(suffix)) {
+      return this.suffixIcon.get(suffix);
+    }
+    return "./assets/file.png"
+  }
+
 }
 
