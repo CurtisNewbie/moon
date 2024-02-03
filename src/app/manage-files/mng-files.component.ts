@@ -1063,6 +1063,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       next: () => {
         this.fetchFileInfoList();
         this.notifi.toast(`Unpacking ${fi.name}, please be patient.`);
+        this.currId = -1
       }
     })
     return false
