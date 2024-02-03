@@ -864,6 +864,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.pagingController.firstPage();
+    this.expandUploadPanel = false;
   }
 
   private _prepNextUpload(): UploadFileParam {
