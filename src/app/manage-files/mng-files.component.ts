@@ -61,23 +61,15 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   readonly videoSuffix = new Set(["mp4", "mov", "webm", "ogg"]);
   readonly imageSuffix = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
   readonly textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
-  readonly suffixIcon = new Map<string, string>()
-    .set("pdf", "./assets/pdf.png")
-    .set("zip", "./assets/zip.png")
-    .set("txt", "./assets/text.png")
-    .set("7z", "./assets/zip.png")
-    .set("csv", "./assets/csv.png")
-    .set("dmg", "./assets/dmg.png")
-    .set("doc", "./assets/doc.png")
-    .set("docx", "./assets/docx.png")
-    .set("exe", "./assets/exe.png")
-    .set("iso", "./assets/iso.png")
-    .set("xls", "./assets/xls.png")
-    .set("jar", "./assets/jar.png")
-    .set("ppt", "./assets/ppt.png")
-    .set("pptx", "./assets/pptx.png")
-    .set("xlsx", "./assets/xlsx.png")
-    ;
+  readonly suffixIcon: [Set<string>, string][] = [
+    [new Set(["pdf"]), "./assets/pdf.png"],
+    [new Set(["zip", "7z"]), "./assets/zip.png"],
+    [new Set(["txt", "conf", "yml", "yaml", "properties", "json", "list", "doc", "docx"]), "./assets/text.png"],
+    [new Set(["go", "java", "js", "ts", "html", "css"]), "./assets/code.png"],
+    [new Set(["csv", "xls", "xlsx"]), "./assets/spreadsheet.png"],
+    [new Set(["iso"]), "./assets/binary.png"],
+    [new Set(["dmg", "exe", "jar"]), "./assets/install.png"],
+  ];
 
   allFileTypeOpts: Option<FileType>[] = [];
 
@@ -125,9 +117,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-
+  
   Virtual Folders
-
+  
   -----------------------
   */
 
@@ -138,9 +130,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-
+  
   Directory
-
+  
   -----------------------
   */
 
@@ -158,9 +150,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-
+  
   Uploading
-
+  
   -----------------------
   */
   /** whther the upload panel is expanded */
@@ -184,9 +176,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   ----------------------------------
-
+  
   Labels
-
+  
   ----------------------------------
   */
   refreshLabel = () => {
@@ -1109,14 +1101,19 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   guessFileThumbnail(f: FileInfo): string {
     if (f.isDir) {
-      return "./assets/dir.png"
+      return "./assets/box.png"
     }
     if (f.thumbnailUrl) {
       return f.thumbnailUrl
     }
     let suffix = this.suffix(f.name);
-    if (this.suffixIcon.has(suffix)) {
-      return this.suffixIcon.get(suffix);
+    if (!suffix) {
+      return "./assets/file.png"
+    }
+    for (let u of this.suffixIcon) {
+      if (u[0].has(suffix)) {
+        return u[1]
+      }
     }
     return "./assets/file.png"
   }

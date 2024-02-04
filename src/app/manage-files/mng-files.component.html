@@ -62,7 +62,8 @@
         </div>
         <div *ngIf="inDirFileName" class="m-2">
             <mat-card>
-                <h5><img style="max-height:30px; padding: 0px 5px 5px 5px;" src="../assets/dir.png" /> /{{inDirFileName}}</h5>
+                <h5><img style="max-height:30px; padding: 0px 5px 5px 5px;" src="../assets/unbox.png" />
+                    /{{inDirFileName}}</h5>
             </mat-card>
         </div>
 
@@ -175,9 +176,10 @@
                 <ng-container matColumnDef="thumbnail">
                     <th mat-header-cell *matHeaderCellDef> <b>Preview</b> </th>
                     <td mat-cell *matCellDef="let f">
-                        <img style="max-height:50px; padding: 0px 0px 0px 10px;" *ngIf="f.thumbnailUrl"
+                        <img style="max-height:50px; padding: 5px 0px 5px 0px;" *ngIf="f.thumbnailUrl"
                             [src]="f.thumbnailUrl" />
-                        <img style="max-height:50px" *ngIf="!f.thumbnailUrl" [src]="guessFileThumbnail(f)" />
+                        <img style="max-height:40px; padding: 5px 0px 5px 0px;" *ngIf="!f.thumbnailUrl"
+                            [src]="guessFileThumbnail(f)" />
                     </td>
                 </ng-container>
 
@@ -224,10 +226,12 @@
                     <th mat-header-cell *matHeaderCellDef> <b>Operation</b> </th>
                     <td mat-cell *matCellDef="let f">
                         <button *ngIf="!inFolderNo" class="small-btn m-2" mat-raised-button
-                            (click)="$event.stopPropagation() || selectExpanded(f)"><img style="max-height:20px;" src="../assets/edit.png"/></button>
+                            (click)="$event.stopPropagation() || selectExpanded(f)"><img style="max-height:20px;"
+                                src="../assets/edit.png" /></button>
                         <ng-container *ngIf="f.isFile">
                             <button class="small-btn m-2" mat-raised-button
-                                (click)="$event.stopPropagation() || jumpToDownloadUrl(f.uuid)"><img style="max-height:20px;" src="../assets/download.png"/></button>
+                                (click)="$event.stopPropagation() || jumpToDownloadUrl(f.uuid)"><img
+                                    style="max-height:20px;" src="../assets/download.png" /></button>
                         </ng-container>
                     </td>
                 </ng-container>
