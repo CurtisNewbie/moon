@@ -136,6 +136,7 @@
                 <button mat-raised-button class="m-2" (click)="deleteSelected()"> Delete </button>
                 <button mat-raised-button class="m-2" (click)="moveSelectedToDir(true)">Move To
                     Directory</button>
+                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out Of Directory</button>
             </ng-container>
 
 
