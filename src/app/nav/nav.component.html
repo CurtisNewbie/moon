@@ -49,6 +49,6 @@
     </mat-menu>
 
     <button class="smlbtn" mat-button (click)="logout()">logout</button>
-    <button class="smlbtn" mat-button routerLink="/notifications" routerLinkActive="active" [matBadge]="unreadCount"
+    <button class="smlbtn" mat-button routerLink="/notifications" routerLinkActive="active" [matBadge]="unreadCount > 0 ? unreadCount : ''"
         matBadgeColor="warn" matBadgeOverlap="true" matBadgeSize="small">notifications</button>
 </ng-container>

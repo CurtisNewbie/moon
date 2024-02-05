@@ -44,8 +44,12 @@ export class PagingController {
   }
 
   /** go to first page */
-  public firstPage() {
+  public firstPage(): boolean {
+    if (this.atFirstPage()) {
+      return false;
+    }
     this.paginator.firstPage();
+    return true;
   }
 
   /** is at first page */

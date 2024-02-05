@@ -73,10 +73,12 @@ export class ListNotificationComponent implements OnInit {
   }
 
   reset() {
-    this.pagingController.firstPage();
     this.query = {
       onlyInitMessage: true,
     };
+    if (!this.pagingController.firstPage()) {
+      this.fetchList();
+    }
   }
 
   onPagingControllerReady(pc) {
