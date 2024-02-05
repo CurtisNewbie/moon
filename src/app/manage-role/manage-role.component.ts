@@ -4,7 +4,7 @@ import { animateElementExpanding } from 'src/animate/animate-util';
 import { environment } from 'src/environments/environment';
 import { PagingController } from 'src/common/paging';
 import { MngRoleDialogComponent } from '../mng-role-dialog/mng-role-dialog.component';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { UserService } from '../user.service';
 import { HClient } from 'src/common/api-util';
 import { isEnterKey } from 'src/common/condition';
@@ -41,7 +41,7 @@ export class ManageRoleComponent implements OnInit {
     private hclient: HClient,
     private userService: UserService,
     private dialog: MatDialog,
-    private toaster: NotificationService
+    private toaster: Toaster
   ) { }
 
   reset() {

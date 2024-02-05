@@ -20,7 +20,7 @@ import {
 } from "src/common/file-info";
 import { PagingController } from "src/common/paging";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { UserService } from "../user.service";
 import { animateElementExpanding, isIdEqual } from "../../animate/animate-util";
 import { HClient } from "src/common/api-util";
@@ -193,7 +193,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   constructor(
     private userService: UserService,
-    private notifi: NotificationService,
+    private toaster: Toaster,
     private dialog: MatDialog,
     private fileService: FileInfoService,
     private nav: NavigationService,
@@ -249,7 +249,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   mkdir() {
     const dirName = this.newDirName;
     if (!dirName) {
-      this.notifi.toast("Please enter new directory name")
+      this.toaster.toast("Please enter new directory name")
       return;
     }
 
@@ -283,7 +283,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   moveSelectedToDir(into: boolean = true) {
     const selected = this.filterSelected();
     if (!selected || selected.length < 1) {
-      this.notifi.toast("Please select files first");
+      this.toaster.toast("Please select files first");
       return;
     }
 
@@ -384,12 +384,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   /** Upload file */
   upload(): void {
     if (this.isUploading) {
-      this.notifi.toast("Uploading, please wait for a moment");
+      this.toaster.toast("Uploading, please wait for a moment");
       return;
     }
 
     if (this.uploadParam.files.length < 1) {
-      this.notifi.toast("Please select a file to upload");
+      this.toaster.toast("Please select a file to upload");
       return;
     }
 
@@ -397,7 +397,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     // single file upload name is required
     if (!this.displayedUploadName && isSingleUpload) {
-      this.notifi.toast("Please enter filename");
+      this.toaster.toast("Please enter filename");
       return;
     }
 
@@ -485,7 +485,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       });
 
     if (!selected || selected.length < 1) {
-      this.notifi.toast("Select files first (not including directory).")
+      this.toaster.toast("Select files first (not including directory).")
       return;
     }
 
@@ -570,7 +570,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     this.isUploading = false;
     this._resetFileUploadParam();
-    this.notifi.toast("File uploading cancelled");
+    this.toaster.toast("File uploading cancelled");
   }
 
   /** Update file's info */
@@ -700,7 +700,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   addToVirtualFolder() {
     if (!this.fileInfoList) {
-      this.notifi.toast("Please select files first");
+      this.toaster.toast("Please select files first");
       return;
     }
 
@@ -711,7 +711,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       });
 
     if (!selected || selected.length < 1) {
-      this.notifi.toast("Please select files first");
+      this.toaster.toast("Please select files first");
       return;
     }
 
@@ -736,7 +736,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       });
 
     if (!selected || selected.length < 1) {
-      this.notifi.toast("Please select images or directory first")
+      this.toaster.toast("Please select images or directory first")
       return;
     }
 
@@ -927,7 +927,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     const abortUpload = () => {
       this.progress = null;
       this.isUploading = false;
-      this.notifi.toast(`Failed to upload file ${name} `);
+      this.toaster.toast(`Failed to upload file ${name} `);
       this._resetFileUploadParam();
     };
 
@@ -1054,7 +1054,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }).subscribe({
       next: () => {
         this.fetchFileInfoList();
-        this.notifi.toast(`Unpacking ${fi.name}, please be patient.`);
+        this.toaster.toast(`Unpacking ${fi.name}, please be patient.`);
         this.currId = -1
       }
     })

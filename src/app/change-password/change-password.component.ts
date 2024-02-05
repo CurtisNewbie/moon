@@ -4,7 +4,7 @@ import {
   emptyChangePasswordParam,
 } from "src/common/user-info";
 import { NavigationService } from "../navigation.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { UserService } from "../user.service";
 import { hasText } from "src/common/str-util";
 import { NavType } from "../routes";
@@ -21,7 +21,7 @@ export class ChangePasswordComponent implements OnInit {
   constructor(
     private nav: NavigationService,
     private userService: UserService,
-    private notifi: NotificationService
+    private toaster: Toaster
   ) { }
 
   ngOnInit() {
@@ -34,12 +34,12 @@ export class ChangePasswordComponent implements OnInit {
       !hasText(this.changePasswordParam.newPassword) ||
       !hasText(this.newPasswordConfirm)
     ) {
-      this.notifi.toast("Please enter passwords");
+      this.toaster.toast("Please enter passwords");
       return;
     }
 
     if (this.changePasswordParam.newPassword !== this.newPasswordConfirm) {
-      this.notifi.toast("Confirmed password is not matched");
+      this.toaster.toast("Confirmed password is not matched");
       return;
     }
 
@@ -47,13 +47,13 @@ export class ChangePasswordComponent implements OnInit {
       this.changePasswordParam.prevPassword ===
       this.changePasswordParam.newPassword
     ) {
-      this.notifi.toast("new password must be different");
+      this.toaster.toast("new password must be different");
       return;
     }
 
     this.userService.changePassword(this.changePasswordParam).subscribe({
       next: (result) => {
-        this.notifi.toast("Password changed");
+        this.toaster.toast("Password changed");
         this.nav.navigateTo(NavType.MANAGE_USER);
       },
       complete: () => {

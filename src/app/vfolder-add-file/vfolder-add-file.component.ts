@@ -5,7 +5,7 @@ import { ConfirmDialog } from 'src/common/dialog';
 import { VFolderBrief } from 'src/common/folder';
 import { filterAlike } from 'src/common/select-util';
 import { environment } from 'src/environments/environment';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 
 type VfFile = {
   fileKey: string
@@ -34,7 +34,7 @@ export class VfolderAddFileComponent implements OnInit {
     public dialogRef: MatDialogRef<VfolderAddFileComponent, Data>, @Inject(MAT_DIALOG_DATA) public dat: Data,
     private hclient: HClient,
     private confirmDialog: ConfirmDialog,
-    private notifi: NotificationService
+    private notifi: Toaster
   ) { }
 
   ngOnInit(): void {

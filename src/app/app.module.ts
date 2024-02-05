@@ -72,6 +72,8 @@ import { DirectoryMoveFileComponent } from './directory-move-file/directory-move
 import { ManageBookmarksComponent } from './manage-bookmarks/manage-bookmarks.component';
 import { GalleryAccessComponent } from './gallery-access/gallery-access.component';
 import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share-file-qrcode-dialog.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { ListNotificationComponent } from './list-notification/list-notification.component';
 
 @NgModule({
   exports: [],
@@ -116,6 +118,7 @@ import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share
     ManageBookmarksComponent,
     GalleryAccessComponent,
     ShareFileQrcodeDialogComponent,
+    ListNotificationComponent,
   ],
   imports: [
     MatTabsModule,
@@ -143,6 +146,7 @@ import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share
     MatCardModule,
     LightboxModule,
     MatListModule,
+    MatBadgeModule,
   ],
   entryComponents: [
     ConfirmDialogComponent,

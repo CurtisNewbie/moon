@@ -12,14 +12,14 @@ import { Observable } from "rxjs";
 import { catchError, filter } from "rxjs/operators";
 import { Resp } from "src/common/resp";
 import { Router } from "@angular/router";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 
 /**
  * Intercept http response with 'Resp' as body
  */
 @Injectable()
 export class RespInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private notifi: NotificationService) {}
+  constructor(private router: Router, private notifi: Toaster) {}
 
   intercept(
     httpRequest: HttpRequest<any>,

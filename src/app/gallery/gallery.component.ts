@@ -7,7 +7,7 @@ import { Gallery, ListGalleriesResp } from "src/common/gallery";
 import { PagingController } from "src/common/paging";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 import { NavigationService } from "../navigation.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
 import { HClient } from "src/common/api-util";
 import { isMobile } from "src/common/env-util";
@@ -46,7 +46,7 @@ export class GalleryComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private notification: NotificationService,
+    private toaster: Toaster,
     private navigation: NavigationService,
     private dialog: MatDialog,
   ) {
@@ -72,7 +72,7 @@ export class GalleryComponent implements OnInit {
 
   createGallery() {
     if (!this.newGalleryName) {
-      this.notification.toast("Please enter new gallery's name");
+      this.toaster.toast("Please enter new gallery's name");
       return;
     }
 

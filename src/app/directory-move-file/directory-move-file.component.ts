@@ -4,7 +4,7 @@ import { HClient } from 'src/common/api-util';
 import { ConfirmDialog } from 'src/common/dialog';
 import { DirBrief } from 'src/common/file-info';
 import { filterAlike } from 'src/common/select-util';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { environment } from 'src/environments/environment';
 
 type DfFile = {
@@ -36,7 +36,7 @@ export class DirectoryMoveFileComponent implements OnInit {
     public dialogRef: MatDialogRef<DirectoryMoveFileComponent, Data>, @Inject(MAT_DIALOG_DATA) public dat: Data,
     private hclient: HClient,
     private confirmDialog: ConfirmDialog,
-    private notifi: NotificationService
+    private toaster: Toaster
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +58,11 @@ export class DirectoryMoveFileComponent implements OnInit {
   findMoveIntoDirFileKey(dirName: string) {
     let matched: DirBrief[] = this.dirBriefList.filter(v => v.name === dirName)
     if (!matched || matched.length < 1) {
-      this.notifi.toast("Directory not found, please check and try again");
+      this.toaster.toast("Directory not found, please check and try again");
       return;
     }
     if (matched.length > 1) {
-      this.notifi.toast("Found multiple directories with the same name, please update their names and try again", 4000);
+      this.toaster.toast("Found multiple directories with the same name, please update their names and try again", 4000);
       return;
     }
     return matched[0].uuid;
@@ -71,7 +71,7 @@ export class DirectoryMoveFileComponent implements OnInit {
   moveToDir() {
     const moveIntoDirName = this.moveIntoDirName;
     if (!moveIntoDirName) {
-      this.notifi.toast("Please select directory");
+      this.toaster.toast("Please select directory");
       return;
     }
     const key = this.findMoveIntoDirFileKey(moveIntoDirName);

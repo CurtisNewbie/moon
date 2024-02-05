@@ -4,7 +4,7 @@ import { PagingController } from "src/common/paging";
 import { HClient } from "src/common/api-util";
 import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
 import { UserService } from "../user.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { environment } from "src/environments/environment";
 import { isEnterKey } from "src/common/condition";
 import { copyToClipboard } from "src/common/clipboard";
@@ -36,17 +36,20 @@ export class ManageKeysComponent implements OnInit {
   idEquals = isIdEqual;
   getExpandedEle = (row) => getExpanded(row, this.expandedElement);
   isEnter = isEnterKey;
-  mask = (k: string) => k.length > 0 ? k.substring(0, 5) + "*********" + k.substring(k.length - 5) : "";
   copyToClipboard = copyToClipboard;
 
   constructor(
     private http: HClient,
     private userService: UserService,
-    private notifi: NotificationService
+    private toaster: Toaster
   ) { }
 
   ngOnInit() {
     this.userService.fetchUserInfo();
+  }
+
+  mask(k: string): string {
+    return k.length > 0 ? k.substring(0, 5) + "*********" + k.substring(k.length - 5) : "";
   }
 
   fetchList() {
@@ -84,11 +87,11 @@ export class ManageKeysComponent implements OnInit {
 
   generateRandomKey() {
     if (!this.password) {
-      this.notifi.toast("Please enter password");
+      this.toaster.toast("Please enter password");
       return;
     }
     if (!this.newUserKeyName) {
-      this.notifi.toast("Please enter key name");
+      this.toaster.toast("Please enter key name");
       return;
     }
 
@@ -131,7 +134,6 @@ export class ManageKeysComponent implements OnInit {
     this.panelDisplayed = !this.panelDisplayed;
     this.password = null;
   }
-
 
   onPagingControllerReady(pc) {
     this.pagingController = pc;

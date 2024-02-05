@@ -8,4 +8,5 @@ export const environment = {
   fstore: "fstore",
   logbot: "logbot",
   docindexer:"docindexer",
+  postbox: "postbox"
 };

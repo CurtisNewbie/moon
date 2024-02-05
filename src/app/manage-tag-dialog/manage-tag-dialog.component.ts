@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { environment } from "src/environments/environment";
 import { Tag } from "src/common/file-info";
 import { PagingController } from "src/common/paging";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { HClient } from "src/common/api-util";
 
 export interface ManageTagDialogData {
@@ -33,7 +33,7 @@ export class ManageTagDialogComponent implements OnInit {
   pagingController: PagingController;
 
   constructor(
-    private notifi: NotificationService,
+    private toaster: Toaster,
     private http: HClient,
     public dialogRef: MatDialogRef<
       ManageTagDialogComponent,
@@ -51,7 +51,7 @@ export class ManageTagDialogComponent implements OnInit {
 
   tagFile(): void {
     if (!this.tagName) {
-      this.notifi.toast("Enter tag name first");
+      this.toaster.toast("Enter tag name first");
       return;
     }
 

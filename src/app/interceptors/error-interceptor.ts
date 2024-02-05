@@ -9,7 +9,7 @@ import {
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { UserService } from "../user.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { Resp } from "src/common/resp";
 
 /**
@@ -19,7 +19,7 @@ import { Resp } from "src/common/resp";
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private userService: UserService,
-    private notifi: NotificationService
+    private toaster: Toaster
   ) { }
 
   intercept(
@@ -32,13 +32,13 @@ export class ErrorInterceptor implements HttpInterceptor {
           // console.log("Http error response: ", e);
 
           if (e.status === 401) {
-            this.notifi.toast("Please login first");
+            this.toaster.toast("Please login first");
             this.userService.logout();
           } else if (e.status === 403) {
             let r: Resp<any> = e.error as Resp<any>;
-            this.notifi.toast(r.msg, 6000);
+            this.toaster.toast(r.msg, 6000);
           } else {
-            this.notifi.toast("Unknown server error, please try again later");
+            this.toaster.toast("Unknown server error, please try again later");
           }
           return throwError(e);
         }

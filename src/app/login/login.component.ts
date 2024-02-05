@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../navigation.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
 import { UserService } from "../user.service";
 import { setToken, getToken } from "src/common/api-util";
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private userService: UserService,
     private nav: NavigationService,
-    private notifi: NotificationService
+    private toaster: Toaster
   ) { }
 
   ngOnInit() {
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
    */
   public login(): void {
     if (!this.usernameInput || !this.passwordInput) {
-      this.notifi.toast("Please enter username and password");
+      this.toaster.toast("Please enter username and password");
       return;
     }
     this.userService.login(this.usernameInput, this.passwordInput).subscribe({

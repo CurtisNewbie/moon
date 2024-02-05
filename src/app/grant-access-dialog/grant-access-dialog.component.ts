@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { environment } from "src/environments/environment";
 import { FileAccessGranted } from "src/common/file-info";
 import { PagingController } from "src/common/paging";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { HClient } from "src/common/api-util";
 import { isEnterKey } from "src/common/condition";
 
@@ -30,7 +30,7 @@ export class GrantAccessDialogComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private notifi: NotificationService,
+    private toaster: Toaster,
     public dialogRef: MatDialogRef<GrantAccessDialogComponent, GrantAccessDialogData>,
     @Inject(MAT_DIALOG_DATA) public data: GrantAccessDialogData
   ) {
@@ -46,7 +46,7 @@ export class GrantAccessDialogComponent implements OnInit {
 
   grantFolderAccess() {
     if (!this.grantedTo) {
-      this.notifi.toast("Enter username first");
+      this.toaster.toast("Enter username first");
       return;
     }
 
@@ -58,7 +58,7 @@ export class GrantAccessDialogComponent implements OnInit {
       },
     ).subscribe({
       next: () => {
-        this.notifi.toast("Access granted");
+        this.toaster.toast("Access granted");
         this.fetchAccessGranted();
       },
     });

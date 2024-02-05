@@ -26,6 +26,7 @@ import { ManageResourcesComponent } from "./manage-resources/manage-resources.co
 import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
 import { ManageLogsComponent } from "./manage-logs/manage-logs.component";
 import { ManageBookmarksComponent } from "./manage-bookmarks/manage-bookmarks.component";
+import { ListNotificationComponent } from "./list-notification/list-notification.component";
 
 const routes: Routes = [
   {
@@ -131,6 +132,10 @@ const routes: Routes = [
   {
     path: NavType.MNG_BOOKMARKS,
     component: ManageBookmarksComponent,
+  },
+  {
+    path: NavType.LIST_NOTIFICATION,
+    component: ListNotificationComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS},
 ];

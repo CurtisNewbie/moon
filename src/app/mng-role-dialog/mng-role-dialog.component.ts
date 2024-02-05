@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { PagingController } from 'src/common/paging';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { ResBrief, UserService } from '../user.service';
 import { HClient } from 'src/common/api-util';
 
@@ -35,7 +35,7 @@ export class MngRoleDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MngRoleDialogComponent, DialogDat>, @Inject(MAT_DIALOG_DATA) public dat: DialogDat,
     private hclient: HClient,
-    private toaster: NotificationService,
+    private toaster: Toaster,
   ) { }
 
   ngOnInit(): void {

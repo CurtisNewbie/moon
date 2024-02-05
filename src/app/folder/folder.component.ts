@@ -10,7 +10,7 @@ import { Resp } from "src/common/resp";
 import { UserInfo } from "src/common/user-info";
 import { GrantAccessDialogComponent } from "../grant-access-dialog/grant-access-dialog.component";
 import { NavigationService } from "../navigation.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
 import { UserService } from "../user.service";
 import { buildApiPath, buildOptions } from "src/common/api-util";
@@ -42,7 +42,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private notification: NotificationService,
+    private toaster: Toaster,
     private navi: NavigationService,
     private dialog: MatDialog,
     private userService: UserService
@@ -101,7 +101,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
       ).
       subscribe({
         next: (resp) => {
-          this.notification.toast("Virtual Folder Removed");
+          this.toaster.toast("Virtual Folder Removed");
           this.fetchFolders();
         }
       })
@@ -162,7 +162,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
 
   createFolder(): void {
     if (!this.newFolderName) {
-      this.notification.toast("Please enter folder name");
+      this.toaster.toast("Please enter folder name");
       return;
     }
 

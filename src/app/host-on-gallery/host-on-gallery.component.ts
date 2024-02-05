@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HClient } from 'src/common/api-util';
 import { ConfirmDialog } from 'src/common/dialog';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { filterAlike } from 'src/common/select-util';
 import { GalleryBrief } from 'src/common/gallery';
 import { environment } from 'src/environments/environment';
@@ -37,7 +37,7 @@ export class HostOnGalleryComponent implements OnInit {
     public dialogRef: MatDialogRef<HostOnGalleryComponent, Data>, @Inject(MAT_DIALOG_DATA) public dat: Data,
     private hclient: HClient,
     private confirmDialog: ConfirmDialog,
-    private notifi: NotificationService
+    private toaster: Toaster
   ) { }
 
   ngOnInit(): void {
@@ -69,7 +69,7 @@ export class HostOnGalleryComponent implements OnInit {
           .post(environment.fantahsea, "/gallery/image/transfer", { images: params, })
           .subscribe({
             complete: () => {
-              this.notifi.toast("Request success! It may take a while.");
+              this.toaster.toast("Request success! It may take a while.");
             },
           });
       })
@@ -78,17 +78,17 @@ export class HostOnGalleryComponent implements OnInit {
   private extractToGalleryNo(): string {
     const gname = this.addToGalleryName;
     if (!gname) {
-      this.notifi.toast("Please select gallery");
+      this.toaster.toast("Please select gallery");
       return;
     }
 
     let matched: GalleryBrief[] = this.galleryBriefs.filter(v => v.name === gname)
     if (!matched || matched.length < 1) {
-      this.notifi.toast("Gallery not found, please check and try again")
+      this.toaster.toast("Gallery not found, please check and try again")
       return null;
     }
     if (matched.length > 1) {
-      this.notifi.toast("Found multiple galleries with the same name, please try again")
+      this.toaster.toast("Found multiple galleries with the same name, please try again")
       return null;
     }
     return matched[0].galleryNo

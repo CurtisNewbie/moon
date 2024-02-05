@@ -8,7 +8,7 @@ import {
   SearchFileExtParam,
 } from "src/common/file-ext";
 import { PagingController } from "src/common/paging";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { animateElementExpanding } from "../../animate/animate-util";
 import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
@@ -50,7 +50,7 @@ export class ManageExtensionComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private notifi: NotificationService,
+    private toaster: Toaster,
   ) {
 
   }
@@ -125,12 +125,12 @@ export class ManageExtensionComponent implements OnInit {
   addFileExt(): void {
     let ext: string = this.extToBeAdded;
     if (ext == null || ext.trim() == "") {
-      this.notifi.toast("Please enter file extension");
+      this.toaster.toast("Please enter file extension");
       return;
     }
     ext = ext.trim();
     if (!ext.match(/[0-9a-zA-Z]+/)) {
-      this.notifi.toast(
+      this.toaster.toast(
         "File extension should only contains alphabets and numbers"
       );
       return;
@@ -141,7 +141,7 @@ export class ManageExtensionComponent implements OnInit {
       { name: ext },
     ).subscribe({
       next: (resp) => {
-        this.notifi.toast(`File extension '${ext}' added`);
+        this.toaster.toast(`File extension '${ext}' added`);
       },
       complete: () => {
         this.addExtPanelDisplayed = false;

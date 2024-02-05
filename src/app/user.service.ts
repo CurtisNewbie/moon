@@ -5,7 +5,7 @@ import { environment } from "src/environments/environment";
 import { Resp } from "src/common/resp";
 import { ChangePasswordParam, UserInfo } from "src/common/user-info";
 import { NavigationService } from "./navigation.service";
-import { NotificationService } from "./notification.service";
+import { Toaster } from "./notification.service";
 import { NavType } from "./routes";
 import {
   getToken,
@@ -54,7 +54,7 @@ export class UserService implements OnDestroy {
   constructor(
     private http: HClient,
     private nav: NavigationService,
-    private notifi: NotificationService
+    private notifi: Toaster
   ) {
     onEmptyToken(() => this.logout());
   }

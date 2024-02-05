@@ -9,7 +9,7 @@ import {
 } from "src/common/fs-group";
 import { PagingController } from "src/common/paging";
 import { animateElementExpanding, getExpanded, isIdEqual } from "../../animate/animate-util";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { HClient } from "src/common/api-util";
 import { resolveSize } from "src/common/file";
 
@@ -47,7 +47,7 @@ export class FsGroupComponent implements OnInit {
   idEquals = isIdEqual;
   getExpandedEle = (row) => getExpanded(row, this.expandedElement);
 
-  constructor(private http: HClient, private toaster: NotificationService) {
+  constructor(private http: HClient, private toaster: Toaster) {
 
   }
 

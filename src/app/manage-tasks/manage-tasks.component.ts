@@ -12,7 +12,7 @@ import {
 } from "src/common/task";
 import { animateElementExpanding, getExpanded, isIdEqual } from "../../animate/animate-util";
 import { Option } from "src/common/select-util";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { TaskService } from "../task.service";
 import { NavigationService } from "../navigation.service";
 import { isEnterKey } from "src/common/condition";
@@ -59,7 +59,7 @@ export class ManageTasksComponent implements OnInit {
 
   constructor(
     private taskService: TaskService,
-    private notifi: NotificationService,
+    private toaster: Toaster,
     private navi: NavigationService
   ) {
 
@@ -83,7 +83,7 @@ export class ManageTasksComponent implements OnInit {
     let param: UpdateTaskReqVo = JSON.parse(JSON.stringify(task));
     this.taskService.updateTask(param).subscribe({
       next: (resp) => {
-        this.notifi.toast("Task updated");
+        this.toaster.toast("Task updated");
         this.expandedElement = null;
         this.fetchTaskList();
       },
@@ -97,7 +97,7 @@ export class ManageTasksComponent implements OnInit {
       })
       .subscribe({
         complete: () => {
-          this.notifi.toast("Task triggered");
+          this.toaster.toast("Task triggered");
           this.expandedElement = null;
         },
       });

@@ -15,7 +15,6 @@ export enum NavType {
     MNG_RES = "manage-resources",
     MNG_LOGS = "manage-logs",
     MNG_BOOKMARKS = "manage-bookmarks",
-
     MANAGE_FILES = "manage-files",
     LOGIN_PAGE = "login-page",
     MANAGE_EXT = "manage-extension",
@@ -28,5 +27,6 @@ export enum NavType {
     FILE_TASK = "file-task",
     MANAGE_FSGROUP = "manage-fsgroup",
     TXT_VIEWER = "txt-viewer",
+    LIST_NOTIFICATION= "notifications",
 }
 

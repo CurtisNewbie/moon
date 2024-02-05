@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationService } from "../navigation.service";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { UserService } from "../user.service";
 import { isEnterKey } from "src/common/condition";
 import { NavType } from "../routes";
@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private notifi: NotificationService,
+    private notifi: Toaster,
     private nav: NavigationService
   ) { }
 

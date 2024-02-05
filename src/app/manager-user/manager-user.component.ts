@@ -10,7 +10,7 @@ import {
   USER_IS_DISABLED_OPTIONS,
 } from "src/common/user-info";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
-import { NotificationService } from "../notification.service";
+import { Toaster } from "../notification.service";
 import { RoleBrief, UserService } from "../user.service";
 import { HClient } from "src/common/api-util";
 import { isEnterKey } from "src/common/condition";
@@ -53,7 +53,7 @@ export class ManagerUserComponent implements OnInit {
   isEnter = isEnterKey;
 
   constructor(
-    private notifi: NotificationService,
+    private toaster: Toaster,
     private dialog: MatDialog,
     private http: HClient,
     private userService: UserService
@@ -68,7 +68,7 @@ export class ManagerUserComponent implements OnInit {
    */
   addUser(): void {
     if (!this.usernameToBeAdded || !this.passswordToBeAdded) {
-      this.notifi.toast("Please enter username and password");
+      this.toaster.toast("Please enter username and password");
       return;
     }
 

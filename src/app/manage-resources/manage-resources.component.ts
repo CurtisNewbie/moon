@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { getExpanded, isIdEqual } from 'src/animate/animate-util';
 import { environment } from 'src/environments/environment';
 import { PagingController } from 'src/common/paging';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { UserService } from '../user.service';
 import { HClient } from 'src/common/api-util';
 import { isEnterKey } from 'src/common/condition';
@@ -42,7 +42,7 @@ export class ManageResourcesComponent implements OnInit {
   constructor(
     private hclient: HClient,
     private userService: UserService,
-    private toaster: NotificationService,
+    private toaster: Toaster,
     private dialog: MatDialog,
   ) { }
 

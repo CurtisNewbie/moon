@@ -5,7 +5,7 @@ import { Resp } from "./resp";
 
 const TOKEN = "token";
 let emptyTokenCallback = null;
-const BASE_API = "/open/api";
+const openApiBasePath = "/open/api";
 
 export function onEmptyToken(callback) {
   emptyTokenCallback = callback;
@@ -16,7 +16,7 @@ export function buildApiPath(
   service: string
 ): string {
   subPath = subPath.startsWith("/", 0) ? subPath : "/" + subPath;
-  return service + BASE_API + subPath;
+  return service + openApiBasePath + subPath;
 }
 
 export function buildOptions() {
@@ -57,8 +57,8 @@ export class HClient {
   constructor(private httpClient: HttpClient) { }
 
   /** Do POST request */
-  post<T>(serviceBase: string, url: string, payload: any, openApi: boolean = true): Observable<Resp<T>> {
-    url = openApi ? buildApiPath(url, serviceBase) : serviceBase + url;
+  post<T>(serviceBase: string, url: string, payload: any, openApiPrefix: boolean = true): Observable<Resp<T>> {
+    url = openApiPrefix ? buildApiPath(url, serviceBase) : serviceBase + url;
     console.log("url", url)
     return this.httpClient.post<Resp<T>>(
       url, payload, buildOptions()
@@ -66,11 +66,9 @@ export class HClient {
   }
 
   /** Do GET request */
-  get<T>(serviceBase: string, url: string): Observable<Resp<T>> {
-    return this.httpClient.get<Resp<T>>(
-      buildApiPath(url, serviceBase),
-      buildOptions()
-    );
+  get<T>(serviceBase: string, url: string, openApiPrefix: boolean = true): Observable<Resp<T>> {
+    url = openApiPrefix ? buildApiPath(url, serviceBase) : serviceBase + url;
+    return this.httpClient.get<Resp<T>>(url, buildOptions());
   }
 
 }

@@ -10,8 +10,9 @@ export const environment = {
   goauth: "goauth",
   dtaskgo: "dtaskgo",
   fstore: "fstore",
-  logbot:"logbot",
-  docindexer:"docindexer",
+  logbot: "logbot",
+  docindexer: "docindexer",
+  postbox: "postbox"
 };
 
 /*

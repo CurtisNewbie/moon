@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { HClient } from 'src/common/api-util';
 import { isEnterKey } from 'src/common/condition';
 import { PagingController } from 'src/common/paging';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 
@@ -35,7 +35,7 @@ export class GalleryAccessComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private notifi: NotificationService,
+    private toaster: Toaster,
     public dialogRef: MatDialogRef<GalleryAccessComponent, GrantGalleryAccessDialogData>,
     @Inject(MAT_DIALOG_DATA) public data: GrantGalleryAccessDialogData
   ) {
@@ -51,7 +51,7 @@ export class GalleryAccessComponent implements OnInit {
 
   grantFolderAccess() {
     if (!this.grantedTo) {
-      this.notifi.toast("Enter username first");
+      this.toaster.toast("Enter username first");
       return;
     }
 
@@ -63,7 +63,7 @@ export class GalleryAccessComponent implements OnInit {
       },
     ).subscribe({
       next: () => {
-        this.notifi.toast("Access granted");
+        this.toaster.toast("Access granted");
         this.fetchAccessGranted();
       },
     });

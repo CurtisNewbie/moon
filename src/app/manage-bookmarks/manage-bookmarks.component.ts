@@ -6,7 +6,7 @@ import { isEnterKey } from 'src/common/condition';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { NotificationService } from '../notification.service';
+import { Toaster } from '../notification.service';
 import { ConfirmDialog } from 'src/common/dialog';
 
 @Component({
@@ -33,7 +33,7 @@ export class ManageBookmarksComponent implements OnInit {
   constructor(private hclient: HClient,
     private userService: UserService,
     private http: HttpClient,
-    private toaster: NotificationService,
+    private toaster: Toaster,
     private confirmDialog: ConfirmDialog,
   ) { }
 
