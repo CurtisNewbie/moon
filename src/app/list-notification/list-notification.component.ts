@@ -102,7 +102,7 @@ export class ListNotificationComponent implements OnInit {
   showNotification(n: Notification) {
     let timeStr = "";
     if (n.createTime) {
-      timeStr = n.createTime.toISOString().split('.')[0].replace("T", "");
+      timeStr = n.createTime.toISOString().split('.')[0].replace("T", " ");
     }
     const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
       this.dialog.open(ConfirmDialogComponent, {
