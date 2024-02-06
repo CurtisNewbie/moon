@@ -104,12 +104,14 @@ export class ListNotificationComponent implements OnInit {
     if (n.createTime) {
       timeStr = n.createTime.toISOString().split('.')[0].replace("T", " ");
     }
+    let lines = n.message.split(`\n`)
+
     const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
       this.dialog.open(ConfirmDialogComponent, {
         width: "700px",
         data: {
           title: n.title,
-          msg: [`Time: ${timeStr}`, n.message],
+          msg: [`Notification Time: ${timeStr}`, ...lines]
         },
       });
 
