@@ -60,12 +60,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   readonly mobileColumns = ["fileType", "thumbnail", "name", "operation"];
   readonly videoSuffix = new Set(["mp4", "mov", "webm", "ogg"]);
   readonly imageSuffix = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
-  readonly textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list"]);
+  readonly textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list", "service"]);
   readonly suffixIcon: [Set<string>, string][] = [
     [new Set(["pdf"]), "./assets/pdf.png"],
     [new Set(["zip", "7z"]), "./assets/zip.png"],
-    [new Set(["txt", "conf", "yml", "yaml", "properties", "json", "list", "doc", "docx"]), "./assets/text.png"],
-    [new Set(["go", "java", "js", "ts", "html", "css"]), "./assets/code.png"],
+    [new Set(["txt", "conf", "yml", "yaml", "properties", "json", "list", "doc", "docx", "service", "md", "conf"]), "./assets/text.png"],
+    [new Set(["go", "java", "js", "ts", "html", "css", "sh"]), "./assets/code.png"],
     [new Set(["csv", "xls", "xlsx"]), "./assets/spreadsheet.png"],
     [new Set(["iso"]), "./assets/binary.png"],
     [new Set(["dmg", "exe", "jar"]), "./assets/install.png"],
