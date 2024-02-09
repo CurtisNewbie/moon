@@ -154,8 +154,7 @@
             <button mat-raised-button class="m-2" (click)="resetSearchParam()">Reset</button>
         </div>
 
-        <!-- <div style="overflow: auto; max-height: 550px;" class="mat-elevation-z8 mb-2"> -->
-        <div style="overflow: auto; max-height: 550px;" class="mb-2">
+        <div style="overflow: auto; max-height: 600px;" class="mb-2">
             <table mat-table [dataSource]="fileInfoList" style="width: 100%; height: 70%" multiTemplateDataRows>
                 <ng-container matColumnDef="selected">
                     <th mat-header-cell *matHeaderCellDef> <span (click)="selectAll()"
