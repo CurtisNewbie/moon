@@ -7,7 +7,7 @@ export const environment = {
   fantahsea: "vfm",
   vfm: "vfm",
   authService: "user-vault",
-  goauth: "goauth",
+  goauth: "user-vault",
   dtaskgo: "dtaskgo",
   fstore: "fstore",
   logbot: "logbot",
