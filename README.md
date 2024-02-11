@@ -13,7 +13,7 @@ Angular frontend project for a privately hosted website.
 
 ## Doc
 
-- [Issues](./doc/issues.md)
+- [Known Issues](./doc/issues.md)
 
 ## Updates
 
