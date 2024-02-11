@@ -184,7 +184,7 @@ export class UserService implements OnDestroy {
       registerDate;
     }>
   > {
-    return this.http.get<any>(environment.authService, "/user/detail");
+    return this.http.get<any>(environment.authService, "/user/info");
   }
 
   /**
