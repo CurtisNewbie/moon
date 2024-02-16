@@ -481,7 +481,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    let msgs = [`You sure you want to truncate directory ${f.name}`, "All files in this directory are deleted"]
+    let msgs = [`You sure you want to truncate directory '${f.name}'?`, "All files in this directory will be deleted."]
     this.dialog.open(ConfirmDialogComponent, {
       width: "500px",
       data: {
@@ -500,6 +500,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         false
       ).subscribe((resp) => {
         this.toaster.toast("Truncating directory, please wait for a while")
+        this.fetchFileInfoList();
       });
     });
   }
