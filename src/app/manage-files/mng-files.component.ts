@@ -476,6 +476,34 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
+  truncateDir(f: FileInfo): void {
+    if (!f) {
+      return;
+    }
+
+    let msgs = [`You sure you want to truncate directory ${f.name}`, "All files in this directory are deleted"]
+    this.dialog.open(ConfirmDialogComponent, {
+      width: "500px",
+      data: {
+        title: 'Truncate Directory',
+        msg: msgs,
+        isNoBtnDisplayed: true,
+      },
+    }).afterClosed().subscribe((confirm) => {
+      if (!confirm) {
+        return;
+      }
+
+      this.hclient.post<any>(
+        environment.vfm, "/open/api/file/dir/truncate",
+        { uuid: f.uuid },
+        false
+      ).subscribe((resp) => {
+        this.toaster.toast("Truncating directory, please wait for a while")
+      });
+    });
+  }
+
   deleteSelected(): void {
 
     let selected = this.fileInfoList
@@ -485,7 +513,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       });
 
     if (!selected || selected.length < 1) {
-      this.toaster.toast("Select files first (not including directory).")
+      this.toaster.toast("Select files first")
       return;
     }
 

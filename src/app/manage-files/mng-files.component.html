@@ -258,6 +258,9 @@
                                             <div class="col">
                                                 <button mat-raised-button (click)="update(curr)"> Update </button>
                                             </div>
+                                            <div class="col">
+                                                <button mat-raised-button (click)="truncateDir(curr)"> Truncate </button>
+                                            </div>
                                         </ng-container>
 
                                         <ng-container *ngIf="curr.isFile">
