@@ -36,7 +36,11 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.userService.logout();
           } else if (e.status === 403) {
             let r: Resp<any> = e.error as Resp<any>;
-            this.toaster.toast(r.msg, 6000);
+            if (r) {
+              this.toaster.toast(r.msg, 6000);
+            } else {
+              this.toaster.toast("Forbidden", 1000);
+            }
           } else {
             this.toaster.toast("Unknown server error, please try again later");
           }
