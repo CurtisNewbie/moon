@@ -4,6 +4,7 @@ import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
 import { UserService } from "../user.service";
 import { setToken, getToken } from "src/common/api-util";
+import { PlatformNotificationService } from "../platform-notification.service";
 
 @Component({
   selector: "app-login",
@@ -17,14 +18,16 @@ export class LoginComponent implements OnInit {
   constructor(
     private userService: UserService,
     private nav: NavigationService,
-    private toaster: Toaster
+    private toaster: Toaster,
+    private platformNotification: PlatformNotificationService,
   ) { }
 
   ngOnInit() {
     if (getToken()) {
-      this.userService.fetchUserInfo(() =>
-        this.nav.navigateTo(NavType.USER_DETAILS)
-      );
+      this.userService.fetchUserInfo(() => {
+        this.nav.navigateTo(NavType.USER_DETAILS);
+        this.platformNotification.triggerChange();
+      });
     }
   }
 
@@ -45,6 +48,7 @@ export class LoginComponent implements OnInit {
       },
       complete: () => {
         this.passwordInput = "";
+        this.platformNotification.triggerChange();
       },
     });
   }

@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private notifi: Toaster,
+    private toaster: Toaster,
     private nav: NavigationService
   ) { }
 
@@ -25,16 +25,14 @@ export class RegisterComponent implements OnInit {
 
   register(): void {
     if (!this.usernameInput || !this.passwordInput) {
-      this.notifi.toast("Please enter username and password");
+      this.toaster.toast("Please enter username and password");
       return;
     }
     this.userService
       .register(this.usernameInput, this.passwordInput)
       .subscribe({
         next: () => {
-          this.notifi.toast(
-            "Registration successful, please wait for administrator's approval"
-          );
+          this.toaster.toast("Registered, please wait for administrator's approval", 5000);
           this.nav.navigateTo(NavType.LOGIN_PAGE);
         },
         complete: () => {

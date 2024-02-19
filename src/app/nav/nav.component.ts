@@ -5,6 +5,7 @@ import { copyToClipboard } from "src/common/clipboard";
 import { HClient } from "src/common/api-util";
 import { environment } from "src/environments/environment";
 import { PlatformNotificationService } from "../platform-notification.service";
+import { Toaster } from "../notification.service";
 
 @Component({
   selector: "app-nav",
@@ -13,13 +14,17 @@ import { PlatformNotificationService } from "../platform-notification.service";
 })
 export class NavComponent implements OnInit, OnDestroy {
   userInfo: UserInfo = null;
-  copyToClipboard = copyToClipboard;
+  copyToClipboard = (s) => {
+    this.toaster.toast("Copied to clipboard")
+    copyToClipboard(s);
+  }
   unreadCount: 0;
 
   constructor(
     private userService: UserService,
     private http: HClient,
-    private platformNotification: PlatformNotificationService
+    private platformNotification: PlatformNotificationService,
+    private toaster: Toaster
   ) {
     platformNotification.subscribeChange().subscribe({
       next: () => this.fetchUnreadNotificationCount()
