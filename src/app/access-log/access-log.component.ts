@@ -15,6 +15,7 @@ export class AccessLogComponent implements OnInit {
     "id",
     "user",
     "accessTime",
+    "success",
     "ipAddress",
     "userAgent",
     "url"
