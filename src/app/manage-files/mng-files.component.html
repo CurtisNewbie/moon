@@ -1,3 +1,10 @@
+<div *ngIf="inDirFileName" class="m-2">
+    <mat-card>
+        <h5><img style="max-height:30px; padding: 0px 5px 5px 5px;" src="../assets/unbox.png" />
+            /{{inDirFileName}}</h5>
+    </mat-card>
+</div>
+
 <div *ngIf="!inFolderNo && expandUploadPanel" class="container-fluid bootstrap p-3 shadow rounded mt-3 border">
 
     <h4 class="mt-3 mb-3">Upload </h4>
@@ -59,12 +66,6 @@
     <div class="mt-2 mb-2">
         <div *ngIf="inFolderName" class="m-2">
             <mat-card>Virtual Folder: '{{inFolderName}}'</mat-card>
-        </div>
-        <div *ngIf="inDirFileName" class="m-2">
-            <mat-card>
-                <h5><img style="max-height:30px; padding: 0px 5px 5px 5px;" src="../assets/unbox.png" />
-                    /{{inDirFileName}}</h5>
-            </mat-card>
         </div>
 
         <!-- search param start -->
@@ -136,7 +137,8 @@
                 <button mat-raised-button class="m-2" (click)="deleteSelected()"> Delete </button>
                 <button mat-raised-button class="m-2" (click)="moveSelectedToDir(true)">Move To
                     Directory</button>
-                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out Of Directory</button>
+                <button mat-raised-button class="m-2" *ngIf="inDirFileName" (click)="moveSelectedToDir(false)">Move Out
+                    Of Directory</button>
             </ng-container>
 
 
@@ -259,7 +261,8 @@
                                                 <button mat-raised-button (click)="update(curr)"> Update </button>
                                             </div>
                                             <div class="col">
-                                                <button mat-raised-button (click)="truncateDir(curr)"> Truncate </button>
+                                                <button mat-raised-button (click)="truncateDir(curr)"> Truncate
+                                                </button>
                                             </div>
                                         </ng-container>
 

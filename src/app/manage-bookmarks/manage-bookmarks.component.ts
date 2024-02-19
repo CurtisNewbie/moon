@@ -71,6 +71,7 @@ export class ManageBookmarksComponent implements OnInit {
           this.uploadFileInput.nativeElement.value = null;
         }
         this.toaster.toast("Bookmarks uploaded");
+        this.showUploadPanel = false;
       },
     });
   }
