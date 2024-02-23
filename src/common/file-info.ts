@@ -76,8 +76,6 @@ export interface DirBrief {
 export interface SearchFileInfoParam {
   /** filename */
   name?: string;
-  /** name of tag */
-  tagName?: string;
   /** folder no */
   folderNo?: string;
   /** parent file UUID */
@@ -92,8 +90,6 @@ export interface UploadFileParam {
   fileName?: string;
   /** file */
   files?: File[];
-  /** tags */
-  tags?: string[];
   /** parent file uuid */
   parentFile?: string;
   /** ignore on duplicate name */
@@ -106,8 +102,6 @@ export interface FetchFileInfoListParam {
   filename?: string;
   /** paging  */
   paging?: Paging;
-  /** tagName */
-  tagName?: string;
   /** folder no */
   folderNo?: string;
   /** parent file UUID */
@@ -121,7 +115,6 @@ export function emptyUploadFileParam(): UploadFileParam {
   return {
     files: [],
     fileName: null,
-    tags: [],
   };
 }
 
@@ -138,22 +131,4 @@ export interface FileAccessGranted {
   createDate: Date;
   /** the access is granted by */
   createdBy: string;
-}
-
-export interface Tag {
-  id: number;
-
-  /** name of tag */
-  name: string;
-
-  /** when the record is created */
-  createTime: Date;
-
-  /** who created this record */
-  createBy: string;
-}
-
-export interface ListTagsForFileResp {
-  paging: Paging;
-  payload: Tag[];
 }

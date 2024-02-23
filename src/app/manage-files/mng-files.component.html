@@ -1,6 +1,6 @@
 <div *ngIf="inDirFileName" class="m-2">
     <mat-card>
-        <h5><img style="max-height:30px; padding: 0px 5px 5px 5px;" src="../assets/unbox.png" />
+        <h5><img style="max-width:30px; max-height:30px; padding: 0px 5px 5px 5px;" src="../assets/unbox.png" />
             /{{inDirFileName}}</h5>
     </mat-card>
 </div>
@@ -28,17 +28,6 @@
 
     <div class="mt-3 mb-2">
         <div class="row row-cols-lg-auto g-3 align-items-center">
-            <div class="col">
-                <mat-form-field>
-                    <mat-label>With Tags:</mat-label>
-                    <mat-select [(value)]="selectedTags" [disabled]="isUploading" multiple>
-                        <mat-option [value]="t" *ngFor="let t of tags">
-                            {{t}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-
             <div class="col">
                 <button class="ml-2 mr-2" mat-raised-button (click)="upload()" [disabled]="isUploading"
                     *ngIf="!isUploading"> Upload </button>
@@ -87,16 +76,6 @@
                         <mat-select (valueChange)="setSearchFileType($event)" [value]="searchParam.fileType">
                             <mat-option [value]="option.value" *ngFor="let option of allFileTypeOpts">
                                 {{option.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col">
-                    <mat-form-field>
-                        <mat-label>File Tag</mat-label>
-                        <mat-select (valueChange)="setTag($event)" [value]="searchParam.tagName">
-                            <mat-option [value]="t" *ngFor="let t of tags">
-                                {{t}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -279,10 +258,6 @@
                                                     By
                                                     QRCode </button>
                                             </div>
-                                            <div class="col">
-                                                <button mat-raised-button (click)="popToManageTag(curr)">Tags</button>
-                                            </div>
-
                                             <div class="col" *ngIf="canUnpack(curr)">
                                                 <button mat-raised-button (click)="unpack(curr)">Unpack</button>
                                             </div>

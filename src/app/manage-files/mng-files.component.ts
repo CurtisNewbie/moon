@@ -25,7 +25,6 @@ import { UserService } from "../user.service";
 import { animateElementExpanding, isIdEqual } from "../../animate/animate-util";
 import { HClient } from "src/common/api-util";
 import { FileInfoService } from "../file-info.service";
-import { ManageTagDialogComponent } from "../manage-tag-dialog/manage-tag-dialog.component";
 import { NavigationService } from "../navigation.service";
 import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
@@ -86,10 +85,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   pagingController: PagingController;
   /** progress string */
   progress: string = null;
-  /** all accessible tags */
-  tags: string[];
-  /** tags selected for the uploaded files */
-  selectedTags: string[] = [];
   /** whether current user is using mobile device */
   isMobile: boolean = false;
   /** check if all files are selected */
@@ -189,7 +184,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   uploadFileInput: ElementRef;
 
   setSearchFileType = (fileType) => this.searchParam.fileType = fileType;
-  setTag = (tag) => this.searchParam.tagName = tag;
 
   constructor(
     private userService: UserService,
@@ -240,8 +234,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       }
 
       this.userService.fetchUserInfo();
-      this._fetchTags();
-
     });
   }
 
@@ -347,7 +339,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       {
         paging: this.pagingController.paging,
         filename: this.searchParam.name,
-        tagName: this.searchParam.tagName,
         folderNo: this.inFolderNo,
         parentFile: this.searchParam.parentFile,
         fileType: this.searchParam.fileType,
@@ -401,7 +392,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    this.uploadParam.tags = this.selectedTags ? this.selectedTags : [];
     this.uploadParam.ignoreOnDupName = this.ignoreOnDupName;
 
     if (isSingleUpload) {
@@ -700,16 +690,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     });
   }
 
-
-  popToManageTag(u: FileInfo): void {
-    if (!u) return;
-
-    this.dialog.open(ManageTagDialogComponent, {
-      width: "700px",
-      data: { fileId: u.id, filename: u.name, autoComplete: this.tags },
-    });
-  }
-
   /**
    * Fetch download url and open it in a new tab
    */
@@ -817,17 +797,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   // -------------------------- private helper methods ------------------------
 
-  private _fetchTags(): void {
-    this.hclient.get<string[]>(
-      environment.vfm, "/file/tag/list/all",
-    ).subscribe({
-      next: (resp) => {
-        this.tags = resp.data;
-        this.selectedTags = [];
-      },
-    });
-  }
-
   private _concatTempFileDownloadUrl(tempToken: string): string {
     return window.location.protocol + "//" + window.location.host + "/" + environment.fstore + "/file/raw?key=" + encodeURIComponent(tempToken);
   }
@@ -870,7 +839,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     if (this.isUploading) return;
 
     this.isAllSelected = false;
-    this.selectedTags = [];
     this.uploadParam = emptyUploadFileParam();
 
     if (this.uploadFileInput) {
@@ -907,7 +875,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     return {
       fileName: next.name,
       files: [next],
-      tags: this.uploadParam.tags,
       ignoreOnDupName: this.uploadParam.ignoreOnDupName
     };
   }
@@ -980,7 +947,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             this.hclient.post(environment.vfm, "/file/create", {
               filename: uploadParam.fileName,
               fstoreFileId: fstoreRes.data,
-              tags: uploadParam.tags,
               parentFile: uploadParam.parentFile
             }).subscribe({
               complete: onComplete,
