@@ -32,7 +32,6 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatDialogModule } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "./dialog/confirm/confirm-dialog.component";
-import { FsGroupComponent } from "./fs-group/fs-group.component";
 import { MatMenuModule } from "@angular/material/menu";
 import { GrantAccessDialogComponent } from "./grant-access-dialog/grant-access-dialog.component";
 import { ManageTagDialogComponent } from "./manage-tag-dialog/manage-tag-dialog.component";
@@ -52,10 +51,8 @@ import { FileTaskComponent } from './file-task/file-task.component';
 import { TxtViewerComponent } from './txt-viewer/txt-viewer.component';
 import { UserDetailComponent } from "./user-detail/user-detail.component";
 import { ManageKeysComponent } from "./manage-keys/manage-keys.component";
-import { TaskHistoryComponent } from "./task-history/task-history.component";
 import { RegisterComponent } from "./register/register.component";
 import { OperateHistoryComponent } from "./operate-history/operate-history.component";
-import { ManageTasksComponent } from "./manage-tasks/manage-tasks.component";
 import { ManagerUserComponent } from "./manager-user/manager-user.component";
 import { ManageRoleComponent } from "./manage-role/manage-role.component";
 import { ManageResourcesComponent } from "./manage-resources/manage-resources.component";
@@ -85,7 +82,6 @@ import { ListNotificationComponent } from './list-notification/list-notification
     NavComponent,
     ManageExtensionComponent,
     ConfirmDialogComponent,
-    FsGroupComponent,
     GrantAccessDialogComponent,
     ManageTagDialogComponent,
     ImageViewerComponent,
@@ -98,10 +94,8 @@ import { ListNotificationComponent } from './list-notification/list-notification
     TxtViewerComponent,
     UserDetailComponent,
     ManageKeysComponent,
-    TaskHistoryComponent,
     RegisterComponent,
     OperateHistoryComponent,
-    ManageTasksComponent,
     ManagerUserComponent,
     ManageRoleComponent,
     ManageResourcesComponent,

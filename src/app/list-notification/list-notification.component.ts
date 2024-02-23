@@ -67,7 +67,7 @@ export class ListNotificationComponent implements OnInit {
               this.data.push(r);
             }
           }
-          this.pagingController.onTotalChanged(resp.data.pagingVo);
+          this.pagingController.onTotalChanged(resp.data.paging);
         }
       });
   }

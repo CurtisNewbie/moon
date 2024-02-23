@@ -79,7 +79,7 @@ export class GalleryAccessComponent implements OnInit {
       environment.fantahsea, "/gallery/access/list",
       {
         galleryNo: this.data.galleryNo,
-        pagingVo: this.pagingController.paging,
+        paging: this.pagingController.paging,
       },
     ).subscribe({
       next: (resp) => {
@@ -90,7 +90,7 @@ export class GalleryAccessComponent implements OnInit {
             this.grantedAccesses.push(g);
           }
         }
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
       },
     });
   }

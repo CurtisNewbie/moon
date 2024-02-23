@@ -1,7 +1,7 @@
 import { Paging } from "./paging";
 
 export interface ListGalleriesResp {
-  pagingVo: Paging;
+  paging: Paging;
   galleries: Gallery[];
 }
 
@@ -19,7 +19,7 @@ export interface Gallery {
 
 export interface ListGalleryImagesResp {
   images: { thumbnailToken: string, fileTempToken: string }[];
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export interface GalleryBrief {

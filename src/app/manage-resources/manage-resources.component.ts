@@ -61,7 +61,7 @@ export class ManageResourcesComponent implements OnInit {
 
   fetchList() {
     this.hclient.post<any>(environment.goauth, '/resource/list', {
-      pagingVo: this.pagingController.paging
+      paging: this.pagingController.paging
     }).subscribe({
       next: (r) => {
         this.resources = [];
@@ -72,7 +72,7 @@ export class ManageResourcesComponent implements OnInit {
             this.resources.push(ro);
           }
         }
-        this.pagingController.onTotalChanged(r.data.pagingVo);
+        this.pagingController.onTotalChanged(r.data.paging);
       }
     });
   }

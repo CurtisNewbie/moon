@@ -23,5 +23,5 @@ export interface OperateLog {
 export interface FetchOperateLogListResp {
   operateLogVoList: OperateLog[];
 
-  pagingVo: Paging;
+  paging: Paging;
 }

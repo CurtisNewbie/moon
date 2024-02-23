@@ -74,7 +74,7 @@ export class GrantAccessDialogComponent implements OnInit {
       environment.vfm, "/vfolder/granted/list",
       {
         folderNo: this.data.folderNo,
-        pagingVo: this.pagingController.paging,
+        paging: this.pagingController.paging,
       },
     ).subscribe({
       next: (resp) => {
@@ -85,7 +85,7 @@ export class GrantAccessDialogComponent implements OnInit {
             this.grantedAccesses.push(g);
           }
         }
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
       },
     });
   }

@@ -44,7 +44,7 @@ export class OperateHistoryComponent implements OnInit {
             this.operateLogList.push(r);
           }
         }
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
       },
     });
   }

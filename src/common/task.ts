@@ -43,7 +43,7 @@ export interface Task {
 }
 
 export interface ListTaskByPageReqVo {
-  pagingVo: Paging;
+  paging: Paging;
 
   /** job's name */
   jobName: string;
@@ -57,7 +57,7 @@ export interface ListTaskByPageReqVo {
 
 export function emptyListTaskByPageReqVo(): ListTaskByPageReqVo {
   return {
-    pagingVo: null,
+    paging: null,
     jobName: "",
     appGroup: "",
     enabled: null,
@@ -68,7 +68,7 @@ export interface ListTaskByPageRespVo {
   /** task lists */
   list: Task[];
   /** paging info */
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export interface UpdateTaskReqVo {
@@ -130,7 +130,7 @@ export interface TriggerTaskReqVo {
 }
 
 export interface ListTaskHistoryReqVo {
-  pagingVo: Paging;
+  paging: Paging;
   /**
    * Task id
    */
@@ -153,7 +153,7 @@ export interface ListTaskHistoryReqVo {
 
 export interface ListTaskHistoryRespVo {
   list: TaskHistory[];
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export interface TaskHistory {

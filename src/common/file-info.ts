@@ -105,7 +105,7 @@ export interface FetchFileInfoListParam {
   /** filename */
   filename?: string;
   /** paging  */
-  pagingVo?: Paging;
+  paging?: Paging;
   /** tagName */
   tagName?: string;
   /** folder no */
@@ -154,6 +154,6 @@ export interface Tag {
 }
 
 export interface ListTagsForFileResp {
-  pagingVo: Paging;
+  paging: Paging;
   payload: Tag[];
 }

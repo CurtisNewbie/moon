@@ -36,7 +36,7 @@ export class MngResDialogComponent implements OnInit {
 
   listPathsBound() {
     this.hclient.post<any>(environment.goauth, '/path/list', {
-      pagingVo: this.pagingController.paging,
+      paging: this.pagingController.paging,
       resCode: this.dat.res.code
     }).subscribe({
       next: (r) => {
@@ -48,7 +48,7 @@ export class MngResDialogComponent implements OnInit {
             this.paths.push(ro);
           }
         }
-        this.pagingController.onTotalChanged(r.data.pagingVo);
+        this.pagingController.onTotalChanged(r.data.paging);
       }
     });
 

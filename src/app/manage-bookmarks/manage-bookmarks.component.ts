@@ -54,7 +54,7 @@ export class ManageBookmarksComponent implements OnInit {
       subscribe({
         next: (r) => {
           this.tabdat = r.data.payload;
-          this.pagingController.onTotalChanged(r.data.pagingVo);
+          this.pagingController.onTotalChanged(r.data.paging);
         }
       });
   }

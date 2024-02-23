@@ -54,12 +54,12 @@ export class GalleryImageComponent implements OnInit {
     this.http
       .post<Resp<ListGalleryImagesResp>>(
         buildApiPath("/gallery/images", environment.fantahsea),
-        { galleryNo: this.galleryNo, pagingVo: this.pagingController.paging },
+        { galleryNo: this.galleryNo, paging: this.pagingController.paging },
         buildOptions()
       )
       .subscribe({
         next: (resp) => {
-          this.pagingController.onTotalChanged(resp.data.pagingVo);
+          this.pagingController.onTotalChanged(resp.data.paging);
 
           this.images = [];
           if (resp.data.images) {

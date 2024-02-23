@@ -59,11 +59,11 @@ export class GalleryComponent implements OnInit {
     this.http
       .post<ListGalleriesResp>(
         environment.fantahsea, "/gallery/list",
-        { pagingVo: this.pagingController.paging },
+        { paging: this.pagingController.paging },
       )
       .subscribe({
         next: (resp) => {
-          this.pagingController.onTotalChanged(resp.data.pagingVo);
+          this.pagingController.onTotalChanged(resp.data.paging);
           this.galleries = resp.data.galleries;
           this.expandedElement = null;
         },

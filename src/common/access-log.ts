@@ -13,12 +13,12 @@ export interface AccessLog {
 
 export interface FetchAccessLogList {
   payload: AccessLog[];
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 /**
  * Parameters for fetching list of access log
  */
 export interface FetchAccessLogListParam {
-  pagingVo: Paging;
+  paging: Paging;
 }

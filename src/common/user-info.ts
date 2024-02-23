@@ -23,7 +23,7 @@ export interface UserInfo {
 
 export interface FetchUserInfoResp {
   list: UserInfo[];
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export enum UserIsDisabledEnum {
@@ -102,7 +102,7 @@ export interface FetchUserInfoParam {
   username?: string;
   isDisabled?: UserIsDisabledEnum | number;
   roleNo?: string;
-  pagingVo?: Paging;
+  paging?: Paging;
 }
 
 export interface UpdateUserInfoParam {

@@ -35,7 +35,7 @@ export class AccessLogComponent implements OnInit {
   fetchAccessLogList(): void {
     this.http.post<any>(
       environment.authService, "/access/history",
-      { pagingVo: this.pagingController.paging, }
+      { paging: this.pagingController.paging, }
     ).subscribe({
       next: (resp) => {
         this.accessLogList = [];
@@ -47,7 +47,7 @@ export class AccessLogComponent implements OnInit {
             this.accessLogList.push(r);
           }
         }
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
       },
       error: (err) => {
         console.log(err);

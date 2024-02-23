@@ -11,12 +11,12 @@ export interface FindEventHandlingByPageReqVo {
   /** handle result */
   handleResult: HandleResult;
 
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export interface FindEventHandlingByPageRespVo {
   list: EventHandling[];
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export interface EventHandling {

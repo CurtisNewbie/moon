@@ -53,7 +53,7 @@ export interface FsGroupModeOption {
 export interface ListAllFsGroupReqVo {
   fsGroup: FsGroup;
 
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export interface UpdateFsGroupModeReqVo {
@@ -67,5 +67,5 @@ export interface UpdateFsGroupModeReqVo {
 export interface ListAllFsGroupRespVo {
   payload: FsGroup[];
 
-  pagingVo: Paging;
+  paging: Paging;
 }

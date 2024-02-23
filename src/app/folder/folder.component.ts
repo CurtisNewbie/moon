@@ -30,7 +30,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
   creatingFolder: boolean = false;
   searchParam = {
     name: "",
-    pagingVo: null,
+    paging: null,
   };
   folders: VFolder[] = [];
   selected: VFolder[] = [];
@@ -132,7 +132,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   fetchFolders(): void {
-    this.searchParam.pagingVo = this.pagingController.paging;
+    this.searchParam.paging = this.pagingController.paging;
     this.http
       .post<Resp<any>>(
         buildApiPath("/vfolder/list", environment.vfm),
@@ -149,7 +149,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
               return r;
             });
           }
-          this.pagingController.onTotalChanged(resp.data.pagingVo);
+          this.pagingController.onTotalChanged(resp.data.paging);
         },
       });
   }

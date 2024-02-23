@@ -58,13 +58,13 @@ export interface SearchFileExtParam {
   isEnabled: number;
 
   /** paging  */
-  pagingVo: Paging;
+  paging: Paging;
 }
 
 export function emptySearchFileExtParam(): SearchFileExtParam {
   return {
     name: null,
     isEnabled: null,
-    pagingVo: null,
+    paging: null,
   };
 }

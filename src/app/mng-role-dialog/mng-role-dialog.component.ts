@@ -72,7 +72,7 @@ export class MngRoleDialogComponent implements OnInit {
   listResources() {
     this.hclient.post<any>(environment.goauth, "/role/resource/list", {
       roleNo: this.dat.roleNo,
-      pagingVo: this.pagingController.paging
+      paging: this.pagingController.paging
     }).subscribe({
       next: (res) => {
         this.roleRes = [];
@@ -81,7 +81,7 @@ export class MngRoleDialogComponent implements OnInit {
             if (r.createTime) r.createTime = new Date(r.createTime);
             this.roleRes.push(r);
           }
-          this.pagingController.onTotalChanged(res.data.pagingVo);
+          this.pagingController.onTotalChanged(res.data.paging);
         }
       }
     });

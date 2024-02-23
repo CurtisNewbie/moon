@@ -55,7 +55,7 @@ export class ManageRoleComponent implements OnInit {
 
   fetchList() {
     this.hclient.post<any>(environment.goauth, '/role/list', {
-      pagingVo: this.pagingController.paging
+      paging: this.pagingController.paging
     }).subscribe({
       next: (r) => {
         this.roles = [];
@@ -66,7 +66,7 @@ export class ManageRoleComponent implements OnInit {
             this.roles.push(ro);
           }
         }
-        this.pagingController.onTotalChanged(r.data.pagingVo);
+        this.pagingController.onTotalChanged(r.data.paging);
       }
     });
   }

@@ -49,7 +49,7 @@ export class FileTaskComponent implements OnInit {
             this.fileTaskList.push(r);
           }
 
-          this.pagingController.onTotalChanged(resp.data.pagingVo);
+          this.pagingController.onTotalChanged(resp.data.paging);
         }
       })
   }

@@ -98,7 +98,7 @@ export class ManagerUserComponent implements OnInit {
   }
 
   fetchUserInfoList(): void {
-    this.searchParam.pagingVo = this.pagingController.paging;
+    this.searchParam.paging = this.pagingController.paging;
     this.http.post<any>(
       environment.authService, "/user/list",
       this.searchParam,
@@ -112,7 +112,7 @@ export class ManagerUserComponent implements OnInit {
             this.userInfoList.push(r);
           }
         }
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
       },
     });
   }

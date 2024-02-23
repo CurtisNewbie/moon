@@ -117,9 +117,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
+
   Virtual Folders
-  
+
   -----------------------
   */
 
@@ -130,9 +130,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
+
   Directory
-  
+
   -----------------------
   */
 
@@ -150,9 +150,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   -----------------------
-  
+
   Uploading
-  
+
   -----------------------
   */
   /** whther the upload panel is expanded */
@@ -176,9 +176,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   /*
   ----------------------------------
-  
+
   Labels
-  
+
   ----------------------------------
   */
   refreshLabel = () => {
@@ -345,7 +345,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.hclient.post<any>(
       environment.vfm, "/file/list",
       {
-        pagingVo: this.pagingController.paging,
+        paging: this.pagingController.paging,
         filename: this.searchParam.name,
         tagName: this.searchParam.tagName,
         folderNo: this.inFolderNo,
@@ -373,7 +373,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
           }
         }
 
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
         this.isAllSelected = false;
         this.selectedCount = 0;
       },

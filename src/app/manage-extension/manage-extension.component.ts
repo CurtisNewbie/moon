@@ -65,7 +65,7 @@ export class ManageExtensionComponent implements OnInit {
       this.isSearchParamChagned = false;
       this.pagingController.firstPage();
     }
-    this.searchParam.pagingVo = this.pagingController.paging;
+    this.searchParam.paging = this.pagingController.paging;
 
     this.http.post<any>(
       environment.vfm, "/file/extension/list",
@@ -80,7 +80,7 @@ export class ManageExtensionComponent implements OnInit {
             this.fileExt.push(r);
           }
         }
-        this.pagingController.onTotalChanged(resp.data.pagingVo);
+        this.pagingController.onTotalChanged(resp.data.paging);
       },
     });
   }

@@ -58,7 +58,7 @@ export class ManageKeysComponent implements OnInit {
         environment.authService, "/user/key/list",
         {
           payload: { name: this.query.name },
-          pagingVo: this.pagingController.paging,
+          paging: this.pagingController.paging,
         },
       )
       .subscribe((resp) => {
@@ -71,7 +71,7 @@ export class ManageKeysComponent implements OnInit {
               this.tokens.push(r);
             }
           }
-          this.pagingController.onTotalChanged(resp.data.pagingVo);
+          this.pagingController.onTotalChanged(resp.data.paging);
           if (this.panelDisplayed) this.panelDisplayed = false;
         }
       });

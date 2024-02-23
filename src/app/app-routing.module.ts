@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { FileTaskComponent } from "./file-task/file-task.component";
 import { FolderComponent } from "./folder/folder.component";
-import { FsGroupComponent } from "./fs-group/fs-group.component";
 import { GalleryImageComponent } from "./gallery-image/gallery-image.component";
 import { GalleryComponent } from "./gallery/gallery.component";
 import { MngFilesComponent } from "./manage-files/mng-files.component";
@@ -18,9 +17,6 @@ import { ManageRoleComponent } from "./manage-role/manage-role.component";
 import { ManagerUserComponent } from "./manager-user/manager-user.component";
 import { AccessLogComponent } from "./access-log/access-log.component";
 import { ChangePasswordComponent } from "./change-password/change-password.component";
-import { OperateHistoryComponent } from "./operate-history/operate-history.component";
-import { ManageTasksComponent } from "./manage-tasks/manage-tasks.component";
-import { TaskHistoryComponent } from "./task-history/task-history.component";
 import { RegisterComponent } from "./register/register.component";
 import { ManageResourcesComponent } from "./manage-resources/manage-resources.component";
 import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
@@ -40,10 +36,6 @@ const routes: Routes = [
   {
     path: NavType.FILE_TASK,
     component: FileTaskComponent,
-  },
-  {
-    path: NavType.MANAGE_FSGROUP,
-    component: FsGroupComponent,
   },
   {
     path: NavType.PDF_VIEWER,
@@ -100,18 +92,6 @@ const routes: Routes = [
   {
     path: NavType.CHANGE_PASSWORD,
     component: ChangePasswordComponent,
-  },
-  // {
-  //   path: NavType.OPERATE_HISTORY,
-  //   component: OperateHistoryComponent,
-  // },
-  {
-    path: NavType.MANAGE_TASKS,
-    component: ManageTasksComponent,
-  },
-  {
-    path: NavType.TASK_HISTORY,
-    component: TaskHistoryComponent,
   },
   {
     path: NavType.REGISTER_PAGE,
