@@ -658,7 +658,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
               data: {
                 name: u.name,
                 url: getDownloadUrl(),
-                isMobile: this.isMobile
+                isMobile: this.isMobile,
+                rotate: false,
               },
             });
           }
