@@ -3,8 +3,8 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
 import { environment } from "src/environments/environment";
-import { Gallery, ListGalleriesResp } from "src/common/gallery";
-import { PagingController } from "src/common/paging";
+import { Gallery } from "src/common/gallery";
+import { Paging, PagingController } from "src/common/paging";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 import { NavigationService } from "../navigation.service";
 import { Toaster } from "../notification.service";
@@ -12,6 +12,11 @@ import { NavType } from "../routes";
 import { HClient } from "src/common/api-util";
 import { isMobile } from "src/common/env-util";
 import { GalleryAccessComponent, GrantGalleryAccessDialogData } from "../gallery-access/gallery-access.component";
+
+export interface ListGalleriesResp {
+  paging: Paging;
+  payload: Gallery[];
+}
 
 @Component({
   selector: "app-gallery",
@@ -64,7 +69,7 @@ export class GalleryComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           this.pagingController.onTotalChanged(resp.data.paging);
-          this.galleries = resp.data.galleries;
+          this.galleries = resp.data.payload;
           this.expandedElement = null;
         },
       });

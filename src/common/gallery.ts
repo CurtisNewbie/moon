@@ -1,10 +1,5 @@
 import { Paging } from "./paging";
 
-export interface ListGalleriesResp {
-  paging: Paging;
-  galleries: Gallery[];
-}
-
 export interface Gallery {
   id: string;
   galleryNo: string;
