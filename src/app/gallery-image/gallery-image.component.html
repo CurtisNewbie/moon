@@ -1,7 +1,7 @@
 <div class="row row-cols-lg-auto g-3 align-items-center">
     <div *ngFor="let image of images; let i=index">
         <div class="col-12">
-            <img [src]="image.thumb" (click)="open(i)" class="m-2" />
+            <img [src]="image.thumb" (click)="open(i)" class="m-2" style="max-width:256px" />
         </div>
     </div>
 </div>
