@@ -129,7 +129,7 @@ export class ManagerUserComponent implements OnInit {
     this.http.post<void>(
       environment.authService, "/user/info/update",
       {
-        id: this.expandedElement.id,
+        userNo: this.expandedElement.userNo,
         roleNo: this.expandedElement.roleNo,
         isDisabled: this.expandedElement.isDisabled,
       },
