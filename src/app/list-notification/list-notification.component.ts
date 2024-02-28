@@ -123,4 +123,27 @@ export class ListNotificationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => this.fetchList());
   }
 
+  markAllOpened() {
+    const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
+      this.dialog.open(ConfirmDialogComponent, {
+        width: "700px",
+        data: {
+          title: "Mark All Notifications Opened?",
+          msg: ["Are your sure you want to mark all notifications as opened?"]
+        },
+      });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        this.http.post<any>(environment.postbox, "/open/api/v1/notification/open-all", null, false).
+          subscribe({
+            next: () => {
+              this.platformNotification.triggerChange();
+              this.fetchList();
+            }
+          });
+      }
+    });
+  }
+
 }
