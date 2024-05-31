@@ -11,7 +11,7 @@ export const environment = {
   dtaskgo: "dtaskgo",
   fstore: "fstore",
   logbot: "logbot",
-  docindexer: "docindexer",
+  docindexer: "vfm",
   postbox: "postbox"
 };
 
