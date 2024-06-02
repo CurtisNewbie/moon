@@ -12,7 +12,7 @@ export const environment = {
   fstore: "fstore",
   logbot: "logbot",
   docindexer: "vfm",
-  postbox: "postbox"
+  postbox: "user-vault"
 };
 
 /*
