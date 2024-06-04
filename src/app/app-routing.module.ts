@@ -23,6 +23,7 @@ import { ManagePathsComponent } from "./manage-paths/manage-paths.component";
 import { ManageLogsComponent } from "./manage-logs/manage-logs.component";
 import { ManageBookmarksComponent } from "./manage-bookmarks/manage-bookmarks.component";
 import { ListNotificationComponent } from "./list-notification/list-notification.component";
+import { BookmarkBlacklistComponent } from "./bookmark-blacklist/bookmark-blacklist.component";
 
 const routes: Routes = [
   {
@@ -117,7 +118,11 @@ const routes: Routes = [
     path: NavType.LIST_NOTIFICATION,
     component: ListNotificationComponent,
   },
-  { path: "**", redirectTo: "/" + NavType.USER_DETAILS},
+  {
+    path: NavType.MNG_BOOKMARK_BLACKLIST,
+    component: BookmarkBlacklistComponent,
+  },
+  { path: "**", redirectTo: "/" + NavType.USER_DETAILS },
 ];
 
 @NgModule({

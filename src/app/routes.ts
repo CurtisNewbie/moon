@@ -15,6 +15,7 @@ export enum NavType {
     MNG_RES = "manage-resources",
     MNG_LOGS = "manage-logs",
     MNG_BOOKMARKS = "manage-bookmarks",
+    MNG_BOOKMARK_BLACKLIST = "manage-bookmark-blacklist",
     MANAGE_FILES = "manage-files",
     LOGIN_PAGE = "login-page",
     MANAGE_EXT = "manage-extension",

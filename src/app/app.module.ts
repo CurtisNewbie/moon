@@ -70,6 +70,7 @@ import { GalleryAccessComponent } from './gallery-access/gallery-access.componen
 import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share-file-qrcode-dialog.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ListNotificationComponent } from './list-notification/list-notification.component';
+import { BookmarkBlacklistComponent } from './bookmark-blacklist/bookmark-blacklist.component';
 
 @NgModule({
   exports: [],
@@ -111,6 +112,7 @@ import { ListNotificationComponent } from './list-notification/list-notification
     GalleryAccessComponent,
     ShareFileQrcodeDialogComponent,
     ListNotificationComponent,
+    BookmarkBlacklistComponent,
   ],
   imports: [
     MatTabsModule,
