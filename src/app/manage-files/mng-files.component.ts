@@ -24,14 +24,14 @@ import { Toaster } from "../notification.service";
 import { UserService } from "../user.service";
 import { animateElementExpanding, isIdEqual } from "../../animate/animate-util";
 import { HClient } from "src/common/api-util";
-import { FileInfoService } from "../file-info.service";
+import { FileInfoService, TokenType } from "../file-info.service";
 import { NavigationService } from "../navigation.service";
 import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
 import { ActivatedRoute } from "@angular/router";
 import { Resp } from "src/common/resp";
 import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
-import { resolveSize } from "src/common/file";
+import { isImage, isImageByName, isPdf, isStreamableVideo, guessFileThumbnail, isTxt, resolveSize } from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
 import { Option } from "src/common/select-util";
 import { isEnterKey } from "src/common/condition";
@@ -40,11 +40,6 @@ import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.co
 import { HostOnGalleryComponent } from "../host-on-gallery/host-on-gallery.component";
 import { DirectoryMoveFileComponent } from "../directory-move-file/directory-move-file.component";
 import { ShareFileQrcodeDialogComponent } from "../share-file-qrcode-dialog/share-file-qrcode-dialog.component";
-
-export enum TokenType {
-  DOWNLOAD = "DOWNLOAD",
-  STREAMING = "STREAMING"
-}
 
 @Component({
   selector: "app-mng-files",
@@ -57,20 +52,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   readonly desktopColumns = ["selected", "thumbnail", "name", "parentFileName", "uploadTime", "size", "operation"];
   readonly desktopFolderColumns = ["thumbnail", "name", "uploader", "uploadTime", "size", "operation"];
   readonly mobileColumns = ["fileType", "thumbnail", "name", "operation"];
-  readonly videoSuffix = new Set(["mp4", "mov", "webm", "ogg"]);
-  readonly imageSuffix = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
-  readonly textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list", "service"]);
-  readonly suffixIcon: [Set<string>, string][] = [
-    [new Set(["pdf"]), "./assets/pdf.png"],
-    [new Set(["zip", "7z"]), "./assets/zip.png"],
-    [new Set(["txt", "conf", "yml", "yaml", "properties", "json", "list", "doc", "docx", "service", "md", "conf"]), "./assets/text.png"],
-    [new Set(["go", "java", "js", "ts", "html", "css", "sh"]), "./assets/code.png"],
-    [new Set(["csv", "xls", "xlsx"]), "./assets/spreadsheet.png"],
-    [new Set(["iso"]), "./assets/binary.png"],
-    [new Set(["dmg", "exe", "jar"]), "./assets/install.png"],
-  ];
 
   allFileTypeOpts: Option<FileType>[] = [];
+  guessFileThumbnail = guessFileThumbnail;
 
   /** expanded fileInfo */
   curr: FileInfo;
@@ -619,17 +603,13 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     const filename: string = f.name;
     if (!filename) return false;
 
-    return this._isPdf(filename) || this._isImageByName(filename) || this._isStreamableVideo(filename) || this._isTxt(filename);
-  }
-
-  _isTxt(fname: string): boolean {
-    return this._fileSuffixAnyMatch(fname, this.textSuffix);
+    return isPdf(filename) || isImageByName(filename) || isStreamableVideo(filename) || isTxt(filename);
   }
 
   /** Display the file */
   preview(u: FileInfo): void {
-    const isStreaming = this._isStreamableVideo(u.name);
-    this.generateFileTempToken(u.uuid, isStreaming ? TokenType.STREAMING : TokenType.DOWNLOAD)
+    const isStreaming = isStreamableVideo(u.name);
+    this.fileService.generateFileTempToken(u.uuid, isStreaming ? TokenType.STREAMING : TokenType.DOWNLOAD)
       .subscribe({
         next: (resp) => {
           const token = resp.data;
@@ -645,11 +625,11 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
                 token: token
               },
             });
-          } else if (this._isPdf(u.name)) {
+          } else if (isPdf(u.name)) {
             this.nav.navigateTo(NavType.PDF_VIEWER, [
               { name: u.name, url: getDownloadUrl(), uuid: u.uuid },
             ]);
-          } else if (this._isTxt(u.name)) {
+          } else if (isTxt(u.name)) {
             this.nav.navigateTo(NavType.TXT_VIEWER, [
               { name: u.name, url: getDownloadUrl(), uuid: u.uuid },
             ]);
@@ -670,7 +650,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   generateTempTokenQrCode(fi: FileInfo): void {
     if (!fi) return;
 
-    this.generateFileTempToken(fi.uuid).subscribe({
+    this.fileService.generateFileTempToken(fi.uuid).subscribe({
       next: (resp) => {
         const dialogRef: MatDialogRef<ShareFileQrcodeDialogComponent, boolean> =
           this.dialog.open(ShareFileQrcodeDialogComponent, {
@@ -695,13 +675,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
    * Fetch download url and open it in a new tab
    */
   jumpToDownloadUrl(fileKey: string): void {
-    this.generateFileTempToken(fileKey).subscribe({
-      next: (resp) => {
-        const token = resp.data;
-        const url = environment.fstore + "/file/raw?key=" + encodeURIComponent(token);
-        window.open(url, "_parent");
-      },
-    });
+    this.fileService.jumpToDownloadUrl(fileKey);
   }
 
   isFileNameInputDisabled(): boolean {
@@ -740,7 +714,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   transferSelectedToGallery() {
 
-    let selected = this.filterSelected((f: FileInfo): boolean => this._isImage(f) || f.isDir)
+    let selected = this.filterSelected((f: FileInfo): boolean => isImage(f) || f.isDir)
       .map((f, i) => {
         return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
       });
@@ -800,31 +774,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
   private _concatTempFileDownloadUrl(tempToken: string): string {
     return window.location.protocol + "//" + window.location.host + "/" + environment.fstore + "/file/raw?key=" + encodeURIComponent(tempToken);
-  }
-
-  private _isPdf(filename: string): boolean {
-    return filename.toLowerCase().indexOf(".pdf") != -1;
-  }
-
-  private _isStreamableVideo(filename: string): boolean {
-    return this._fileSuffixAnyMatch(filename, this.videoSuffix);
-  }
-
-  private _isImageByName(filename: string): boolean {
-    return this._fileSuffixAnyMatch(filename, this.imageSuffix);
-  }
-
-  private _fileSuffixAnyMatch(name: string, candidates: Set<string>): boolean {
-    let i = name.lastIndexOf(".");
-    if (i < 0 || i == name.length - 1) return false;
-
-    let suffix = name.slice(i + 1);
-    return candidates.has(suffix.toLowerCase());
-  }
-
-  private _isImage(f: FileInfo): boolean {
-    if (f == null || !f.isFile) return false;
-    return this._isImageByName(f.name);
   }
 
   private _setDisplayedFileName(): void {
@@ -1000,16 +949,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     return this.inFolderNo ? this.desktopFolderColumns : this.desktopColumns;
   }
 
-  /**
-   * Generate file temporary token
-   */
-  private generateFileTempToken(fileKey: string, tokenType: TokenType = TokenType.DOWNLOAD): Observable<Resp<string>> {
-    return this.hclient.post<string>(
-      environment.vfm, "/file/token/generate",
-      { fileKey: fileKey, tokenType: tokenType },
-    );
-  }
-
   /** Filter selected files */
   private filterSelected(...predicates): FileInfo[] {
     return this.fileInfoList
@@ -1063,7 +1002,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   generateTempToken(u: FileInfo): void {
     if (!u) return;
 
-    this.generateFileTempToken(u.uuid).subscribe({
+    this.fileService.generateFileTempToken(u.uuid).subscribe({
       next: (resp) => {
         const dialogRef: MatDialogRef<ConfirmDialogComponent, boolean> =
           this.dialog.open(ConfirmDialogComponent, {
@@ -1085,33 +1024,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         });
       },
     });
-  }
-
-  suffix(name: string): string {
-    let i = name.lastIndexOf(".");
-    if (i < 0 || i == name.length - 1) return "";
-
-    let suffix = name.slice(i + 1);
-    return suffix.toLowerCase();
-  }
-
-  guessFileThumbnail(f: FileInfo): string {
-    if (f.isDir) {
-      return "./assets/box.png"
-    }
-    if (f.thumbnailUrl) {
-      return f.thumbnailUrl
-    }
-    let suffix = this.suffix(f.name);
-    if (!suffix) {
-      return "./assets/file.png"
-    }
-    for (let u of this.suffixIcon) {
-      if (u[0].has(suffix)) {
-        return u[1]
-      }
-    }
-    return "./assets/file.png"
   }
 
 }

@@ -24,6 +24,7 @@ import { ManageLogsComponent } from "./manage-logs/manage-logs.component";
 import { ManageBookmarksComponent } from "./manage-bookmarks/manage-bookmarks.component";
 import { ListNotificationComponent } from "./list-notification/list-notification.component";
 import { BookmarkBlacklistComponent } from "./bookmark-blacklist/bookmark-blacklist.component";
+import { VersionedFileComponent } from "./versioned-file/versioned-file.component";
 
 const routes: Routes = [
   {
@@ -121,6 +122,10 @@ const routes: Routes = [
   {
     path: NavType.MNG_BOOKMARK_BLACKLIST,
     component: BookmarkBlacklistComponent,
+  },
+  {
+    path: NavType.VERSIONED_FILES,
+    component: VersionedFileComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS },
 ];

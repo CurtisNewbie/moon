@@ -71,7 +71,7 @@ import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share
 import { MatBadgeModule } from '@angular/material/badge';
 import { ListNotificationComponent } from './list-notification/list-notification.component';
 import { BookmarkBlacklistComponent } from './bookmark-blacklist/bookmark-blacklist.component';
-import { VersionedFileComponent } from './versioned-file/versioned-file.component';
+import { VerFileHistoryComponent, VersionedFileComponent } from './versioned-file/versioned-file.component';
 
 @NgModule({
   exports: [],
@@ -115,6 +115,7 @@ import { VersionedFileComponent } from './versioned-file/versioned-file.componen
     ListNotificationComponent,
     BookmarkBlacklistComponent,
     VersionedFileComponent,
+    VerFileHistoryComponent,
   ],
   imports: [
     MatTabsModule,
