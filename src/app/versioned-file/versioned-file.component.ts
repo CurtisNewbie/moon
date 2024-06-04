@@ -103,7 +103,7 @@ function preview(u, dialog, nav, fileService, isMobile, onNav = null): void {
       </div>
 
       <p class="mb-3">
-        <b>Accumulated size: '{{ totalSizeLabel }}'</b>
+        <b>Accumulated size (rough estimate): '<= {{ totalSizeLabel }}'</b>
       </p>
 
       <table
