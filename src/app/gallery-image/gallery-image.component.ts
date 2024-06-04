@@ -53,7 +53,7 @@ export class GalleryImageComponent implements OnInit {
 
     this.http
       .post<Resp<ListGalleryImagesResp>>(
-        buildApiPath("/gallery/images", environment.fantahsea),
+        buildApiPath("/gallery/images", environment.vfm),
         { galleryNo: this.galleryNo, paging: this.pagingController.paging },
         buildOptions()
       )

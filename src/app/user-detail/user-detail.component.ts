@@ -31,7 +31,7 @@ export class UserDetailComponent implements OnInit {
   ngOnInit() {
     this.userService.fetchUserInfo();
     this.http.get<any>(
-      environment.authService, "/user/info",
+      environment.uservault, "/user/info",
     ).subscribe({
       next: (resp) => {
         if (resp.data) {

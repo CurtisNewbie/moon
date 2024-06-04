@@ -52,7 +52,7 @@ export class ListNotificationComponent implements OnInit {
   fetchList() {
     this.http
       .post<any>(
-        environment.postbox, "/open/api/v1/notification/query",
+        environment.uservault, "/open/api/v1/notification/query",
         {
           status: this.query.onlyInitMessage ? "INIT" : "",
           page: this.pagingController.paging,
@@ -90,7 +90,7 @@ export class ListNotificationComponent implements OnInit {
   markOpened(notifiNo: string) {
     this.http
       .post<any>(
-        environment.postbox, "/open/api/v1/notification/open",
+        environment.uservault, "/open/api/v1/notification/open",
         { notifiNo: notifiNo, }, false
       ).subscribe({
         complete: () => {
@@ -135,7 +135,7 @@ export class ListNotificationComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        this.http.post<any>(environment.postbox, "/open/api/v1/notification/open-all", null, false).
+        this.http.post<any>(environment.uservault, "/open/api/v1/notification/open-all", null, false).
           subscribe({
             next: () => {
               this.platformNotification.triggerChange();

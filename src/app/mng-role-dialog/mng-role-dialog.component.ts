@@ -43,7 +43,7 @@ export class MngRoleDialogComponent implements OnInit {
   }
 
   fetchResourceCandidates() {
-    this.hclient.get<any>(environment.goauth, `/resource/brief/candidates?roleNo=${this.dat.roleNo}`)
+    this.hclient.get<any>(environment.uservault, `/resource/brief/candidates?roleNo=${this.dat.roleNo}`)
       .subscribe({
         next: (res) => {
           this.resBriefs = res.data;
@@ -57,7 +57,7 @@ export class MngRoleDialogComponent implements OnInit {
       return;
     }
 
-    this.hclient.post<any>(environment.goauth, "/role/resource/add", {
+    this.hclient.post<any>(environment.uservault, "/role/resource/add", {
       roleNo: this.dat.roleNo,
       resCode: this.addResCode
     }).subscribe({
@@ -70,7 +70,7 @@ export class MngRoleDialogComponent implements OnInit {
   }
 
   listResources() {
-    this.hclient.post<any>(environment.goauth, "/role/resource/list", {
+    this.hclient.post<any>(environment.uservault, "/role/resource/list", {
       roleNo: this.dat.roleNo,
       paging: this.pagingController.paging
     }).subscribe({
@@ -94,7 +94,7 @@ export class MngRoleDialogComponent implements OnInit {
   }
 
   delRes(roleRes: ListedRoleRes) {
-    this.hclient.post<any>(environment.goauth, "/role/resource/remove", {
+    this.hclient.post<any>(environment.uservault, "/role/resource/remove", {
       roleNo: this.dat.roleNo,
       resCode: roleRes.resCode
     }).subscribe({

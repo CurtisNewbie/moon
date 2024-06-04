@@ -60,7 +60,7 @@ export class UserService implements OnDestroy {
   }
 
   public fetchUserResources() {
-    this.http.get<any>(environment.goauth, "/resource/brief/user").subscribe({
+    this.http.get<any>(environment.uservault, "/resource/brief/user").subscribe({
       next: (res) => {
         this.resources = new Set();
         if (res.data) {
@@ -88,7 +88,7 @@ export class UserService implements OnDestroy {
    */
   public login(username: string, password: string): Observable<Resp<any>> {
     return this.http.post<Resp<any>>(
-      environment.authService, "/user/login",
+      environment.uservault, "/user/login",
       {
         username: username,
         password: password,
@@ -117,7 +117,7 @@ export class UserService implements OnDestroy {
     userRole: string
   ): Observable<Resp<any>> {
     return this.http.post<any>(
-      environment.authService, "/user/register",
+      environment.uservault, "/user/register",
       { username, password, userRole },
     );
   }
@@ -130,7 +130,7 @@ export class UserService implements OnDestroy {
    */
   public register(username: string, password: string): Observable<Resp<any>> {
     return this.http.post<any>(
-      environment.authService, "/user/register/request",
+      environment.uservault, "/user/register/request",
       { username, password },
     );
   }
@@ -141,7 +141,7 @@ export class UserService implements OnDestroy {
   public fetchUserInfo(callback = null): void {
     this.http
       .get<UserInfo>(
-        environment.authService, "/user/info",
+        environment.uservault, "/user/info",
       )
       .subscribe({
         next: (resp) => {
@@ -184,7 +184,7 @@ export class UserService implements OnDestroy {
       registerDate;
     }>
   > {
-    return this.http.get<any>(environment.authService, "/user/info");
+    return this.http.get<any>(environment.uservault, "/user/info");
   }
 
   /**
@@ -192,7 +192,7 @@ export class UserService implements OnDestroy {
    */
   private exchangeToken(token: string): Observable<Resp<string>> {
     return this.http.post<any>(
-      environment.authService, "/token/exchange",
+      environment.uservault, "/token/exchange",
       { token: token },
     );
   }
@@ -202,17 +202,17 @@ export class UserService implements OnDestroy {
    */
   public changePassword(param: ChangePasswordParam): Observable<Resp<any>> {
     return this.http.post<any>(
-      environment.authService, "/user/password/update",
+      environment.uservault, "/user/password/update",
       param,
     );
   }
 
   public fetchRoleBriefs(): Observable<Resp<any>> {
-    return this.http.get<any>(environment.goauth, "/role/brief/all");
+    return this.http.get<any>(environment.uservault, "/role/brief/all");
   }
 
   public fetchAllResBrief(): Observable<Resp<any>> {
-    return this.http.get<any>(environment.goauth, "/resource/brief/all");
+    return this.http.get<any>(environment.uservault, "/resource/brief/all");
   }
 
 }

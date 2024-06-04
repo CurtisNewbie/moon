@@ -4,15 +4,10 @@
 
 export const environment = {
   production: false,
-  fantahsea: "vfm",
   vfm: "vfm",
-  authService: "user-vault",
-  goauth: "user-vault",
-  dtaskgo: "dtaskgo",
+  uservault: "user-vault",
   fstore: "fstore",
   logbot: "logbot",
-  docindexer: "vfm",
-  postbox: "user-vault"
 };
 
 /*

@@ -55,7 +55,7 @@ export class ManageKeysComponent implements OnInit {
   fetchList() {
     this.http
       .post<any>(
-        environment.authService, "/user/key/list",
+        environment.uservault, "/user/key/list",
         {
           payload: { name: this.query.name },
           paging: this.pagingController.paging,
@@ -102,7 +102,7 @@ export class ManageKeysComponent implements OnInit {
 
     this.http
       .post<void>(
-        environment.authService, "/user/key/generate",
+        environment.uservault, "/user/key/generate",
         {
           password: pw,
           keyName: keyName,
@@ -120,7 +120,7 @@ export class ManageKeysComponent implements OnInit {
   deleteUserKey(id: number) {
     this.http
       .post<void>(
-        environment.authService, "/user/key/delete",
+        environment.uservault, "/user/key/delete",
         {
           userKeyId: id,
         },

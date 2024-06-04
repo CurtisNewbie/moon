@@ -80,7 +80,7 @@ export class ManagePathsComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.goauth, '/path/list', {
+    this.hclient.post<any>(environment.uservault, '/path/list', {
       paging: this.pagingController.paging,
       pgroup: this.searchGroup,
       url: this.searchPath,

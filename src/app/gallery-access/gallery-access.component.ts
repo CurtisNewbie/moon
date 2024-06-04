@@ -56,7 +56,7 @@ export class GalleryAccessComponent implements OnInit {
     }
 
     this.http.post<void>(
-      environment.fantahsea, "/gallery/access/grant",
+      environment.vfm, "/gallery/access/grant",
       {
         galleryNo: this.data.galleryNo,
         username: this.grantedTo,
@@ -76,7 +76,7 @@ export class GalleryAccessComponent implements OnInit {
 
   fetchFolderAccessGranted() {
     this.http.post<any>(
-      environment.fantahsea, "/gallery/access/list",
+      environment.vfm, "/gallery/access/list",
       {
         galleryNo: this.data.galleryNo,
         paging: this.pagingController.paging,
@@ -101,7 +101,7 @@ export class GalleryAccessComponent implements OnInit {
 
   removeFolderAccess(userNo: string): void {
     this.http.post<void>(
-      environment.fantahsea, "/gallery/access/remove",
+      environment.vfm, "/gallery/access/remove",
       { userNo: userNo, galleryNo: this.data.galleryNo },
     ).subscribe({
       next: () => {

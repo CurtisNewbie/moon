@@ -73,7 +73,7 @@ export class ManagerUserComponent implements OnInit {
     }
 
     this.http.post<any>(
-      environment.authService, "/user/add",
+      environment.uservault, "/user/add",
       { username: this.usernameToBeAdded, password: this.passswordToBeAdded, roleNo: this.userRoleOfAddedUser },
     ).subscribe({
       complete: () => {
@@ -100,7 +100,7 @@ export class ManagerUserComponent implements OnInit {
   fetchUserInfoList(): void {
     this.searchParam.paging = this.pagingController.paging;
     this.http.post<any>(
-      environment.authService, "/user/list",
+      environment.uservault, "/user/list",
       this.searchParam,
     ).subscribe({
       next: (resp) => {
@@ -127,7 +127,7 @@ export class ManagerUserComponent implements OnInit {
    */
   updateUserInfo(): void {
     this.http.post<void>(
-      environment.authService, "/user/info/update",
+      environment.uservault, "/user/info/update",
       {
         userNo: this.expandedElement.userNo,
         roleNo: this.expandedElement.roleNo,
@@ -161,7 +161,7 @@ export class ManagerUserComponent implements OnInit {
       console.log(confirm);
       if (confirm) {
         this.http.post<void>(
-          environment.authService, "/user/delete",
+          environment.uservault, "/user/delete",
           { id: this.expandedElement.id },
         ).subscribe({
           complete: () => {
@@ -190,7 +190,7 @@ export class ManagerUserComponent implements OnInit {
 
   reviewRegistration(userId: number, reviewStatus: string) {
     this.http.post<void>(
-      environment.authService, "/user/registration/review",
+      environment.uservault, "/user/registration/review",
       {
         userId: userId,
         reviewStatus: reviewStatus,

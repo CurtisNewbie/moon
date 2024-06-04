@@ -63,7 +63,7 @@ export class GalleryComponent implements OnInit {
   fetchGalleries() {
     this.http
       .post<ListGalleriesResp>(
-        environment.fantahsea, "/gallery/list",
+        environment.vfm, "/gallery/list",
         { paging: this.pagingController.paging },
       )
       .subscribe({
@@ -83,7 +83,7 @@ export class GalleryComponent implements OnInit {
 
     this.http
       .post<any>(
-        environment.fantahsea, "/gallery/new",
+        environment.vfm, "/gallery/new",
         {
           name: this.newGalleryName,
         }
@@ -123,7 +123,7 @@ export class GalleryComponent implements OnInit {
 
         this.http
           .post<any>(
-            environment.fantahsea, "/gallery/delete",
+            environment.vfm, "/gallery/delete",
             {
               galleryNo: galleryNo,
             },
@@ -150,7 +150,7 @@ export class GalleryComponent implements OnInit {
   updateGallery(galleryNo: string, name: string) {
     if (!galleryNo || !name) return;
 
-    this.http.post(environment.fantahsea, "/gallery/update", {
+    this.http.post(environment.vfm, "/gallery/update", {
       galleryNo: galleryNo,
       name: name
     }).subscribe({

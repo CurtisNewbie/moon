@@ -31,7 +31,7 @@ export class MngPathDialogComponent implements OnInit {
   }
 
   update() {
-    this.hclient.post(environment.goauth, "/path/update", {
+    this.hclient.post(environment.uservault, "/path/update", {
       type: this.dat.path.ptype,
       pathNo: this.dat.path.pathNo,
       group: this.dat.path.pgroup

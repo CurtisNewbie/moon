@@ -60,7 +60,7 @@ export class BookmarkBlacklistComponent implements OnInit {
   }
 
   remove(id) {
-    this.hclient.post<any>(environment.docindexer,
+    this.hclient.post<any>(environment.vfm,
       '/bookmark/blacklist/remove', { id: id }, false).
       subscribe({
         complete: () => this.fetchList()

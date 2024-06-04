@@ -35,7 +35,7 @@ export class MngResDialogComponent implements OnInit {
   }
 
   listPathsBound() {
-    this.hclient.post<any>(environment.goauth, '/path/list', {
+    this.hclient.post<any>(environment.uservault, '/path/list', {
       paging: this.pagingController.paging,
       resCode: this.dat.res.code
     }).subscribe({
@@ -69,7 +69,7 @@ export class MngResDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirm) => {
       console.log(confirm);
       if (confirm) {
-        this.hclient.post(environment.goauth, "/resource/remove", {
+        this.hclient.post(environment.uservault, "/resource/remove", {
           resCode: this.dat.res.code
         }).subscribe({
           next: (r) => {
@@ -92,7 +92,7 @@ export class MngResDialogComponent implements OnInit {
     ];
 
     this.confirmDialog.show(title, msg, () => {
-      this.hclient.post(environment.goauth, "/path/resource/unbind", {
+      this.hclient.post(environment.uservault, "/path/resource/unbind", {
         pathNo: pathNo,
         resCode: resCode
       })

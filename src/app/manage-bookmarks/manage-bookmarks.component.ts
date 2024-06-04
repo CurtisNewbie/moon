@@ -49,7 +49,7 @@ export class ManageBookmarksComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.docindexer,
+    this.hclient.post<any>(environment.vfm,
       '/bookmark/list', { paging: this.pagingController.paging, name: this.searchName }, false).
       subscribe({
         next: (r) => {
@@ -91,7 +91,7 @@ export class ManageBookmarksComponent implements OnInit {
   }
 
   remove(id) {
-    this.hclient.post<any>(environment.docindexer,
+    this.hclient.post<any>(environment.vfm,
       '/bookmark/remove', { id: id }, false).
       subscribe({
         complete: () => this.fetchList()
@@ -102,7 +102,7 @@ export class ManageBookmarksComponent implements OnInit {
     let headers = new HttpHeaders().append("Authorization", getToken())
 
     return this.http.put<HttpEvent<any>>(
-      environment.docindexer + "/bookmark/file/upload",
+      environment.vfm + "/bookmark/file/upload",
       file,
       {
         observe: "events",

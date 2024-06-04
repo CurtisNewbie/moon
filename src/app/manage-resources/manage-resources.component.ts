@@ -60,7 +60,7 @@ export class ManageResourcesComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.goauth, '/resource/list', {
+    this.hclient.post<any>(environment.uservault, '/resource/list', {
       paging: this.pagingController.paging
     }).subscribe({
       next: (r) => {
@@ -93,7 +93,7 @@ export class ManageResourcesComponent implements OnInit {
       return;
     }
 
-    this.hclient.post(environment.goauth, "/resource/add", {
+    this.hclient.post(environment.uservault, "/resource/add", {
       name: this.newResName,
       code: this.newResCode
     }).subscribe({

@@ -26,9 +26,9 @@ export class HostOnGalleryComponent implements OnInit {
 
   /** list of brief info of all galleries that we created */
   galleryBriefs: GalleryBrief[] = [];
-  /** name of fantahsea gallery that we may transfer files to */
+  /** name of gallery that we may transfer files to */
   addToGalleryName: string = null;
-  /** Auto complete for fantahsea gallery that we may transfer files to */
+  /** Auto complete for gallery that we may transfer files to */
   autoCompAddToGalleryName: string[];
 
   onAddToGalleryNameChanged = () => this.autoCompAddToGalleryName = filterAlike(this.galleryBriefs.map(v => v.name), this.addToGalleryName);
@@ -56,7 +56,7 @@ export class HostOnGalleryComponent implements OnInit {
     msgs.push(`All images will transferred and hosted on gallery '${this.addToGalleryName}', it may take a while.`);
     msgs.push("");
 
-    this.confirmDialog.show(`Hosting Images On Fantahsea Gallery '${this.addToGalleryName}'`,
+    this.confirmDialog.show(`Hosting Images On Gallery '${this.addToGalleryName}'`,
       msgs, () => {
         let params = this.dat.files.map((f) => {
           return {
@@ -66,7 +66,7 @@ export class HostOnGalleryComponent implements OnInit {
         });
 
         this.hclient
-          .post(environment.fantahsea, "/gallery/image/transfer", { images: params, })
+          .post(environment.vfm, "/gallery/image/transfer", { images: params, })
           .subscribe({
             complete: () => {
               this.toaster.toast("Request success! It may take a while.");
@@ -96,7 +96,7 @@ export class HostOnGalleryComponent implements OnInit {
 
   private _fetchOwnedGalleryBrief() {
     this.hclient.get<GalleryBrief[]>(
-      environment.fantahsea, "/gallery/brief/owned",
+      environment.vfm, "/gallery/brief/owned",
     ).subscribe({
       next: (resp) => {
         this.galleryBriefs = resp.data;

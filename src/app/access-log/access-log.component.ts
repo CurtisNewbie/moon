@@ -34,7 +34,7 @@ export class AccessLogComponent implements OnInit {
    */
   fetchAccessLogList(): void {
     this.http.post<any>(
-      environment.authService, "/access/history",
+      environment.uservault, "/access/history",
       { paging: this.pagingController.paging, }
     ).subscribe({
       next: (resp) => {
