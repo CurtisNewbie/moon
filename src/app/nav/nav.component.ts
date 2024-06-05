@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserInfo } from "src/common/user-info";
 import { UserService } from "../user.service";
 import { copyToClipboard } from "src/common/clipboard";
-import { HClient } from "src/common/api-util";
+import { HClient, getToken } from "src/common/api-util";
 import { environment } from "src/environments/environment";
 import { PlatformNotificationService } from "../platform-notification.service";
 import { Toaster } from "../notification.service";
@@ -27,7 +27,13 @@ export class NavComponent implements OnInit, OnDestroy {
     private toaster: Toaster
   ) {
     platformNotification.subscribeChange().subscribe({
-      next: () => this.fetchUnreadNotificationCount()
+      next: () => {
+        let token = getToken();
+        if (!token) {
+          return;
+        }
+        this.fetchUnreadNotificationCount();
+      }
     })
   }
 
@@ -56,7 +62,10 @@ export class NavComponent implements OnInit, OnDestroy {
       },
     });
     this.userService.fetchUserInfo();
-    this.fetchUnreadNotificationCount();
+
+    if (getToken()) {
+      this.fetchUnreadNotificationCount();
+    }
   }
 
   /** log out current user and navigate back to login page */
