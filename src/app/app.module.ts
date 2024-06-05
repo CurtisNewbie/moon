@@ -72,6 +72,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { ListNotificationComponent } from './list-notification/list-notification.component';
 import { BookmarkBlacklistComponent } from './bookmark-blacklist/bookmark-blacklist.component';
 import { VerFileHistoryComponent, VersionedFileComponent } from './versioned-file/versioned-file.component';
+import { TokenInterceptor } from "./interceptors/token-interceptor";
 
 @NgModule({
   exports: [],
@@ -154,6 +155,7 @@ import { VerFileHistoryComponent, VersionedFileComponent } from './versioned-fil
     { provide: APP_BASE_HREF, useValue: "/" },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RespInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     HttpWrapper
   ],
   bootstrap: [AppComponent],

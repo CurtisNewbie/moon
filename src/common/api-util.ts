@@ -27,7 +27,6 @@ export function buildOptions() {
   return {
     headers: new HttpHeaders({
       "Content-Type": "application/json",
-      Authorization: token,
     }),
     withCredentials: true,
   };
@@ -49,6 +48,7 @@ export function getToken() {
   return tkn;
 }
 
+// Deprecate this thingy
 @Injectable({
   providedIn: 'root'
 })
