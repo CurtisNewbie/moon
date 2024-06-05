@@ -86,3 +86,7 @@ export function isImage(f: FileInfo): boolean {
     if (f == null || !f.isFile) return false;
     return isImageByName(f.name);
 }
+
+export function canPreview(filename: string): boolean {
+    return isPdf(filename) || isImageByName(filename) || isStreamableVideo(filename) || isTxt(filename);
+}

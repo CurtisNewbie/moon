@@ -4,6 +4,7 @@ import { Paging, PagingController } from "src/common/paging";
 import { UserService } from "../user.service";
 import { environment } from "src/environments/environment";
 import {
+  canPreview,
   guessFileThumbnail,
   isPdf,
   isStreamableVideo,
@@ -41,6 +42,10 @@ export interface ApiListVerFileHistoryRes {
 }
 
 function preview(u, dialog, nav, fileService, isMobile, onNav = null): void {
+  if (!canPreview(u.name)) {
+    return;
+  }
+
   const isStreaming = isStreamableVideo(u.name);
   fileService
     .generateFileTempToken(
@@ -221,7 +226,7 @@ export class VerFileHistoryComponent implements OnInit {
     private fileService: FileInfoService,
     private dialog: MatDialog,
     private nav: NavigationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.qryTotalSize();
@@ -502,7 +507,7 @@ export class VersionedFileComponent implements OnInit {
     private toaster: Toaster,
     private dialog: MatDialog,
     private nav: NavigationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userService.fetchUserResources();
