@@ -4,6 +4,7 @@ import { Component, OnInit } from "@angular/core";
 import { Paging, PagingController } from "src/common/paging";
 import { UserService } from "../user.service";
 import { Observable } from "rxjs";
+import { isEnterKey } from "src/common/condition";
 
 export interface ListCashFlowReq {
   paging?: Paging;
@@ -54,6 +55,43 @@ export interface ListCashFlowRes {
         >
           Upload
         </button>
+      </div>
+    </div>
+
+    <div class="row row-cols-lg-auto g-3 align-items-center">
+      <mat-form-field style="width: 90%;" class="mb-1 mt-3">
+        <mat-label>Transaction ID</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="fetchListReq.transId"
+          (keyup)="isEnterKeyPressed($event) && fetchList()"
+        />
+        <button
+          *ngIf="fetchListReq.transId"
+          matSuffix
+          aria-label="Clear"
+          (click)="fetchListReq.transId = ''"
+          class="btn-close"
+        ></button>
+      </mat-form-field>
+    </div>
+    <div class="row row-cols-lg-auto g-3 align-items-center">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Category</mat-label>
+          <mat-select
+            (valueChange)="fetchListReq.category = $event"
+            [value]="fetchListReq.category"
+          >
+            <mat-option
+              [value]="option.value"
+              *ngFor="let option of [{ name: 'Wechat', value: 'WECHAT' }]"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
 
@@ -153,6 +191,7 @@ export class CashflowComponent implements OnInit {
   showUploadPanel: boolean = false;
   file: File = null;
   importType: string;
+  isEnterKeyPressed = isEnterKey;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -169,6 +208,7 @@ export class CashflowComponent implements OnInit {
   popToRemove(transId, name) {}
 
   fetchList() {
+    this.fetchListReq.paging = this.pagingController.paging;
     this.http
       .post<any>(`/acct/open/api/v1/cashflow/list`, this.fetchListReq)
       .subscribe({
