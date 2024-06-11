@@ -100,6 +100,7 @@ export interface ListCashFlowRes {
         Import Wechat Cashflows
       </button>
       <button mat-raised-button class="m-2" (click)="fetchList()">Fetch</button>
+      <button mat-raised-button class="m-2" (click)="reset()">Reset</button>
     </div>
 
     <div class="mt-3 mb-2" style="overflow: auto;">
@@ -288,5 +289,11 @@ export class CashflowComponent implements OnInit {
       return;
     }
     this.file = files[0];
+  }
+
+  reset() {
+    this.fetchListReq = {};
+    this.pagingController.firstPage();
+    this.fetchList();
   }
 }
