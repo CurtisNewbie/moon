@@ -73,6 +73,7 @@ import { ListNotificationComponent } from './list-notification/list-notification
 import { BookmarkBlacklistComponent } from './bookmark-blacklist/bookmark-blacklist.component';
 import { VerFileHistoryComponent, VersionedFileComponent } from './versioned-file/versioned-file.component';
 import { TokenInterceptor } from "./interceptors/token-interceptor";
+import { CashflowComponent } from './cashflow/cashflow.component';
 
 @NgModule({
   exports: [],
@@ -117,6 +118,7 @@ import { TokenInterceptor } from "./interceptors/token-interceptor";
     BookmarkBlacklistComponent,
     VersionedFileComponent,
     VerFileHistoryComponent,
+    CashflowComponent,
   ],
   imports: [
     MatTabsModule,

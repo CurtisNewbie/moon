@@ -28,6 +28,7 @@ export enum NavType {
     FILE_TASK = "file-task",
     TXT_VIEWER = "txt-viewer",
     LIST_NOTIFICATION= "notifications",
-    VERSIONED_FILES = "versioned-files"
+    VERSIONED_FILES = "versioned-files",
+    CASHFLOWS = "cashflows",
 }
 

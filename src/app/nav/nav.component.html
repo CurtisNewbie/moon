@@ -8,6 +8,7 @@
         <button mat-menu-item [matMenuTriggerFor]="user">User</button>
         <button mat-menu-item [matMenuTriggerFor]="file" *ngIf="hasRes('manage-files')">File & Gallery</button>
         <button mat-menu-item [matMenuTriggerFor]="doc" *ngIf="hasRes('manage-bookmarks')">Documents</button>
+        <button mat-menu-item [matMenuTriggerFor]="fin" *ngIf="hasAnyRes('acct:ManageCashflows')">Finance</button>
     </mat-menu>
 
     <mat-menu #user="matMenu">
@@ -44,9 +45,13 @@
         <button mat-menu-item routerLink="/manage-bookmark-blacklist" routerLinkActive="active">Bookmark Blacklist</button>
     </mat-menu>
 
+    <mat-menu #fin="matMenu">
+        <button mat-menu-item routerLink="/cashflows" routerLinkActive="active">Cashflows</button>
+    </mat-menu>
+
     <button class="smlbtn" mat-button [matMenuTriggerFor]="userMenu">{{userInfo.username}}</button>
     <mat-menu #userMenu="matMenu" class="m-2">
-        <button mat-menu-item (click)="copyToClipboard(userInfo.userNo)">Role: {{userInfo.roleName}}</button>
+        <button mat-menu-item>Role: {{userInfo.roleName}}</button>
         <button mat-menu-item (click)="copyToClipboard(userInfo.userNo)">User No: {{userInfo.userNo}}</button>
     </mat-menu>
 
