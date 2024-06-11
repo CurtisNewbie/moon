@@ -119,7 +119,20 @@ export interface ListCashFlowRes {
 
         <ng-container matColumnDef="direction">
           <th mat-header-cell *matHeaderCellDef>Direction</th>
-          <td mat-cell *matCellDef="let u">{{ u.direction }}</td>
+          <td mat-cell *matCellDef="let u">
+            <span
+              *ngIf="u.direction == 'IN'"
+              style="border-radius:10px; padding:5px; background-color:rgba(172, 255, 47, 0.761);"
+            >
+              {{ u.direction }}
+            </span>
+            <span
+              *ngIf="u.direction != 'IN'"
+              style="border-radius:10px; padding:5px; background-color:rgba(255, 0, 0, 0.58);"
+            >
+              {{ u.direction }}
+            </span>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="counterparty">
