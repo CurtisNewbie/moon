@@ -20,6 +20,7 @@ export interface ListCashFlowRes {
   transTime?: number; // Transaction Time
   transId?: string; // Transaction ID
   counterparty?: string; // Counterparty of the transaction
+  paymentMethod?: string; // Payment Method
   amount?: string; // Amount
   currency?: string; // Currency
   extra?: string; // Extra Information
@@ -155,6 +156,11 @@ export interface ListCashFlowRes {
           <td mat-cell *matCellDef="let u">{{ u.categoryName }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="paymentMethod">
+          <th mat-header-cell *matHeaderCellDef>Payment Method</th>
+          <td mat-cell *matCellDef="let u">{{ u.paymentMethod }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="remark">
           <th mat-header-cell *matHeaderCellDef>Remark</th>
           <td mat-cell *matCellDef="let u">{{ u.remark }}</td>
@@ -197,6 +203,7 @@ export class CashflowComponent implements OnInit {
     "amount",
     "currency",
     "category",
+    "paymentMethod",
     "remark",
     "createdAt",
   ];
