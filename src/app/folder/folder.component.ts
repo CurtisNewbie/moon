@@ -1,7 +1,16 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, DoCheck, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  DoCheck,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { MatSelectionList, MatSelectionListChange } from "@angular/material/list";
+import {
+  MatSelectionList,
+  MatSelectionListChange,
+} from "@angular/material/list";
 import { Subscription } from "rxjs";
 import { environment } from "src/environments/environment";
 import { VFolder } from "src/common/folder";
@@ -46,10 +55,12 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
     private navi: NavigationService,
     private dialog: MatDialog,
     private userService: UserService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.userSub = this.userService.userInfoObservable.subscribe(u => this.user = u);
+    this.userSub = this.userService.userInfoObservable.subscribe((u) => {
+      this.user = u;
+    });
   }
 
   ngOnDestroy(): void {
@@ -77,7 +88,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
       this.dialog.open(ConfirmDialogComponent, {
         width: "700px",
         data: {
-          title: 'Delete Virtual Folder',
+          title: "Delete Virtual Folder",
           msg: [`You sure you want to delete '${f.name}'`],
           isNoBtnDisplayed: true,
         },
@@ -97,13 +108,13 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
         buildApiPath("/vfolder/remove", environment.vfm),
         { folderNo: folderNo },
         buildOptions()
-      ).
-      subscribe({
+      )
+      .subscribe({
         next: (resp) => {
           this.toaster.toast("Virtual Folder Removed");
           this.fetchFolders();
-        }
-      })
+        },
+      });
   }
 
   popToGrantAccess(f: VFolder): void {
@@ -121,7 +132,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   selectionChanged(event: MatSelectionListChange): void {
-    this.selected = event.options.filter(o => o.selected).map(o => o.value);
+    this.selected = event.options.filter((o) => o.selected).map((o) => o.value);
   }
 
   selectFolder(f: VFolder): void {
@@ -142,7 +153,7 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
         next: (resp) => {
           this.folders = [];
           if (resp.data.payload) {
-            this.folders = resp.data.payload.map(r => {
+            this.folders = resp.data.payload.map((r) => {
               if (r.createTime) r.createTime = new Date(r.createTime);
               if (r.updateTime) r.updateTime = new Date(r.updateTime);
               return r;

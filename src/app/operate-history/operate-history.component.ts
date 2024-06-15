@@ -2,8 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { OperateLog } from "src/common/operate-log";
 import { PagingController } from "src/common/paging";
-import { UserService } from "../user.service";
-import { HClient } from "src/common/api-util";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-operate-history",
@@ -23,7 +22,7 @@ export class OperateHistoryComponent implements OnInit {
   ];
 
   constructor(
-    private http: HClient,
+    private http: HttpClient,
   ) { }
 
   ngOnInit() {
@@ -31,7 +30,7 @@ export class OperateHistoryComponent implements OnInit {
 
   fetchOperateLogList(): void {
     this.http.post<any>(
-      environment.uservault, "/operate/history",
+       `${environment.uservault}/open/api/operate/history`,
       this.pagingController.paging
     ).subscribe({
       next: (resp) => {

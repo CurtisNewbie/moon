@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserInfo } from "src/common/user-info";
 import { UserService } from "../user.service";
 import { copyToClipboard } from "src/common/clipboard";
-import { HClient } from "src/common/api-util";
 import { environment } from "src/environments/environment";
 import { PlatformNotificationService } from "../platform-notification.service";
 import { Toaster } from "../notification.service";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-nav",
@@ -22,7 +22,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
-    private http: HClient,
+    private http: HttpClient,
     private platformNotification: PlatformNotificationService,
     private toaster: Toaster
   ) {
@@ -67,7 +67,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   fetchUnreadNotificationCount() {
     return this.http
-      .get<any>(environment.uservault, "/open/api/v1/notification/count", false)
+      .get<any>(`${environment.uservault}/open/api/v1/notification/count`)
       .subscribe({
         next: (res) => (this.unreadCount = res.data),
       });

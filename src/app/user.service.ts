@@ -1,13 +1,14 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { Subscription, timer } from "rxjs";
-import { Observable, Subject } from "rxjs";
+import { BehaviorSubject, Subscription, timer } from "rxjs";
+import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Resp } from "src/common/resp";
 import { ChangePasswordParam, UserInfo } from "src/common/user-info";
 import { NavigationService } from "./navigation.service";
 import { Toaster } from "./notification.service";
 import { NavType } from "./routes";
-import { getToken, setToken, onEmptyToken, HClient } from "src/common/api-util";
+import { getToken, setToken, onEmptyToken } from "src/common/api-util";
+import { HttpClient } from "@angular/common/http";
 
 export interface RoleBrief {
   roleNo?: string;
@@ -24,7 +25,7 @@ export interface ResBrief {
   providedIn: "root",
 })
 export class UserService implements OnDestroy {
-  private userInfoSubject = new Subject<UserInfo>();
+  private userInfoSubject = new BehaviorSubject<UserInfo>(null);
   private resources: Set<string> = null;
 
   // refreshed every 5min
@@ -45,7 +46,7 @@ export class UserService implements OnDestroy {
     this.userInfoSubject.asObservable();
 
   constructor(
-    private http: HClient,
+    private http: HttpClient,
     private nav: NavigationService,
     private notifi: Toaster
   ) {
@@ -54,7 +55,7 @@ export class UserService implements OnDestroy {
 
   public fetchUserResources() {
     this.http
-      .get<any>(environment.uservault, "/resource/brief/user")
+      .get<any>(`${environment.uservault}/open/api/resource/brief/user`)
       .subscribe({
         next: (res) => {
           this.resources = new Set();
@@ -82,10 +83,13 @@ export class UserService implements OnDestroy {
    * @param password
    */
   public login(username: string, password: string): Observable<Resp<any>> {
-    return this.http.post<Resp<any>>(environment.uservault, "/user/login", {
-      username: username,
-      password: password,
-    });
+    return this.http.post<Resp<any>>(
+      `${environment.uservault}/open/api/user/login`,
+      {
+        username: username,
+        password: password,
+      }
+    );
   }
 
   /**
@@ -109,11 +113,14 @@ export class UserService implements OnDestroy {
     password: string,
     userRole: string
   ): Observable<Resp<any>> {
-    return this.http.post<any>(environment.uservault, "/user/register", {
-      username,
-      password,
-      userRole,
-    });
+    return this.http.post<any>(
+      `${environment.uservault}/open/api/user/register`,
+      {
+        username,
+        password,
+        userRole,
+      }
+    );
   }
 
   /**
@@ -124,8 +131,7 @@ export class UserService implements OnDestroy {
    */
   public register(username: string, password: string): Observable<Resp<any>> {
     return this.http.post<any>(
-      environment.uservault,
-      "/user/register/request",
+      `${environment.uservault}/open/api/user/register/request`,
       { username, password }
     );
   }
@@ -134,21 +140,23 @@ export class UserService implements OnDestroy {
    * Fetch user info
    */
   public fetchUserInfo(callback = null): void {
-    this.http.get<UserInfo>(environment.uservault, "/user/info").subscribe({
-      next: (resp) => {
-        if (resp.data) {
-          this._notifyUserInfo(resp.data);
-          if (callback) {
-            callback();
+    this.http
+      .get<any>(`${environment.uservault}/open/api/user/info`)
+      .subscribe({
+        next: (resp) => {
+          if (resp.data) {
+            this._notifyUserInfo(resp.data);
+            if (callback) {
+              callback();
+            }
+          } else {
+            this.notifi.toast("Please login first");
+            setToken(null);
+            this._notifyUserInfo(null);
+            this.nav.navigateTo(NavType.LOGIN_PAGE);
           }
-        } else {
-          this.notifi.toast("Please login first");
-          setToken(null);
-          this._notifyUserInfo(null);
-          this.nav.navigateTo(NavType.LOGIN_PAGE);
-        }
-      },
-    });
+        },
+      });
   }
 
   private _notifyUserInfo(userInfo: UserInfo): void {
@@ -166,16 +174,19 @@ export class UserService implements OnDestroy {
       registerDate;
     }>
   > {
-    return this.http.get<any>(environment.uservault, "/user/info");
+    return this.http.get<any>(`${environment.uservault}/open/api/user/info`);
   }
 
   /**
    * Exchange Token
    */
   private exchangeToken(token: string): Observable<Resp<string>> {
-    return this.http.post<any>(environment.uservault, "/token/exchange", {
-      token: token,
-    });
+    return this.http.post<any>(
+      `${environment.uservault}/open/api/token/exchange`,
+      {
+        token: token,
+      }
+    );
   }
 
   /**
@@ -183,17 +194,18 @@ export class UserService implements OnDestroy {
    */
   public changePassword(param: ChangePasswordParam): Observable<Resp<any>> {
     return this.http.post<any>(
-      environment.uservault,
-      "/user/password/update",
+      `${environment.uservault}/open/api/user/password/update`,
       param
     );
   }
 
   public fetchRoleBriefs(): Observable<Resp<any>> {
-    return this.http.get<any>(environment.uservault, "/role/brief/all");
+    return this.http.get<any>(`${environment.uservault}/open/api/role/brief/all`);
   }
 
   public fetchAllResBrief(): Observable<Resp<any>> {
-    return this.http.get<any>(environment.uservault, "/resource/brief/all");
+    return this.http.get<any>(
+      `${environment.uservault}/open/api/resource/brief/all`
+    );
   }
 }

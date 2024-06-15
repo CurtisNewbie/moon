@@ -1,7 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { HClient } from "src/common/api-util";
 import { Paging, PagingController } from "src/common/paging";
-import { UserService } from "../user.service";
 import { environment } from "src/environments/environment";
 import {
   canPreview,
@@ -13,7 +11,7 @@ import {
 } from "src/common/file";
 import { Subscription } from "rxjs";
 import { FileInfoService, TokenType } from "../file-info.service";
-import { HttpEventType } from "@angular/common/http";
+import { HttpClient, HttpEventType } from "@angular/common/http";
 import { Toaster } from "../notification.service";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
 import {
@@ -216,7 +214,7 @@ export class VerFileHistoryComponent implements OnInit {
   };
 
   constructor(
-    private http: HClient,
+    private http: HttpClient,
     private toaster: Toaster,
     public dialogRef: MatDialogRef<
       VerFileHistoryComponent,
@@ -226,7 +224,7 @@ export class VerFileHistoryComponent implements OnInit {
     private fileService: FileInfoService,
     private dialog: MatDialog,
     private nav: NavigationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.qryTotalSize();
@@ -243,10 +241,8 @@ export class VerFileHistoryComponent implements OnInit {
   qryTotalSize() {
     this.http
       .post<any>(
-        environment.vfm,
-        "/open/api/versioned-file/accumulated-size",
-        { verFileId: this.data.verFileId },
-        false
+        `${environment.vfm}/open/api/versioned-file/accumulated-size`,
+        { verFileId: this.data.verFileId }
       )
       .subscribe({
         next: (r) => {
@@ -257,15 +253,10 @@ export class VerFileHistoryComponent implements OnInit {
 
   fetch() {
     this.http
-      .post<any>(
-        environment.vfm,
-        "/open/api/versioned-file/history",
-        {
-          paging: this.pagingController.paging,
-          verFileId: this.data.verFileId,
-        },
-        false
-      )
+      .post<any>(`${environment.vfm}/open/api/versioned-file/history`, {
+        paging: this.pagingController.paging,
+        verFileId: this.data.verFileId,
+      })
       .subscribe({
         next: (r) => {
           if (!r.data.payload) {
@@ -501,12 +492,12 @@ export class VersionedFileComponent implements OnInit {
   };
 
   constructor(
-    private http: HClient,
+    private http: HttpClient,
     private fileService: FileInfoService,
     private toaster: Toaster,
     private dialog: MatDialog,
     private nav: NavigationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.isMobile = isMobile();
@@ -518,7 +509,7 @@ export class VersionedFileComponent implements OnInit {
       name: this.searchName,
     };
     this.http
-      .post<any>(environment.vfm, "/open/api/versioned-file/list", req, false)
+      .post<any>(`${environment.vfm}/open/api/versioned-file/list`, req)
       .subscribe({
         next: (r) => {
           if (!r.data.payload) {
@@ -609,16 +600,22 @@ export class VersionedFileComponent implements OnInit {
             }
             let sub = null;
             if (this.updateVerFileId) {
-              sub = this.http.post(environment.vfm, "/versioned-file/update", {
-                filename: this.uploadFileName,
-                fstoreFileId: fstoreRes.data,
-                verFileId: this.updateVerFileId,
-              });
+              sub = this.http.post(
+                `${environment.vfm}/open/api/versioned-file/update`,
+                {
+                  filename: this.uploadFileName,
+                  fstoreFileId: fstoreRes.data,
+                  verFileId: this.updateVerFileId,
+                }
+              );
             } else {
-              sub = this.http.post(environment.vfm, "/versioned-file/create", {
-                filename: this.uploadFileName,
-                fstoreFileId: fstoreRes.data,
-              });
+              sub = this.http.post(
+                `${environment.vfm}/open/api/versioned-file/create`,
+                {
+                  filename: this.uploadFileName,
+                  fstoreFileId: fstoreRes.data,
+                }
+              );
             }
 
             sub.subscribe({

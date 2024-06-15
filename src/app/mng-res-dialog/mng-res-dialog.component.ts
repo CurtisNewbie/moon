@@ -1,57 +1,68 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PagingController } from 'src/common/paging';
-import { environment } from 'src/environments/environment';
-import { HClient } from 'src/common/api-util';
-import { ConfirmDialogComponent } from '../dialog/confirm/confirm-dialog.component';
-import { WPath } from '../manage-paths/manage-paths.component';
-import { WRes } from '../manage-resources/manage-resources.component';
-import { ConfirmDialog } from 'src/common/dialog';
+import { Component, Inject, OnInit } from "@angular/core";
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from "@angular/material/dialog";
+import { PagingController } from "src/common/paging";
+import { environment } from "src/environments/environment";
+import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
+import { WPath } from "../manage-paths/manage-paths.component";
+import { WRes } from "../manage-resources/manage-resources.component";
+import { ConfirmDialog } from "src/common/dialog";
+import { HttpClient } from "@angular/common/http";
 
 export interface DialogDat {
   res: WRes;
 }
 
 @Component({
-  selector: 'app-mng-res-dialog',
-  templateUrl: './mng-res-dialog.component.html',
-  styleUrls: ['./mng-res-dialog.component.css']
+  selector: "app-mng-res-dialog",
+  templateUrl: "./mng-res-dialog.component.html",
+  styleUrls: ["./mng-res-dialog.component.css"],
 })
 export class MngResDialogComponent implements OnInit {
-
-  readonly tabcol = ["id", "pgroup", "method", "url", "ptype", "desc", "option"];
+  readonly tabcol = [
+    "id",
+    "pgroup",
+    "method",
+    "url",
+    "ptype",
+    "desc",
+    "option",
+  ];
   paths: WPath[] = [];
   pagingController: PagingController = null;
 
   constructor(
-    public dialogRef: MatDialogRef<MngResDialogComponent, DialogDat>, @Inject(MAT_DIALOG_DATA) public dat: DialogDat,
-    private hclient: HClient,
+    public dialogRef: MatDialogRef<MngResDialogComponent, DialogDat>,
+    @Inject(MAT_DIALOG_DATA) public dat: DialogDat,
     private dialog: MatDialog,
-    private confirmDialog: ConfirmDialog
-  ) { }
+    private confirmDialog: ConfirmDialog,
+    private http: HttpClient
+  ) {}
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   listPathsBound() {
-    this.hclient.post<any>(environment.uservault, '/path/list', {
-      paging: this.pagingController.paging,
-      resCode: this.dat.res.code
-    }).subscribe({
-      next: (r) => {
-        this.paths = [];
-        if (r.data && r.data.payload) {
-          for (let ro of r.data.payload) {
-            if (ro.createTime) ro.createTime = new Date(ro.createTime);
-            if (ro.updateTime) ro.updateTime = new Date(ro.updateTime);
-            this.paths.push(ro);
+    this.http
+      .post<any>(`${environment.uservault}/open/api/path/list`, {
+        paging: this.pagingController.paging,
+        resCode: this.dat.res.code,
+      })
+      .subscribe({
+        next: (r) => {
+          this.paths = [];
+          if (r.data && r.data.payload) {
+            for (let ro of r.data.payload) {
+              if (ro.createTime) ro.createTime = new Date(ro.createTime);
+              if (ro.updateTime) ro.updateTime = new Date(ro.updateTime);
+              this.paths.push(ro);
+            }
           }
-        }
-        this.pagingController.onTotalChanged(r.data.paging);
-      }
-    });
-
+          this.pagingController.onTotalChanged(r.data.paging);
+        },
+      });
   }
 
   deleteResource() {
@@ -60,22 +71,22 @@ export class MngResDialogComponent implements OnInit {
         width: "500px",
         data: {
           title: "Remove Resource",
-          msg: [
-            `You sure you want to delete resource '${this.dat.res.name}'`,
-          ],
+          msg: [`You sure you want to delete resource '${this.dat.res.name}'`],
         },
       });
 
     dialogRef.afterClosed().subscribe((confirm) => {
       console.log(confirm);
       if (confirm) {
-        this.hclient.post(environment.uservault, "/resource/remove", {
-          resCode: this.dat.res.code
-        }).subscribe({
-          next: (r) => {
-            this.dialogRef.close();
-          }
-        })
+        this.http
+          .post(`${environment.uservault}/open/api/resource/remove`, {
+            resCode: this.dat.res.code,
+          })
+          .subscribe({
+            next: (r) => {
+              this.dialogRef.close();
+            },
+          });
       }
     });
   }
@@ -85,17 +96,15 @@ export class MngResDialogComponent implements OnInit {
       return;
     }
 
-    const title = 'Unbind Resource Path';
-    const msg = [
-      `Resource '${resName}'`,
-      `Path: '${pathUrl}'`
-    ];
+    const title = "Unbind Resource Path";
+    const msg = [`Resource '${resName}'`, `Path: '${pathUrl}'`];
 
     this.confirmDialog.show(title, msg, () => {
-      this.hclient.post(environment.uservault, "/path/resource/unbind", {
-        pathNo: pathNo,
-        resCode: resCode
-      })
+      this.http
+        .post(`${environment.uservault}/open/api/path/resource/unbind`, {
+          pathNo: pathNo,
+          resCode: resCode,
+        })
         .subscribe(() => this.listPathsBound());
     });
   }
