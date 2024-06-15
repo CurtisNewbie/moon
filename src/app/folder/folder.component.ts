@@ -50,7 +50,6 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
 
   ngOnInit(): void {
     this.userSub = this.userService.userInfoObservable.subscribe(u => this.user = u);
-    this.userService.fetchUserInfo();
   }
 
   ngOnDestroy(): void {

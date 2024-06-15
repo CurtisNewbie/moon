@@ -2,8 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { AccessLog } from "src/common/access-log";
 import { PagingController } from "src/common/paging";
-import { UserService } from "../user.service";
-import { HClient } from "src/common/api-util";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-access-log",
@@ -18,40 +17,33 @@ export class AccessLogComponent implements OnInit {
     "success",
     "ipAddress",
     "userAgent",
-    "url"
+    "url",
   ];
   accessLogList: AccessLog[] = [];
   pagingController: PagingController;
 
-  constructor(private http: HClient) { }
+  constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  /**
-   * Fetch access log list
-   */
   fetchAccessLogList(): void {
-    this.http.post<any>(
-      environment.uservault, "/access/history",
-      { paging: this.pagingController.paging, }
-    ).subscribe({
-      next: (resp) => {
-        this.accessLogList = [];
-        if (resp.data.payload) {
-          for (let r of resp.data.payload) {
-            if (r.accessTime) {
-              r.accessTime = new Date(r.accessTime);
-            }
-            this.accessLogList.push(r);
+    this.http
+      .post<any>(`${environment.uservault}/open/api/access/history`, {
+        paging: this.pagingController.paging,
+      })
+      .subscribe({
+        next: (resp) => {
+          if (resp.data.payload) {
+            this.accessLogList = resp.data.payload;
+          } else {
+            this.accessLogList = [];
           }
-        }
-        this.pagingController.onTotalChanged(resp.data.paging);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+          this.pagingController.onTotalChanged(resp.data.paging);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   onPagingControllerReady(pc) {
