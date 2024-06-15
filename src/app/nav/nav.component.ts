@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserInfo } from "src/common/user-info";
 import { UserService } from "../user.service";
 import { copyToClipboard } from "src/common/clipboard";
-import { HClient, getToken } from "src/common/api-util";
+import { HClient } from "src/common/api-util";
 import { environment } from "src/environments/environment";
 import { PlatformNotificationService } from "../platform-notification.service";
 import { Toaster } from "../notification.service";
@@ -15,9 +15,9 @@ import { Toaster } from "../notification.service";
 export class NavComponent implements OnInit, OnDestroy {
   userInfo: UserInfo = null;
   copyToClipboard = (s) => {
-    this.toaster.toast("Copied to clipboard")
+    this.toaster.toast("Copied to clipboard");
     copyToClipboard(s);
-  }
+  };
   unreadCount: 0;
 
   constructor(
@@ -28,19 +28,18 @@ export class NavComponent implements OnInit, OnDestroy {
   ) {
     platformNotification.subscribeChange().subscribe({
       next: () => {
-        let token = getToken();
-        if (!token) {
-          return;
+        if (this.userInfo) {
+          this.fetchUnreadNotificationCount();
         }
-        this.fetchUnreadNotificationCount();
-      }
-    })
+      },
+    });
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
-  hasRes(code) { return this.userService.hasResource(code); }
+  hasRes(code) {
+    return this.userService.hasResource(code);
+  }
 
   hasAnyRes(...codes: string[]) {
     for (let c of codes) {
@@ -53,17 +52,10 @@ export class NavComponent implements OnInit, OnDestroy {
     this.userService.userInfoObservable.subscribe({
       next: (user) => {
         this.userInfo = user;
-        if (user) this.userService.fetchUserResources();
-      }
-    });
-    this.userService.isLoggedInObservable.subscribe({
-      next: (isLoggedIn) => {
-        if (!isLoggedIn) this.userInfo = null;
       },
     });
-    this.userService.fetchUserInfo();
 
-    if (getToken()) {
+    if (this.userInfo) {
       this.fetchUnreadNotificationCount();
     }
   }
@@ -74,10 +66,10 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   fetchUnreadNotificationCount() {
-    return this.http.get<any>(environment.uservault, "/open/api/v1/notification/count", false)
+    return this.http
+      .get<any>(environment.uservault, "/open/api/v1/notification/count", false)
       .subscribe({
-        next: (res) => this.unreadCount = res.data
+        next: (res) => (this.unreadCount = res.data),
       });
   }
 }
-

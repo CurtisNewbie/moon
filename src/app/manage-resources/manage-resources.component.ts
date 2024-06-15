@@ -41,7 +41,6 @@ export class ManageResourcesComponent implements OnInit {
 
   constructor(
     private hclient: HClient,
-    private userService: UserService,
     private toaster: Toaster,
     private dialog: MatDialog,
   ) { }
@@ -55,8 +54,6 @@ export class ManageResourcesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.fetchUserResources();
-    this.userService.fetchUserInfo();
   }
 
   fetchList() {

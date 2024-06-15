@@ -39,7 +39,6 @@ export class ManageRoleComponent implements OnInit {
 
   constructor(
     private hclient: HClient,
-    private userService: UserService,
     private dialog: MatDialog,
     private toaster: Toaster
   ) { }
@@ -50,7 +49,6 @@ export class ManageRoleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.fetchUserInfo();
   }
 
   fetchList() {

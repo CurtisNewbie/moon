@@ -40,12 +40,10 @@ export class ManageKeysComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private userService: UserService,
     private toaster: Toaster
   ) { }
 
   ngOnInit() {
-    this.userService.fetchUserInfo();
   }
 
   mask(k: string): string {

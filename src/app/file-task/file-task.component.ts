@@ -28,10 +28,9 @@ export class FileTaskComponent implements OnInit {
   pagingController: PagingController;
   fileTaskList: FileTask[] = [];
 
-  constructor(private userService: UserService, private hclient: HClient) { }
+  constructor(private hclient: HClient) { }
 
   ngOnInit(): void {
-    this.userService.fetchUserInfo();
   }
 
   fetchFileTaskList() {

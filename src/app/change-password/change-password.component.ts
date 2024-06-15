@@ -25,7 +25,6 @@ export class ChangePasswordComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.userService.fetchUserInfo();
   }
 
   changePassword() {

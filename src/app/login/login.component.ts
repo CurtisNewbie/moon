@@ -3,7 +3,7 @@ import { NavigationService } from "../navigation.service";
 import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
 import { UserService } from "../user.service";
-import { setToken, getToken } from "src/common/api-util";
+import { setToken } from "src/common/api-util";
 import { PlatformNotificationService } from "../platform-notification.service";
 
 @Component({
@@ -19,16 +19,16 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private nav: NavigationService,
     private toaster: Toaster,
-    private platformNotification: PlatformNotificationService,
-  ) { }
+    private platformNotification: PlatformNotificationService
+  ) {}
 
   ngOnInit() {
-    if (getToken()) {
-      this.userService.fetchUserInfo(() => {
+    this.userService.userInfoObservable.subscribe((user) => {
+      if (user) {
         this.nav.navigateTo(NavType.USER_DETAILS);
         this.platformNotification.triggerChange();
-      });
-    }
+      }
+    });
   }
 
   /**

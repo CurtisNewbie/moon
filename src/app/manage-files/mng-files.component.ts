@@ -216,8 +216,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
           // console.log("ngOnInit.fetchFileInfoList", time())
         }
       }
-
-      this.userService.fetchUserInfo();
     });
   }
 

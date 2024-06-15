@@ -24,11 +24,9 @@ export class OperateHistoryComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private userService: UserService
   ) { }
 
   ngOnInit() {
-    this.userService.fetchUserInfo();
   }
 
   fetchOperateLogList(): void {

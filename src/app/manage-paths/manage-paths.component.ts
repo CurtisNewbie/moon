@@ -49,7 +49,6 @@ export class ManagePathsComponent implements OnInit {
   isEnter = isEnterKey;
 
   constructor(private hclient: HClient,
-    private userService: UserService,
     private dialog: MatDialog,
   ) { }
 
@@ -63,7 +62,6 @@ export class ManagePathsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.fetchUserInfo();
   }
 
   openMngPathDialog(p: WPath) {

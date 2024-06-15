@@ -23,10 +23,9 @@ export class AccessLogComponent implements OnInit {
   accessLogList: AccessLog[] = [];
   pagingController: PagingController;
 
-  constructor(private http: HClient, private userService: UserService) { }
+  constructor(private http: HClient) { }
 
   ngOnInit() {
-    this.userService.fetchUserInfo();
   }
 
   /**

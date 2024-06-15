@@ -39,14 +39,11 @@ export class ListNotificationComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private userService: UserService,
-    private toaster: Toaster,
     private dialog: MatDialog,
     private platformNotification: PlatformNotificationService,
   ) { }
 
   ngOnInit(): void {
-    this.userService.fetchUserInfo();
   }
 
   fetchList() {

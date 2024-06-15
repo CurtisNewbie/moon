@@ -502,7 +502,6 @@ export class VersionedFileComponent implements OnInit {
 
   constructor(
     private http: HClient,
-    private userService: UserService,
     private fileService: FileInfoService,
     private toaster: Toaster,
     private dialog: MatDialog,
@@ -510,8 +509,6 @@ export class VersionedFileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.userService.fetchUserResources();
-    this.userService.fetchUserInfo();
     this.isMobile = isMobile();
   }
 

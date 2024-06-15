@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { UserService } from "./user.service";
 
 @Component({
   selector: "app-root",
@@ -6,6 +7,16 @@ import { Component } from "@angular/core";
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
-  constructor() { }
-  ngOnInit(): void { }
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userService.userInfoObservable.subscribe({
+      next: (user) => {
+        if (user) {
+          this.userService.fetchUserResources();
+        }
+      },
+    });
+    this.userService.fetchUserInfo();
+  }
 }

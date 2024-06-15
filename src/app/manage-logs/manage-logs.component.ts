@@ -41,11 +41,9 @@ export class ManageLogsComponent implements OnInit {
   tabdat = []
   isEnter = isEnterKey;
 
-  constructor(private userService: UserService, private hclient: HClient) { }
+  constructor(private hclient: HClient) { }
 
   ngOnInit(): void {
-    this.userService.fetchUserResources();
-    this.userService.fetchUserInfo();
   }
 
   reset() {

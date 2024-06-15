@@ -26,14 +26,10 @@ export class BookmarkBlacklistComponent implements OnInit {
   showUploadPanel = false;
 
   constructor(private hclient: HClient,
-    private userService: UserService,
-    private toaster: Toaster,
     private confirmDialog: ConfirmDialog,
   ) { }
 
   ngOnInit(): void {
-    this.userService.fetchUserResources();
-    this.userService.fetchUserInfo();
   }
 
   onPagingControllerReady(pc) {

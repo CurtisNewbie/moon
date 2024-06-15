@@ -222,8 +222,6 @@ export class CashflowComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchList();
-    this.userService.fetchUserResources();
-    this.userService.fetchUserInfo();
   }
 
   popToRemove(transId, name) {}

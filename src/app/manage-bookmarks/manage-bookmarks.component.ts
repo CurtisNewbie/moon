@@ -1,26 +1,24 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { HClient, getToken } from 'src/common/api-util';
-import { PagingController } from 'src/common/paging';
-import { UserService } from '../user.service';
-import { isEnterKey } from 'src/common/condition';
-import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { Toaster } from '../notification.service';
-import { ConfirmDialog } from 'src/common/dialog';
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { HClient } from "src/common/api-util";
+import { PagingController } from "src/common/paging";
+import { isEnterKey } from "src/common/condition";
+import { environment } from "src/environments/environment";
+import { Observable } from "rxjs";
+import { HttpClient, HttpEvent } from "@angular/common/http";
+import { Toaster } from "../notification.service";
+import { ConfirmDialog } from "src/common/dialog";
 
 @Component({
-  selector: 'app-manage-bookmarks',
-  templateUrl: './manage-bookmarks.component.html',
-  styleUrls: ['./manage-bookmarks.component.css']
+  selector: "app-manage-bookmarks",
+  templateUrl: "./manage-bookmarks.component.html",
+  styleUrls: ["./manage-bookmarks.component.css"],
 })
 export class ManageBookmarksComponent implements OnInit {
-
   readonly isEnterKeyPressed = isEnterKey;
-  readonly tabcol = ['id', 'name', 'operation']
+  readonly tabcol = ["id", "name", "operation"];
 
   pagingController: PagingController;
-  tabdat = []
+  tabdat = [];
   isEnter = isEnterKey;
   file = null;
 
@@ -30,17 +28,14 @@ export class ManageBookmarksComponent implements OnInit {
   @ViewChild("uploadFileInput")
   uploadFileInput: ElementRef;
 
-  constructor(private hclient: HClient,
-    private userService: UserService,
+  constructor(
+    private hclient: HClient,
     private http: HttpClient,
     private toaster: Toaster,
-    private confirmDialog: ConfirmDialog,
-  ) { }
+    private confirmDialog: ConfirmDialog
+  ) {}
 
-  ngOnInit(): void {
-    this.userService.fetchUserResources();
-    this.userService.fetchUserInfo();
-  }
+  ngOnInit(): void {}
 
   onPagingControllerReady(pc) {
     this.pagingController = pc;
@@ -49,13 +44,18 @@ export class ManageBookmarksComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.vfm,
-      '/bookmark/list', { paging: this.pagingController.paging, name: this.searchName }, false).
-      subscribe({
+    this.hclient
+      .post<any>(
+        environment.vfm,
+        "/bookmark/list",
+        { paging: this.pagingController.paging, name: this.searchName },
+        false
+      )
+      .subscribe({
         next: (r) => {
           this.tabdat = r.data.payload;
           this.pagingController.onTotalChanged(r.data.paging);
-        }
+        },
       });
   }
 
@@ -85,22 +85,24 @@ export class ManageBookmarksComponent implements OnInit {
   }
 
   popToRemove(id, name) {
-    this.confirmDialog.show("Remove Bookmark", [`Removing Bookmark ${name}`], () => {
-      this.remove(id);
-    });
+    this.confirmDialog.show(
+      "Remove Bookmark",
+      [`Removing Bookmark ${name}`],
+      () => {
+        this.remove(id);
+      }
+    );
   }
 
   remove(id) {
-    this.hclient.post<any>(environment.vfm,
-      '/bookmark/remove', { id: id }, false).
-      subscribe({
-        complete: () => this.fetchList()
+    this.hclient
+      .post<any>(environment.vfm, "/bookmark/remove", { id: id }, false)
+      .subscribe({
+        complete: () => this.fetchList(),
       });
   }
 
   uploadToTmpFile(file: File): Observable<HttpEvent<any>> {
-    let headers = new HttpHeaders().append("Authorization", getToken())
-
     return this.http.put<HttpEvent<any>>(
       environment.vfm + "/bookmark/file/upload",
       file,
@@ -108,7 +110,6 @@ export class ManageBookmarksComponent implements OnInit {
         observe: "events",
         reportProgress: true,
         withCredentials: true,
-        headers: headers,
       }
     );
   }
@@ -117,5 +118,4 @@ export class ManageBookmarksComponent implements OnInit {
     this.searchName = null;
     this.fetchList();
   }
-
 }
