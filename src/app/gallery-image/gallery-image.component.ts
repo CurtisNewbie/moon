@@ -3,7 +3,6 @@ import { ActivatedRoute } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { PagingController } from "src/common/paging";
 import { ListGalleryImagesResp } from "src/common/gallery";
-import { buildApiPath, buildOptions } from "src/common/api-util";
 import { environment } from "src/environments/environment";
 import { Resp } from "src/common/resp";
 import { NavigationService } from "../navigation.service";
@@ -53,9 +52,8 @@ export class GalleryImageComponent implements OnInit {
 
     this.http
       .post<Resp<ListGalleryImagesResp>>(
-        buildApiPath("/gallery/images", environment.vfm),
-        { galleryNo: this.galleryNo, paging: this.pagingController.paging },
-        buildOptions()
+        `${environment.vfm}/open/api/gallery/images`,
+        { galleryNo: this.galleryNo, paging: this.pagingController.paging }
       )
       .subscribe({
         next: (resp) => {
@@ -66,8 +64,14 @@ export class GalleryImageComponent implements OnInit {
             let imgs = resp.data.images;
             this.images = [];
             for (let i = 0; i < imgs.length; i++) {
-              let src = environment.fstore + "/file/raw?key=" + encodeURIComponent(imgs[i].fileTempToken);
-              let thumb = environment.fstore + "/file/raw?key=" + encodeURIComponent(imgs[i].thumbnailToken);
+              let src =
+                environment.fstore +
+                "/file/raw?key=" +
+                encodeURIComponent(imgs[i].fileTempToken);
+              let thumb =
+                environment.fstore +
+                "/file/raw?key=" +
+                encodeURIComponent(imgs[i].thumbnailToken);
               this.images.push({
                 src: src,
                 thumb: thumb,

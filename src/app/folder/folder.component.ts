@@ -22,7 +22,6 @@ import { NavigationService } from "../navigation.service";
 import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
 import { UserService } from "../user.service";
-import { buildApiPath, buildOptions } from "src/common/api-util";
 import { isEnterKey } from "src/common/condition";
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 
@@ -104,11 +103,9 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
 
   removeVFolder(folderNo: string) {
     this.http
-      .post<Resp<any>>(
-        buildApiPath("/vfolder/remove", environment.vfm),
-        { folderNo: folderNo },
-        buildOptions()
-      )
+      .post<Resp<any>>(`${environment.vfm}/open/api/vfolder/remove`, {
+        folderNo: folderNo,
+      })
       .subscribe({
         next: (resp) => {
           this.toaster.toast("Virtual Folder Removed");
@@ -145,9 +142,8 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
     this.searchParam.paging = this.pagingController.paging;
     this.http
       .post<Resp<any>>(
-        buildApiPath("/vfolder/list", environment.vfm),
-        this.searchParam,
-        buildOptions()
+        `${environment.vfm}/open/api/vfolder/list`,
+        this.searchParam
       )
       .subscribe({
         next: (resp) => {
@@ -178,11 +174,9 @@ export class FolderComponent implements OnInit, DoCheck, OnDestroy {
 
     this.creatingFolder = false;
     this.http
-      .post<Resp<void>>(
-        buildApiPath("/vfolder/create", environment.vfm),
-        { name: this.newFolderName },
-        buildOptions()
-      )
+      .post<Resp<void>>(`${environment.vfm}/open/api/vfolder/create`, {
+        name: this.newFolderName,
+      })
       .subscribe({
         next: (resp) => {
           this.fetchFolders();

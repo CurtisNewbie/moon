@@ -1,32 +1,9 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Resp } from "./resp";
-
 const TOKEN = "token";
+
 let emptyTokenCallback = null;
-const openApiBasePath = "/open/api";
 
 export function onEmptyToken(callback) {
   emptyTokenCallback = callback;
-}
-
-export function buildApiPath(subPath: string, service: string): string {
-  subPath = subPath.startsWith("/", 0) ? subPath : "/" + subPath;
-  return service + openApiBasePath + subPath;
-}
-
-export function buildOptions() {
-  let token = getToken();
-  if (!token) {
-    return;
-  }
-  return {
-    headers: new HttpHeaders({
-      "Content-Type": "application/json",
-    }),
-    withCredentials: true,
-  };
 }
 
 export function setToken(token: string) {
@@ -39,7 +16,6 @@ export function setToken(token: string) {
 export function getToken() {
   let tkn = localStorage.getItem(TOKEN);
   if (!tkn && emptyTokenCallback) {
-    // console.log("No token found, invoking registered onEmptyToken callback");
     emptyTokenCallback();
   }
   return tkn;
