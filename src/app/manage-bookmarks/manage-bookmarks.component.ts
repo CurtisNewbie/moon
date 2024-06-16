@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { HClient } from "src/common/api-util";
 import { PagingController } from "src/common/paging";
 import { isEnterKey } from "src/common/condition";
 import { environment } from "src/environments/environment";
@@ -29,7 +28,6 @@ export class ManageBookmarksComponent implements OnInit {
   uploadFileInput: ElementRef;
 
   constructor(
-    private hclient: HClient,
     private http: HttpClient,
     private toaster: Toaster,
     private confirmDialog: ConfirmDialog
@@ -44,13 +42,11 @@ export class ManageBookmarksComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient
-      .post<any>(
-        environment.vfm,
-        "/bookmark/list",
-        { paging: this.pagingController.paging, name: this.searchName },
-        false
-      )
+    this.http
+      .post<any>(`${environment.vfm}/bookmark/list`, {
+        paging: this.pagingController.paging,
+        name: this.searchName,
+      })
       .subscribe({
         next: (r) => {
           this.tabdat = r.data.payload;
@@ -95,8 +91,8 @@ export class ManageBookmarksComponent implements OnInit {
   }
 
   remove(id) {
-    this.hclient
-      .post<any>(environment.vfm, "/bookmark/remove", { id: id }, false)
+    this.http
+      .post<any>(`${environment.vfm}/bookmark/remove`, { id: id })
       .subscribe({
         complete: () => this.fetchList(),
       });

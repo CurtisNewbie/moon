@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { getExpanded, isIdEqual } from 'src/animate/animate-util';
-import { environment } from 'src/environments/environment';
-import { PagingController } from 'src/common/paging';
-import { Toaster } from '../notification.service';
-import { UserService } from '../user.service';
-import { HClient } from 'src/common/api-util';
-import { isEnterKey } from 'src/common/condition';
-import { MngResDialogComponent } from '../mng-res-dialog/mng-res-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from "@angular/core";
+import { getExpanded, isIdEqual } from "src/animate/animate-util";
+import { environment } from "src/environments/environment";
+import { PagingController } from "src/common/paging";
+import { Toaster } from "../notification.service";
+import { isEnterKey } from "src/common/condition";
+import { MngResDialogComponent } from "../mng-res-dialog/mng-res-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { HttpClient } from "@angular/common/http";
 
 export interface WRes {
   id?: number;
@@ -20,9 +19,9 @@ export interface WRes {
 }
 
 @Component({
-  selector: 'app-manage-resources',
-  templateUrl: './manage-resources.component.html',
-  styleUrls: ['./manage-resources.component.css']
+  selector: "app-manage-resources",
+  templateUrl: "./manage-resources.component.html",
+  styleUrls: ["./manage-resources.component.css"],
 })
 export class ManageResourcesComponent implements OnInit {
   newResDialog = false;
@@ -32,7 +31,15 @@ export class ManageResourcesComponent implements OnInit {
   expandedElement: WRes = null;
   pagingController: PagingController;
 
-  readonly tabcol = ["id", "name", "code", "createBy", "createTime", "updateBy", "updateTime"];
+  readonly tabcol = [
+    "id",
+    "name",
+    "code",
+    "createBy",
+    "createTime",
+    "updateBy",
+    "updateTime",
+  ];
   resources: WRes[] = [];
 
   idEquals = isIdEqual;
@@ -40,10 +47,10 @@ export class ManageResourcesComponent implements OnInit {
   isEnter = isEnterKey;
 
   constructor(
-    private hclient: HClient,
+    private http: HttpClient,
     private toaster: Toaster,
-    private dialog: MatDialog,
-  ) { }
+    private dialog: MatDialog
+  ) {}
 
   reset() {
     this.expandedElement = null;
@@ -53,25 +60,26 @@ export class ManageResourcesComponent implements OnInit {
     this.pagingController.firstPage();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   fetchList() {
-    this.hclient.post<any>(environment.uservault, '/resource/list', {
-      paging: this.pagingController.paging
-    }).subscribe({
-      next: (r) => {
-        this.resources = [];
-        if (r.data && r.data.payload) {
-          for (let ro of r.data.payload) {
-            if (ro.createTime) ro.createTime = new Date(ro.createTime);
-            if (ro.updateTime) ro.updateTime = new Date(ro.updateTime);
-            this.resources.push(ro);
+    this.http
+      .post<any>(`${environment.uservault}/open/api/resource/list`, {
+        paging: this.pagingController.paging,
+      })
+      .subscribe({
+        next: (r) => {
+          this.resources = [];
+          if (r.data && r.data.payload) {
+            for (let ro of r.data.payload) {
+              if (ro.createTime) ro.createTime = new Date(ro.createTime);
+              if (ro.updateTime) ro.updateTime = new Date(ro.updateTime);
+              this.resources.push(ro);
+            }
           }
-        }
-        this.pagingController.onTotalChanged(r.data.paging);
-      }
-    });
+          this.pagingController.onTotalChanged(r.data.paging);
+        },
+      });
   }
 
   onPagingControllerReady(pc) {
@@ -90,29 +98,34 @@ export class ManageResourcesComponent implements OnInit {
       return;
     }
 
-    this.hclient.post(environment.uservault, "/resource/add", {
-      name: this.newResName,
-      code: this.newResCode
-    }).subscribe({
-      next: (r) => {
-        this.newResDialog = false;
-        this.newResName = null;
-        this.newResCode = null;
-        this.fetchList();
-      }
-    });
+    this.http
+      .post(`${environment.uservault}/open/api/resource/add`, {
+        name: this.newResName,
+        code: this.newResCode,
+      })
+      .subscribe({
+        next: (r) => {
+          this.newResDialog = false;
+          this.newResName = null;
+          this.newResCode = null;
+          this.fetchList();
+        },
+      });
   }
 
   openMngResDialog(r: WRes) {
-    this.dialog.open(MngResDialogComponent, {
-      width: "1000px",
-      data: {
-        res: { ...r }
-      },
-    }).afterClosed().subscribe({
-      complete: () => {
-        this.fetchList();
-      }
-    });
+    this.dialog
+      .open(MngResDialogComponent, {
+        width: "1000px",
+        data: {
+          res: { ...r },
+        },
+      })
+      .afterClosed()
+      .subscribe({
+        complete: () => {
+          this.fetchList();
+        },
+      });
   }
 }

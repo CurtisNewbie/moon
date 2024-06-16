@@ -1,53 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
-import { HClient } from 'src/common/api-util';
-import { Paging, PagingController } from 'src/common/paging';
-import { environment } from 'src/environments/environment';
-import { isEnterKey } from 'src/common/condition';
+import { Component, OnInit } from "@angular/core";
+import { Paging, PagingController } from "src/common/paging";
+import { environment } from "src/environments/environment";
+import { isEnterKey } from "src/common/condition";
+import { HttpClient } from "@angular/common/http";
 
 export interface ListedErrorLog {
-  id?: number
-  node?: string
-  app?: string
-  caller?: string
-  traceId?: string
-  spanId?: string
-  errMsg?: string
-  rtime?: any
+  id?: number;
+  node?: string;
+  app?: string;
+  caller?: string;
+  traceId?: string;
+  spanId?: string;
+  errMsg?: string;
+  rtime?: any;
 }
 
 export interface ListErrorLogReq {
-  app?: string
-  page?: Paging
+  app?: string;
+  page?: Paging;
 }
 
 export interface ListErrorLogResp {
-  page: Paging
-  payload: ListedErrorLog[]
-
+  page: Paging;
+  payload: ListedErrorLog[];
 }
 
 @Component({
-  selector: 'app-manage-logs',
-  templateUrl: './manage-logs.component.html',
-  styleUrls: ['./manage-logs.component.css']
+  selector: "app-manage-logs",
+  templateUrl: "./manage-logs.component.html",
+  styleUrls: ["./manage-logs.component.css"],
 })
 export class ManageLogsComponent implements OnInit {
+  readonly tabcol = ["rtime", "app", "caller", "errMsg"];
 
-  readonly tabcol = ['rtime', 'app', 'caller', 'errMsg']
-
-  qryApp = '';
+  qryApp = "";
   pagingController: PagingController;
-  tabdat = []
+  tabdat = [];
   isEnter = isEnterKey;
 
-  constructor(private hclient: HClient) { }
+  constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   reset() {
-    this.qryApp = '';
+    this.qryApp = "";
     this.pagingController.firstPage();
   }
 
@@ -58,21 +54,22 @@ export class ManageLogsComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.logbot, '/log/error/list', {
-      app: this.qryApp,
-      page: this.pagingController.paging
-    }, false).subscribe({
-      next: (r) => {
-        this.tabdat = [];
-        if (r.data && r.data.payload) {
-          for (let ro of r.data.payload) {
-            if (ro.ctime) ro.createTime = new Date(ro.ctime);
-            this.tabdat.push(ro);
+    this.http
+      .post<any>(`${environment.logbot}/log/error/list`, {
+        app: this.qryApp,
+        page: this.pagingController.paging,
+      })
+      .subscribe({
+        next: (r) => {
+          this.tabdat = [];
+          if (r.data && r.data.payload) {
+            for (let ro of r.data.payload) {
+              if (ro.ctime) ro.createTime = new Date(ro.ctime);
+              this.tabdat.push(ro);
+            }
           }
-        }
-        this.pagingController.onTotalChanged(r.data.page);
-      }
-    });
+          this.pagingController.onTotalChanged(r.data.page);
+        },
+      });
   }
-
 }

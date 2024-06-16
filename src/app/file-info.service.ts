@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UploadFileParam } from "src/common/file-info";
-import { HClient } from "src/common/api-util";
 import { Resp } from "src/common/resp";
 
 export enum TokenType {
@@ -15,7 +14,7 @@ export enum TokenType {
   providedIn: "root",
 })
 export class FileInfoService {
-  constructor(private http: HttpClient, private hclient: HClient) {}
+  constructor(private http: HttpClient) {}
 
   public uploadToMiniFstore(
     uploadParam: UploadFileParam
@@ -41,10 +40,13 @@ export class FileInfoService {
     fileKey: string,
     tokenType: TokenType = TokenType.DOWNLOAD
   ): Observable<Resp<string>> {
-    return this.hclient.post<string>(environment.vfm, "/file/token/generate", {
-      fileKey: fileKey,
-      tokenType: tokenType,
-    });
+    return this.http.post<Resp<string>>(
+      `${environment.vfm}/open/api/file/token/generate`,
+      {
+        fileKey: fileKey,
+        tokenType: tokenType,
+      }
+    );
   }
 
   public jumpToDownloadUrl(fileKey: string): void {

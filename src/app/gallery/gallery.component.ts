@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
-import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
+import {
+  animateElementExpanding,
+  getExpanded,
+  isIdEqual,
+} from "src/animate/animate-util";
 import { environment } from "src/environments/environment";
 import { Gallery } from "src/common/gallery";
 import { Paging, PagingController } from "src/common/paging";
@@ -9,9 +13,9 @@ import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.compone
 import { NavigationService } from "../navigation.service";
 import { Toaster } from "../notification.service";
 import { NavType } from "../routes";
-import { HClient } from "src/common/api-util";
 import { isMobile } from "src/common/env-util";
-import { GalleryAccessComponent, GrantGalleryAccessDialogData } from "../gallery-access/gallery-access.component";
+import { GalleryAccessComponent } from "../gallery-access/gallery-access.component";
+import { HttpClient } from "@angular/common/http";
 
 export interface ListGalleriesResp {
   paging: Paging;
@@ -25,7 +29,6 @@ export interface ListGalleriesResp {
   animations: [animateElementExpanding()],
 })
 export class GalleryComponent implements OnInit {
-
   readonly DESKTOP_COLUMNS = [
     "galleryNo",
     "name",
@@ -50,22 +53,19 @@ export class GalleryComponent implements OnInit {
   getExpandedEle = (row) => getExpanded(row, this.expandedElement);
 
   constructor(
-    private http: HClient,
+    private http: HttpClient,
     private toaster: Toaster,
     private navigation: NavigationService,
-    private dialog: MatDialog,
-  ) {
-  }
+    private dialog: MatDialog
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   fetchGalleries() {
     this.http
-      .post<ListGalleriesResp>(
-        environment.vfm, "/gallery/list",
-        { paging: this.pagingController.paging },
-      )
+      .post<any>(`${environment.vfm}/open/api/gallery/list`, {
+        paging: this.pagingController.paging,
+      })
       .subscribe({
         next: (resp) => {
           this.pagingController.onTotalChanged(resp.data.paging);
@@ -82,12 +82,9 @@ export class GalleryComponent implements OnInit {
     }
 
     this.http
-      .post<any>(
-        environment.vfm, "/gallery/new",
-        {
-          name: this.newGalleryName,
-        }
-      )
+      .post<any>(`${environment.vfm}/open/api/gallery/new`, {
+        name: this.newGalleryName,
+      })
       .subscribe({
         next: (resp) => {
           this.newGalleryName = null;
@@ -101,19 +98,20 @@ export class GalleryComponent implements OnInit {
   }
 
   // todo (impl this later)
-  shareGallery(g: Gallery) { }
+  shareGallery(g: Gallery) {}
 
   deleteGallery(galleryNo: string, galleryName: string) {
     if (!galleryNo) return;
 
-    this.dialog.open(ConfirmDialogComponent, {
-      width: "500px",
-      data: {
-        title: 'Delete Gallery',
-        msg: [`You sure you want to delete '${galleryName}'`],
-        isNoBtnDisplayed: true,
-      },
-    })
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: "500px",
+        data: {
+          title: "Delete Gallery",
+          msg: [`You sure you want to delete '${galleryName}'`],
+          isNoBtnDisplayed: true,
+        },
+      })
       .afterClosed()
       .subscribe((confirm) => {
         if (!confirm) {
@@ -122,12 +120,9 @@ export class GalleryComponent implements OnInit {
         }
 
         this.http
-          .post<any>(
-            environment.vfm, "/gallery/delete",
-            {
-              galleryNo: galleryNo,
-            },
-          )
+          .post<any>(`${environment.vfm}/open/api/gallery/delete`, {
+            galleryNo: galleryNo,
+          })
           .subscribe({
             complete: () => this.fetchGalleries(),
           });
@@ -150,15 +145,17 @@ export class GalleryComponent implements OnInit {
   updateGallery(galleryNo: string, name: string) {
     if (!galleryNo || !name) return;
 
-    this.http.post(environment.vfm, "/gallery/update", {
-      galleryNo: galleryNo,
-      name: name
-    }).subscribe({
-      complete: () => {
-        this.expandedElement = null;
-        this.fetchGalleries();
-      }
-    });
+    this.http
+      .post(`${environment.vfm}/open/api/gallery/update`, {
+        galleryNo: galleryNo,
+        name: name,
+      })
+      .subscribe({
+        complete: () => {
+          this.expandedElement = null;
+          this.fetchGalleries();
+        },
+      });
   }
 
   popToGrantAccess(g: Gallery): void {

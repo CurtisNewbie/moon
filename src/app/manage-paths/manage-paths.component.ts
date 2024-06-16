@@ -4,9 +4,8 @@ import { getExpanded, isIdEqual } from 'src/animate/animate-util';
 import { environment } from 'src/environments/environment';
 import { PagingController } from 'src/common/paging';
 import { MngPathDialogComponent } from '../mng-path-dialog/mng-path-dialog.component';
-import { UserService } from '../user.service';
-import { HClient } from 'src/common/api-util';
 import { isEnterKey } from 'src/common/condition';
+import { HttpClient } from '@angular/common/http';
 
 export interface WPath {
   id?: number;
@@ -48,7 +47,7 @@ export class ManagePathsComponent implements OnInit {
   getExpandedEle = (row) => getExpanded(row, this.expandedElement);
   isEnter = isEnterKey;
 
-  constructor(private hclient: HClient,
+  constructor(private http: HttpClient,
     private dialog: MatDialog,
   ) { }
 
@@ -78,7 +77,7 @@ export class ManagePathsComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.uservault, '/path/list', {
+    this.http.post<any>(`${environment.uservault}/open/api/path/list`, {
       paging: this.pagingController.paging,
       pgroup: this.searchGroup,
       url: this.searchPath,

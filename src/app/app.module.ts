@@ -17,7 +17,6 @@ import { FormsModule } from "@angular/forms";
 import { NavComponent } from "./nav/nav.component";
 import { RespInterceptor } from "./interceptors/resp-interceptor";
 import { ErrorInterceptor } from "./interceptors/error-interceptor";
-import { ManageExtensionComponent } from "./manage-extension/manage-extension.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from "@angular/material/core";
@@ -43,11 +42,9 @@ import { GalleryImageComponent } from "./gallery-image/gallery-image.component";
 import { MatCardModule } from "@angular/material/card";
 import { FolderComponent } from "./folder/folder.component";
 import { MatListModule } from "@angular/material/list";
-import { HClient as HttpWrapper } from "src/common/api-util";
-import { ControlledPaginatorComponent } from './controlled-paginator/controlled-paginator.component';
-import { MediaStreamerComponent } from './media-streamer/media-streamer.component';
-import { FileTaskComponent } from './file-task/file-task.component';
-import { TxtViewerComponent } from './txt-viewer/txt-viewer.component';
+import { ControlledPaginatorComponent } from "./controlled-paginator/controlled-paginator.component";
+import { MediaStreamerComponent } from "./media-streamer/media-streamer.component";
+import { TxtViewerComponent } from "./txt-viewer/txt-viewer.component";
 import { UserDetailComponent } from "./user-detail/user-detail.component";
 import { ManageKeysComponent } from "./manage-keys/manage-keys.component";
 import { RegisterComponent } from "./register/register.component";
@@ -61,19 +58,22 @@ import { MngPathDialogComponent } from "./mng-path-dialog/mng-path-dialog.compon
 import { MngRoleDialogComponent } from "./mng-role-dialog/mng-role-dialog.component";
 import { ChangePasswordComponent } from "./change-password/change-password.component";
 import { AccessLogComponent } from "./access-log/access-log.component";
-import { ManageLogsComponent } from './manage-logs/manage-logs.component';
-import { VfolderAddFileComponent } from './vfolder-add-file/vfolder-add-file.component';
-import { HostOnGalleryComponent } from './host-on-gallery/host-on-gallery.component';
-import { DirectoryMoveFileComponent } from './directory-move-file/directory-move-file.component';
-import { ManageBookmarksComponent } from './manage-bookmarks/manage-bookmarks.component';
-import { GalleryAccessComponent } from './gallery-access/gallery-access.component';
-import { ShareFileQrcodeDialogComponent } from './share-file-qrcode-dialog/share-file-qrcode-dialog.component';
-import { MatBadgeModule } from '@angular/material/badge';
-import { ListNotificationComponent } from './list-notification/list-notification.component';
-import { BookmarkBlacklistComponent } from './bookmark-blacklist/bookmark-blacklist.component';
-import { VerFileHistoryComponent, VersionedFileComponent } from './versioned-file/versioned-file.component';
+import { ManageLogsComponent } from "./manage-logs/manage-logs.component";
+import { VfolderAddFileComponent } from "./vfolder-add-file/vfolder-add-file.component";
+import { HostOnGalleryComponent } from "./host-on-gallery/host-on-gallery.component";
+import { DirectoryMoveFileComponent } from "./directory-move-file/directory-move-file.component";
+import { ManageBookmarksComponent } from "./manage-bookmarks/manage-bookmarks.component";
+import { GalleryAccessComponent } from "./gallery-access/gallery-access.component";
+import { ShareFileQrcodeDialogComponent } from "./share-file-qrcode-dialog/share-file-qrcode-dialog.component";
+import { MatBadgeModule } from "@angular/material/badge";
+import { ListNotificationComponent } from "./list-notification/list-notification.component";
+import { BookmarkBlacklistComponent } from "./bookmark-blacklist/bookmark-blacklist.component";
+import {
+  VerFileHistoryComponent,
+  VersionedFileComponent,
+} from "./versioned-file/versioned-file.component";
 import { TokenInterceptor } from "./interceptors/token-interceptor";
-import { CashflowComponent } from './cashflow/cashflow.component';
+import { CashflowComponent } from "./cashflow/cashflow.component";
 
 @NgModule({
   exports: [],
@@ -83,7 +83,6 @@ import { CashflowComponent } from './cashflow/cashflow.component';
     MngFilesComponent,
     LoginComponent,
     NavComponent,
-    ManageExtensionComponent,
     ConfirmDialogComponent,
     GrantAccessDialogComponent,
     ImageViewerComponent,
@@ -92,7 +91,6 @@ import { CashflowComponent } from './cashflow/cashflow.component';
     FolderComponent,
     ControlledPaginatorComponent,
     MediaStreamerComponent,
-    FileTaskComponent,
     TxtViewerComponent,
     UserDetailComponent,
     ManageKeysComponent,
@@ -148,18 +146,14 @@ import { CashflowComponent } from './cashflow/cashflow.component';
     MatListModule,
     MatBadgeModule,
   ],
-  entryComponents: [
-    ConfirmDialogComponent,
-    GrantAccessDialogComponent,
-  ],
+  entryComponents: [ConfirmDialogComponent, GrantAccessDialogComponent],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: APP_BASE_HREF, useValue: "/" },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RespInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    HttpWrapper
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

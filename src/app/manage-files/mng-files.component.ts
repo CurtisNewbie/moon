@@ -1,4 +1,4 @@
-import { HttpEventType } from "@angular/common/http";
+import { HttpClient, HttpEventType } from "@angular/common/http";
 import {
   Component,
   DoCheck,
@@ -8,7 +8,6 @@ import {
   ViewChild,
 } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { Observable, Subscription } from "rxjs";
 
 import {
   emptyUploadFileParam,
@@ -23,15 +22,21 @@ import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.compone
 import { Toaster } from "../notification.service";
 import { UserService } from "../user.service";
 import { animateElementExpanding, isIdEqual } from "../../animate/animate-util";
-import { HClient } from "src/common/api-util";
 import { FileInfoService, TokenType } from "../file-info.service";
 import { NavigationService } from "../navigation.service";
 import { isMobile } from "src/common/env-util";
 import { environment } from "src/environments/environment";
 import { ActivatedRoute } from "@angular/router";
-import { Resp } from "src/common/resp";
 import { ImageViewerComponent } from "../image-viewer/image-viewer.component";
-import { isImage, isImageByName, isPdf, isStreamableVideo, guessFileThumbnail, isTxt, resolveSize } from "src/common/file";
+import {
+  isImage,
+  isImageByName,
+  isPdf,
+  isStreamableVideo,
+  guessFileThumbnail,
+  isTxt,
+  resolveSize,
+} from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
 import { Option } from "src/common/select-util";
 import { isEnterKey } from "src/common/condition";
@@ -40,6 +45,7 @@ import { VfolderAddFileComponent } from "../vfolder-add-file/vfolder-add-file.co
 import { HostOnGalleryComponent } from "../host-on-gallery/host-on-gallery.component";
 import { DirectoryMoveFileComponent } from "../directory-move-file/directory-move-file.component";
 import { ShareFileQrcodeDialogComponent } from "../share-file-qrcode-dialog/share-file-qrcode-dialog.component";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-mng-files",
@@ -48,9 +54,23 @@ import { ShareFileQrcodeDialogComponent } from "../share-file-qrcode-dialog/shar
   animations: [animateElementExpanding()],
 })
 export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
-
-  readonly desktopColumns = ["selected", "thumbnail", "name", "parentFileName", "uploadTime", "size", "operation"];
-  readonly desktopFolderColumns = ["thumbnail", "name", "uploader", "uploadTime", "size", "operation"];
+  readonly desktopColumns = [
+    "selected",
+    "thumbnail",
+    "name",
+    "parentFileName",
+    "uploadTime",
+    "size",
+    "operation",
+  ];
+  readonly desktopFolderColumns = [
+    "thumbnail",
+    "name",
+    "uploader",
+    "uploadTime",
+    "size",
+    "operation",
+  ];
   readonly mobileColumns = ["fileType", "thumbnail", "name", "operation"];
 
   allFileTypeOpts: Option<FileType>[] = [];
@@ -64,7 +84,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   /** list of files fetched */
   fileInfoList: FileInfo[] = [];
   /** searching param */
-  searchParam: SearchFileInfoParam = {}
+  searchParam: SearchFileInfoParam = {};
   /** controller for pagination */
   pagingController: PagingController;
   /** progress string */
@@ -87,9 +107,9 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   selectExpanded = (row): FileInfo => {
     if (this.isMobile) return null;
     // null means row is the expanded one, so we return null to make it collapsed
-    this.curr = (this.currId > -1 && row.id == this.currId) ? null : { ...row }
+    this.curr = this.currId > -1 && row.id == this.currId ? null : { ...row };
     this.currId = this.curr ? this.curr.id : -1;
-  }
+  };
 
   isEnterKeyPressed = isEnterKey;
   inSensitiveMode = false;
@@ -115,7 +135,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   -----------------------
   */
 
-
   /** the name of the directory that we are currently in */
   inDirFileName: string = null;
   /** the file key of the directory that we are currently in */
@@ -125,7 +144,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   makingDir: boolean = false;
   /** name of new dir */
   newDirName: string = null;
-
 
   /*
   -----------------------
@@ -167,7 +185,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   @ViewChild("uploadFileInput")
   uploadFileInput: ElementRef;
 
-  setSearchFileType = (fileType) => this.searchParam.fileType = fileType;
+  setSearchFileType = (fileType) => (this.searchParam.fileType = fileType);
 
   constructor(
     private userService: UserService,
@@ -175,25 +193,22 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     private dialog: MatDialog,
     private fileService: FileInfoService,
     private nav: NavigationService,
-    private hclient: HClient,
+    private http: HttpClient,
     private route: ActivatedRoute
-  ) {
-  }
+  ) {}
 
   ngDoCheck(): void {
     this.anySelected = this.selectedCount > 0;
     this.displayedColumns = this._selectColumns();
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   ngOnInit() {
     this.refreshLabel();
     this.isMobile = isMobile();
 
     this.route.paramMap.subscribe((params) => {
-
       // vfolder
       this.inFolderNo = params.get("folderNo");
       this.inFolderName = params.get("folderName");
@@ -223,23 +238,22 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   mkdir() {
     const dirName = this.newDirName;
     if (!dirName) {
-      this.toaster.toast("Please enter new directory name")
+      this.toaster.toast("Please enter new directory name");
       return;
     }
 
     this.newDirName = null;
-    this.hclient.post(
-      environment.vfm, "/file/make-dir",
-      {
+    this.http
+      .post(`${environment.vfm}/open/api/file/make-dir`, {
         name: dirName,
         parentFile: this.inDirFileKey,
-      },
-    ).subscribe({
-      next: () => {
-        this.fetchFileInfoList();
-        this.makingDir = false;
-      }
-    });
+      })
+      .subscribe({
+        next: () => {
+          this.fetchFileInfoList();
+          this.makingDir = false;
+        },
+      });
   }
 
   // Go to dir, i.e., list files under the directory
@@ -262,20 +276,25 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     if (!into) {
-      let msgs = ["You sure you want to move these files out of current directory?", ""];
+      let msgs = [
+        "You sure you want to move these files out of current directory?",
+        "",
+      ];
       let c = 0;
       for (let f of selected) {
         msgs.push(` ${++c}. ${f.name}`);
       }
 
-      this.dialog.open(ConfirmDialogComponent, {
-        width: "500px",
-        data: {
-          title: "Move Files",
-          msg: msgs,
-          isNoBtnDisplayed: true,
-        },
-      }).afterClosed()
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          width: "500px",
+          data: {
+            title: "Move Files",
+            msg: msgs,
+            isNoBtnDisplayed: true,
+          },
+        })
+        .afterClosed()
         .subscribe((confirm) => {
           if (!confirm) return;
           this._moveEachToDir(selected, "", 0);
@@ -283,75 +302,84 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    this.dialog.open(DirectoryMoveFileComponent, {
-      width: "500px",
-      data: {
-        files: selected.map((f, i) => { return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid } })
-      },
-    }).afterClosed()
+    this.dialog
+      .open(DirectoryMoveFileComponent, {
+        width: "500px",
+        data: {
+          files: selected.map((f, i) => {
+            return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid };
+          }),
+        },
+      })
+      .afterClosed()
       .subscribe(() => this.fetchFileInfoList());
   }
 
-  private _moveEachToDir(selected: FileInfo[], dirFileKey: string, offset: number) {
+  private _moveEachToDir(
+    selected: FileInfo[],
+    dirFileKey: string,
+    offset: number
+  ) {
     if (offset >= selected.length) {
       this.fetchFileInfoList();
       return;
     }
 
     let curr = selected[offset];
-    this.hclient.post(
-      environment.vfm, "/file/move-to-dir",
-      {
+    this.http
+      .post(`${environment.vfm}/open/api/file/move-to-dir`, {
         uuid: curr.uuid,
         parentFileUuid: dirFileKey,
-      },
-    ).subscribe({
-      next: (resp) => {
-        this._moveEachToDir(selected, dirFileKey, offset + 1);
-      }
-    });
+      })
+      .subscribe({
+        next: (resp) => {
+          this._moveEachToDir(selected, dirFileKey, offset + 1);
+        },
+      });
   }
 
   /** fetch file info list */
   fetchFileInfoList() {
     this.searchParam.parentFile = this.inDirFileKey;
 
-    this.hclient.post<any>(
-      environment.vfm, "/file/list",
-      {
+    this.http
+      .post<any>(`${environment.vfm}/open/api/file/list`, {
         paging: this.pagingController.paging,
         filename: this.searchParam.name,
         folderNo: this.inFolderNo,
         parentFile: this.searchParam.parentFile,
         fileType: this.searchParam.fileType,
-        sensitive: this.inSensitiveMode
-      }
-    ).subscribe({
-      next: (resp) => {
-        this.fileInfoList = [];
-        if (resp.data.payload) {
-          for (let f of resp.data.payload) {
-            f.isFile = f.fileType == FileType.FILE;
-            f.isDir = !f.isFile;
-            f.fileTypeLabel = f.isFile ? "File" : "Directory";
-            f.sizeLabel = resolveSize(f.sizeInBytes);
-            f.isDisplayable = this.isDisplayable(f);
-            if (f.updateTime) f.updateTime = new Date(f.updateTime);
-            if (f.uploadTime) f.uploadTime = new Date(f.uploadTime);
-            this.fileInfoList.push(f);
+        sensitive: this.inSensitiveMode,
+      })
+      .subscribe({
+        next: (resp) => {
+          this.fileInfoList = [];
+          if (resp.data.payload) {
+            for (let f of resp.data.payload) {
+              f.isFile = f.fileType == FileType.FILE;
+              f.isDir = !f.isFile;
+              f.fileTypeLabel = f.isFile ? "File" : "Directory";
+              f.sizeLabel = resolveSize(f.sizeInBytes);
+              f.isDisplayable = this.isDisplayable(f);
+              if (f.updateTime) f.updateTime = new Date(f.updateTime);
+              if (f.uploadTime) f.uploadTime = new Date(f.uploadTime);
+              this.fileInfoList.push(f);
 
-            if (f.thumbnailToken) {
-              f.thumbnailUrl = environment.fstore + "/file/raw?key=" + encodeURIComponent(f.thumbnailToken);
+              if (f.thumbnailToken) {
+                f.thumbnailUrl =
+                  environment.fstore +
+                  "/file/raw?key=" +
+                  encodeURIComponent(f.thumbnailToken);
+              }
             }
           }
-        }
 
-        this.pagingController.onTotalChanged(resp.data.paging);
-        this.isAllSelected = false;
-        this.selectedCount = 0;
-      },
-      error: (err) => console.log(err),
-    });
+          this.pagingController.onTotalChanged(resp.data.paging);
+          this.isAllSelected = false;
+          this.selectedCount = 0;
+        },
+        error: (err) => console.log(err),
+      });
   }
 
   /** Upload file */
@@ -419,22 +447,27 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.expandUploadPanel = false;
-    this.hclient.get<any>(environment.vfm, `/file/parent?fileKey=${this.inDirFileKey}`)
+    this.http
+      .get<any>(
+        `${environment.vfm}/open/api/file/parent?fileKey=${this.inDirFileKey}`
+      )
       .subscribe({
         next: (resp) => {
           // console.log("fetchParentFileKey", resp)
           if (resp.data) {
             this.goToDir(resp.data.fileName, resp.data.fileKey);
           } else {
-            this.nav.navigateTo(NavType.MANAGE_FILES, [
-            ]);
+            this.nav.navigateTo(NavType.MANAGE_FILES, []);
           }
-        }
-      })
+        },
+      });
   }
 
   /** Reset all parameters used for searching, and the fetch the list */
-  resetSearchParam(setFirstPage: boolean = true, fetchFileInfoList: boolean = true): void {
+  resetSearchParam(
+    setFirstPage: boolean = true,
+    fetchFileInfoList: boolean = true
+  ): void {
     this.curr = null;
     this.currId = -1;
 
@@ -443,8 +476,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       this.pagingController.firstPage(); // this also triggers fetchFileInfoList
       // console.log("resetSearchParam.firstPage", time())
     } else {
-      if (fetchFileInfoList)
-        this.fetchFileInfoList();
+      if (fetchFileInfoList) this.fetchFileInfoList();
     }
   }
 
@@ -453,73 +485,82 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    let msgs = [`You sure you want to truncate directory '${f.name}'?`, "All files in this directory will be deleted."]
-    this.dialog.open(ConfirmDialogComponent, {
-      width: "500px",
-      data: {
-        title: 'Truncate Directory',
-        msg: msgs,
-        isNoBtnDisplayed: true,
-      },
-    }).afterClosed().subscribe((confirm) => {
-      if (!confirm) {
-        return;
-      }
+    let msgs = [
+      `You sure you want to truncate directory '${f.name}'?`,
+      "All files in this directory will be deleted.",
+    ];
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: "500px",
+        data: {
+          title: "Truncate Directory",
+          msg: msgs,
+          isNoBtnDisplayed: true,
+        },
+      })
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (!confirm) {
+          return;
+        }
 
-      this.hclient.post<any>(
-        environment.vfm, "/open/api/file/dir/truncate",
-        { uuid: f.uuid },
-        false
-      ).subscribe((resp) => {
-        this.toaster.toast("Truncating directory, please wait for a while")
-        this.fetchFileInfoList();
+        this.http
+          .post<any>(`${environment.vfm}/open/api/file/dir/truncate`, {
+            uuid: f.uuid,
+          })
+          .subscribe((resp) => {
+            this.toaster.toast("Truncating directory, please wait for a while");
+            this.fetchFileInfoList();
+          });
       });
-    });
   }
 
   deleteSelected(): void {
-
     let selected = this.fileInfoList
       .filter((f) => f._selected)
       .map((f, i) => {
-        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
+        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid };
       });
 
     if (!selected || selected.length < 1) {
-      this.toaster.toast("Select files first")
+      this.toaster.toast("Select files first");
       return;
     }
 
-    let msgs = [`You sure you want to delete the following files?`, ""]
+    let msgs = [`You sure you want to delete the following files?`, ""];
     for (let s of selected) {
       msgs.push(s.name);
     }
 
-    this.dialog.open(ConfirmDialogComponent, {
-      width: "500px",
-      data: {
-        title: 'Delete Files',
-        msg: msgs,
-        isNoBtnDisplayed: true,
-      },
-    }).afterClosed().subscribe((confirm) => {
-      console.log(confirm);
-      if (!confirm) {
-        return;
-      }
-      let fks = [];
-      for (let f of selected) {
-        fks.push(f.fileKey);
-      }
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: "500px",
+        data: {
+          title: "Delete Files",
+          msg: msgs,
+          isNoBtnDisplayed: true,
+        },
+      })
+      .afterClosed()
+      .subscribe((confirm) => {
+        console.log(confirm);
+        if (!confirm) {
+          return;
+        }
+        let fks = [];
+        for (let f of selected) {
+          fks.push(f.fileKey);
+        }
 
-      this.hclient.post<any>(
-        environment.vfm, "/file/delete/batch",
-        { fileKeys: fks },
-      ).subscribe((resp) => {
-        this.fetchFileInfoList();
-        console.log("deleted", fks);
+        this.http
+          .post<any>(`${environment.vfm}/open/api/file/delete/batch`, {
+            fileKeys: fks,
+          })
+          .subscribe((resp) => {
+            this.fetchFileInfoList();
+            console.log("deleted", fks);
+          });
       });
-    });
   }
 
   /**
@@ -530,7 +571,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       this.dialog.open(ConfirmDialogComponent, {
         width: "500px",
         data: {
-          title: 'Delete File',
+          title: "Delete File",
           msg: [`You sure you want to delete '${name}'`],
           isNoBtnDisplayed: true,
         },
@@ -539,12 +580,11 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     dialogRef.afterClosed().subscribe((confirm) => {
       // console.log(confirm);
       if (confirm) {
-        this.hclient.post<any>(
-          environment.vfm, "/file/delete",
-          { uuid: uuid },
-        ).subscribe((resp) => {
-          this.fetchFileInfoList()
-        });
+        this.http
+          .post<any>(`${environment.vfm}/open/api/file/delete`, { uuid: uuid })
+          .subscribe((resp) => {
+            this.fetchFileInfoList();
+          });
       }
     });
   }
@@ -578,20 +618,19 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   update(u: FileInfo): void {
     if (!u) return;
 
-    this.hclient.post<any>(
-      environment.vfm, "/file/info/update",
-      {
+    this.http
+      .post<any>(`${environment.vfm}/open/api/file/info/update`, {
         id: u.id,
         name: u.name,
         sensitiveMode: u.sensitiveMode,
-      },
-    ).subscribe({
-      complete: () => {
-        this.fetchFileInfoList();
-        this.curr = null;
-        this.currId = 0;
-      },
-    });
+      })
+      .subscribe({
+        complete: () => {
+          this.fetchFileInfoList();
+          this.curr = null;
+          this.currId = 0;
+        },
+      });
   }
 
   /** Guess whether the file is displayable by its name */
@@ -601,26 +640,39 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     const filename: string = f.name;
     if (!filename) return false;
 
-    return isPdf(filename) || isImageByName(filename) || isStreamableVideo(filename) || isTxt(filename);
+    return (
+      isPdf(filename) ||
+      isImageByName(filename) ||
+      isStreamableVideo(filename) ||
+      isTxt(filename)
+    );
   }
 
   /** Display the file */
   preview(u: FileInfo): void {
     const isStreaming = isStreamableVideo(u.name);
-    this.fileService.generateFileTempToken(u.uuid, isStreaming ? TokenType.STREAMING : TokenType.DOWNLOAD)
+    this.fileService
+      .generateFileTempToken(
+        u.uuid,
+        isStreaming ? TokenType.STREAMING : TokenType.DOWNLOAD
+      )
       .subscribe({
         next: (resp) => {
           const token = resp.data;
 
-          const getDownloadUrl = () => environment.fstore + "/file/raw?key=" + encodeURIComponent(token);
-          const getStreamingUrl = () => environment.fstore + "/file/stream?key=" + encodeURIComponent(token);
+          const getDownloadUrl = () =>
+            environment.fstore + "/file/raw?key=" + encodeURIComponent(token);
+          const getStreamingUrl = () =>
+            environment.fstore +
+            "/file/stream?key=" +
+            encodeURIComponent(token);
 
           if (isStreaming) {
             this.dialog.open(MediaStreamerComponent, {
               data: {
                 name: u.name,
                 url: getStreamingUrl(),
-                token: token
+                token: token,
               },
             });
           } else if (isPdf(u.name)) {
@@ -631,7 +683,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             this.nav.navigateTo(NavType.TXT_VIEWER, [
               { name: u.name, url: getDownloadUrl(), uuid: u.uuid },
             ]);
-          } else { // image
+          } else {
+            // image
             this.dialog.open(ImageViewerComponent, {
               data: {
                 name: u.name,
@@ -653,12 +706,16 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
         const dialogRef: MatDialogRef<ShareFileQrcodeDialogComponent, boolean> =
           this.dialog.open(ShareFileQrcodeDialogComponent, {
             data: {
-              title: 'Share File By QRCode',
-              msg: [
-                'Scan QRCode to download the file',
-              ],
-              img: window.location.protocol + "//" + window.location.host + "/" + environment.vfm
-                + "/open/api/file/token/qrcode?token=" + encodeURIComponent(resp.data)
+              title: "Share File By QRCode",
+              msg: ["Scan QRCode to download the file"],
+              img:
+                window.location.protocol +
+                "//" +
+                window.location.host +
+                "/" +
+                environment.vfm +
+                "/open/api/file/token/qrcode?token=" +
+                encodeURIComponent(resp.data),
             },
           });
 
@@ -689,7 +746,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     let selected = this.fileInfoList
       .filter((f) => f._selected)
       .map((f, i) => {
-        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
+        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid };
       });
 
     if (!selected || selected.length < 1) {
@@ -697,10 +754,12 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       return;
     }
 
-    this.dialog.open(VfolderAddFileComponent, {
-      width: "500px",
-      data: { files: selected },
-    }).afterClosed()
+    this.dialog
+      .open(VfolderAddFileComponent, {
+        width: "500px",
+        data: { files: selected },
+      })
+      .afterClosed()
       .subscribe();
   }
 
@@ -711,21 +770,23 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   transferSelectedToGallery() {
-
-    let selected = this.filterSelected((f: FileInfo): boolean => isImage(f) || f.isDir)
-      .map((f, i) => {
-        return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid }
-      });
+    let selected = this.filterSelected(
+      (f: FileInfo): boolean => isImage(f) || f.isDir
+    ).map((f, i) => {
+      return { name: `${i + 1}. ${f.name}`, fileKey: f.uuid };
+    });
 
     if (!selected || selected.length < 1) {
-      this.toaster.toast("Please select images or directory first")
+      this.toaster.toast("Please select images or directory first");
       return;
     }
 
-    this.dialog.open(HostOnGalleryComponent, {
-      width: "500px",
-      data: { files: selected },
-    }).afterClosed()
+    this.dialog
+      .open(HostOnGalleryComponent, {
+        width: "500px",
+        data: { files: selected },
+      })
+      .afterClosed()
       .subscribe();
   }
 
@@ -758,7 +819,6 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     this.expandUploadPanel = !this.expandUploadPanel;
 
     if (this.expandUploadPanel) {
-
       this.makingDir = false;
 
       // if we are already in a directory, by default we upload to current directory
@@ -771,7 +831,15 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   // -------------------------- private helper methods ------------------------
 
   private _concatTempFileDownloadUrl(tempToken: string): string {
-    return window.location.protocol + "//" + window.location.host + "/" + environment.fstore + "/file/raw?key=" + encodeURIComponent(tempToken);
+    return (
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      "/" +
+      environment.fstore +
+      "/file/raw?key=" +
+      encodeURIComponent(tempToken)
+    );
   }
 
   private _setDisplayedFileName(): void {
@@ -780,7 +848,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     const files = this.uploadParam.files;
     const firstFile: File = files[0];
     if (this._isSingleUpload()) this.displayedUploadName = firstFile.name;
-    else this.displayedUploadName = `Batch Upload: ${files.length} files in total`;
+    else
+      this.displayedUploadName = `Batch Upload: ${files.length} files in total`;
   }
 
   private _resetFileUploadParam(): void {
@@ -823,11 +892,15 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     return {
       fileName: next.name,
       files: [next],
-      ignoreOnDupName: this.uploadParam.ignoreOnDupName
+      ignoreOnDupName: this.uploadParam.ignoreOnDupName,
     };
   }
 
-  private _updateUploadProgress(filename: string, loaded: number, total: number) {
+  private _updateUploadProgress(
+    filename: string,
+    loaded: number,
+    total: number
+  ) {
     // how many files left
     let remaining;
     let index = this.uploadIndex;
@@ -845,28 +918,29 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
     // upload progress
     let p = Math.round((100 * loaded) / total).toFixed(2);
     let ps;
-    if (p == "100.00")
-      ps = `Processing '${filename}' ... ${remaining} `;
+    if (p == "100.00") ps = `Processing '${filename}' ... ${remaining} `;
     else ps = `Uploading ${filename} ${p}% ${remaining} `;
     this.progress = ps;
   }
 
-  private _doUpload(uploadParam: UploadFileParam, fetchOnComplete: boolean = true) {
+  private _doUpload(
+    uploadParam: UploadFileParam,
+    fetchOnComplete: boolean = true
+  ) {
     uploadParam.parentFile = this.inDirFileKey;
     const onComplete = () => {
-      if (fetchOnComplete)
-        setTimeout(() => this.fetchFileInfoList(), 1_000);
+      if (fetchOnComplete) setTimeout(() => this.fetchFileInfoList(), 1_000);
 
       let next = this._prepNextUpload();
       if (!next) {
         this.progress = null;
         this.isUploading = false;
         this._resetFileUploadParam();
-        this.fetchFileInfoList()
+        this.fetchFileInfoList();
       } else {
         this._doUpload(next, false); // upload next file
       }
-    }
+    };
 
     const abortUpload = () => {
       this.progress = null;
@@ -877,47 +951,63 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
     const name = uploadParam.fileName;
     const uploadFileCallback = () => {
-      this.uploadSub = this.fileService.uploadToMiniFstore(uploadParam).subscribe({
-        next: (event) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this._updateUploadProgress(uploadParam.fileName, event.loaded, event.total);
-          }
-
-          // TODO: refactor this later, this is so ugly
-          if (event.type == HttpEventType.Response) {
-            let fstoreRes = event.body
-            if (fstoreRes.error) {
-              abortUpload();
-              return;
+      this.uploadSub = this.fileService
+        .uploadToMiniFstore(uploadParam)
+        .subscribe({
+          next: (event) => {
+            if (event.type === HttpEventType.UploadProgress) {
+              this._updateUploadProgress(
+                uploadParam.fileName,
+                event.loaded,
+                event.total
+              );
             }
 
-            // create the record in vfm
-            this.hclient.post(environment.vfm, "/file/create", {
-              filename: uploadParam.fileName,
-              fstoreFileId: fstoreRes.data,
-              parentFile: uploadParam.parentFile
-            }).subscribe({
-              complete: onComplete,
-              error: () => {
+            // TODO: refactor this later, this is so ugly
+            if (event.type == HttpEventType.Response) {
+              let fstoreRes = event.body;
+              if (fstoreRes.error) {
                 abortUpload();
-              },
-            })
-          }
-        },
-        error: () => {
-          abortUpload();
-        },
-      });
-    }
+                return;
+              }
+
+              // create the record in vfm
+              this.http
+                .post(`${environment.vfm}/open/api/file/create`, {
+                  filename: uploadParam.fileName,
+                  fstoreFileId: fstoreRes.data,
+                  parentFile: uploadParam.parentFile,
+                })
+                .subscribe({
+                  complete: onComplete,
+                  error: () => {
+                    abortUpload();
+                  },
+                });
+            }
+          },
+          error: () => {
+            abortUpload();
+          },
+        });
+    };
 
     if (!uploadParam.ignoreOnDupName) {
       uploadFileCallback();
     } else {
-      let pf = uploadParam.parentFile ? encodeURIComponent(uploadParam.parentFile) : ""
+      let pf = uploadParam.parentFile
+        ? encodeURIComponent(uploadParam.parentFile)
+        : "";
 
       // preflight check whether the filename exists already
-      this.hclient.get<boolean>(environment.vfm,
-        `/file/upload/duplication/preflight?fileName=${encodeURIComponent(name)}&parentFileKey=${pf}`)
+      this.http
+        .get<any>(
+          `${
+            environment.vfm
+          }/open/api/file/upload/duplication/preflight?fileName=${encodeURIComponent(
+            name
+          )}&parentFileKey=${pf}`
+        )
         .subscribe({
           next: (resp) => {
             let isDuplicate = resp.data;
@@ -929,8 +1019,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
               // skip this file, it exists already
               onComplete();
             }
-          }
-        })
+          },
+        });
     }
   }
 
@@ -958,7 +1048,7 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
 
         return v;
       })
-      .filter(v => v != null);
+      .filter((v) => v != null);
   }
 
   onRowClicked(row: FileInfo) {
@@ -972,26 +1062,28 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   sensitiveModeChecked(event, file) {
-    file.sensitiveMode = event.checked ? 'Y' : 'N';
+    file.sensitiveMode = event.checked ? "Y" : "N";
     console.log("checked?", file);
   }
 
   canUnpack(fi: FileInfo): boolean {
-    return fi.name && fi.name.toLowerCase().endsWith('.zip');
+    return fi.name && fi.name.toLowerCase().endsWith(".zip");
   }
 
   unpack(fi: FileInfo) {
-    this.hclient.post(environment.vfm, "/file/unpack", {
-      fileKey: fi.uuid,
-      parentFileKey: this.inDirFileKey,
-    }).subscribe({
-      next: () => {
-        this.fetchFileInfoList();
-        this.toaster.toast(`Unpacking ${fi.name}, please be patient.`);
-        this.currId = -1
-      }
-    })
-    return false
+    this.http
+      .post(`${environment.vfm}/open/api/file/unpack`, {
+        fileKey: fi.uuid,
+        parentFileKey: this.inDirFileKey,
+      })
+      .subscribe({
+        next: () => {
+          this.fetchFileInfoList();
+          this.toaster.toast(`Unpacking ${fi.name}, please be patient.`);
+          this.currId = -1;
+        },
+      });
+    return false;
   }
 
   /**
@@ -1006,12 +1098,10 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
           this.dialog.open(ConfirmDialogComponent, {
             width: "700px",
             data: {
-              title: 'Share File',
+              title: "Share File",
               msg: [
-                'Link to download this file:',
-                this._concatTempFileDownloadUrl(
-                  resp.data
-                )
+                "Link to download this file:",
+                this._concatTempFileDownloadUrl(resp.data),
               ],
               isNoBtnDisplayed: false,
             },
@@ -1023,6 +1113,4 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       },
     });
   }
-
 }
-

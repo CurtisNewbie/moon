@@ -25,7 +25,6 @@ export enum NavType {
     GALLERY = "gallery",
     GALLERY_IMAGE = "gallery-image",
     MEDIA_STREAMER = "media",
-    FILE_TASK = "file-task",
     TXT_VIEWER = "txt-viewer",
     LIST_NOTIFICATION= "notifications",
     VERSIONED_FILES = "versioned-files",

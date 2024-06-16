@@ -1,28 +1,26 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { HClient } from 'src/common/api-util';
-import { ConfirmDialog } from 'src/common/dialog';
-import { DirBrief } from 'src/common/file-info';
-import { filterAlike } from 'src/common/select-util';
-import { Toaster } from '../notification.service';
-import { environment } from 'src/environments/environment';
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { DirBrief } from "src/common/file-info";
+import { filterAlike } from "src/common/select-util";
+import { Toaster } from "../notification.service";
+import { environment } from "src/environments/environment";
+import { HttpClient } from "@angular/common/http";
 
 type DfFile = {
-  fileKey: string
-  name: string
-}
+  fileKey: string;
+  name: string;
+};
 
 type Data = {
-  files: DfFile[]
-}
+  files: DfFile[];
+};
 
 @Component({
-  selector: 'app-directory-move-file',
-  templateUrl: './directory-move-file.component.html',
-  styleUrls: ['./directory-move-file.component.css']
+  selector: "app-directory-move-file",
+  templateUrl: "./directory-move-file.component.html",
+  styleUrls: ["./directory-move-file.component.css"],
 })
 export class DirectoryMoveFileComponent implements OnInit {
-
   /** list of brief info of all directories that we can access */
   dirBriefList: DirBrief[] = [];
   /** auto complete for dirs that we may move file into */
@@ -30,14 +28,18 @@ export class DirectoryMoveFileComponent implements OnInit {
   /** name of dir that we may move file into */
   moveIntoDirName: string = null;
 
-  onMoveIntoDirNameChanged = () => this.autoCompMoveIntoDirs = filterAlike(this.dirBriefList.map(v => v.name), this.moveIntoDirName);
+  onMoveIntoDirNameChanged = () =>
+    (this.autoCompMoveIntoDirs = filterAlike(
+      this.dirBriefList.map((v) => v.name),
+      this.moveIntoDirName
+    ));
 
   constructor(
-    public dialogRef: MatDialogRef<DirectoryMoveFileComponent, Data>, @Inject(MAT_DIALOG_DATA) public dat: Data,
-    private hclient: HClient,
-    private confirmDialog: ConfirmDialog,
+    public dialogRef: MatDialogRef<DirectoryMoveFileComponent, Data>,
+    @Inject(MAT_DIALOG_DATA) public dat: Data,
+    private http: HttpClient,
     private toaster: Toaster
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this._fetchDirBriefList();
@@ -45,24 +47,27 @@ export class DirectoryMoveFileComponent implements OnInit {
 
   // fetch dir brief list
   private _fetchDirBriefList() {
-    this.hclient.get<DirBrief[]>(
-      environment.vfm, "/file/dir/list",
-    ).subscribe({
+    this.http.get<any>(`${environment.vfm}/open/api/file/dir/list`).subscribe({
       next: (resp) => {
         this.dirBriefList = resp.data;
         this.onMoveIntoDirNameChanged();
-      }
+      },
     });
   }
 
   findMoveIntoDirFileKey(dirName: string) {
-    let matched: DirBrief[] = this.dirBriefList.filter(v => v.name === dirName)
+    let matched: DirBrief[] = this.dirBriefList.filter(
+      (v) => v.name === dirName
+    );
     if (!matched || matched.length < 1) {
       this.toaster.toast("Directory not found, please check and try again");
       return;
     }
     if (matched.length > 1) {
-      this.toaster.toast("Found multiple directories with the same name, please update their names and try again", 4000);
+      this.toaster.toast(
+        "Found multiple directories with the same name, please update their names and try again",
+        4000
+      );
       return;
     }
     return matched[0].uuid;
@@ -87,17 +92,15 @@ export class DirectoryMoveFileComponent implements OnInit {
     }
 
     let curr = files[offset];
-    this.hclient.post(
-      environment.vfm, "/file/move-to-dir",
-      {
+    this.http
+      .post(`${environment.vfm}/open/api/file/move-to-dir`, {
         uuid: curr.fileKey,
         parentFileUuid: dirFileKey,
-      },
-    ).subscribe({
-      next: (resp) => {
-        this._moveEachToDir(files, dirFileKey, offset + 1);
-      }
-    });
+      })
+      .subscribe({
+        next: (resp) => {
+          this._moveEachToDir(files, dirFileKey, offset + 1);
+        },
+      });
   }
-
 }

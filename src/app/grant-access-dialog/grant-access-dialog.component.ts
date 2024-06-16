@@ -4,8 +4,8 @@ import { environment } from "src/environments/environment";
 import { FileAccessGranted } from "src/common/file-info";
 import { PagingController } from "src/common/paging";
 import { Toaster } from "../notification.service";
-import { HClient } from "src/common/api-util";
 import { isEnterKey } from "src/common/condition";
+import { HttpClient } from "@angular/common/http";
 
 export interface GrantAccessDialogData {
   folderNo?: string;
@@ -18,27 +18,23 @@ export interface GrantAccessDialogData {
   styleUrls: ["./grant-access-dialog.component.css"],
 })
 export class GrantAccessDialogComponent implements OnInit {
-  readonly columns: string[] = [
-    "username",
-    "createDate",
-    "removeButton",
-  ];
+  readonly columns: string[] = ["username", "createDate", "removeButton"];
   grantedTo: string = "";
   grantedAccesses: FileAccessGranted[] = [];
   pagingController: PagingController;
   isEnterPressed = isEnterKey;
 
   constructor(
-    private http: HClient,
+    private http: HttpClient,
     private toaster: Toaster,
-    public dialogRef: MatDialogRef<GrantAccessDialogComponent, GrantAccessDialogData>,
+    public dialogRef: MatDialogRef<
+      GrantAccessDialogComponent,
+      GrantAccessDialogData
+    >,
     @Inject(MAT_DIALOG_DATA) public data: GrantAccessDialogData
-  ) {
-  }
+  ) {}
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   grantAccess() {
     this.grantFolderAccess();
@@ -50,44 +46,41 @@ export class GrantAccessDialogComponent implements OnInit {
       return;
     }
 
-    this.http.post<void>(
-      environment.vfm, "/vfolder/share",
-      {
+    this.http
+      .post<void>(`${environment.vfm}/open/api/vfolder/share`, {
         folderNo: this.data.folderNo,
         username: this.grantedTo,
-      },
-    ).subscribe({
-      next: () => {
-        this.toaster.toast("Access granted");
-        this.fetchAccessGranted();
-      },
-    });
+      })
+      .subscribe({
+        next: () => {
+          this.toaster.toast("Access granted");
+          this.fetchAccessGranted();
+        },
+      });
   }
-
 
   fetchAccessGranted() {
     this.fetchFolderAccessGranted();
   }
 
   fetchFolderAccessGranted() {
-    this.http.post<any>(
-      environment.vfm, "/vfolder/granted/list",
-      {
+    this.http
+      .post<any>(`${environment.vfm}/open/api/vfolder/granted/list`, {
         folderNo: this.data.folderNo,
         paging: this.pagingController.paging,
-      },
-    ).subscribe({
-      next: (resp) => {
-        this.grantedAccesses = [];
-        if (resp.data.payload) {
-          for (let g of resp.data.payload) {
-            g.createDate = new Date(g.createTime);
-            this.grantedAccesses.push(g);
+      })
+      .subscribe({
+        next: (resp) => {
+          this.grantedAccesses = [];
+          if (resp.data.payload) {
+            for (let g of resp.data.payload) {
+              g.createDate = new Date(g.createTime);
+              this.grantedAccesses.push(g);
+            }
           }
-        }
-        this.pagingController.onTotalChanged(resp.data.paging);
-      },
-    });
+          this.pagingController.onTotalChanged(resp.data.paging);
+        },
+      });
   }
 
   removeAccess(access): void {
@@ -95,14 +88,16 @@ export class GrantAccessDialogComponent implements OnInit {
   }
 
   removeFolderAccess(userNo: string): void {
-    this.http.post<void>(
-      environment.vfm, "/vfolder/access/remove",
-      { userNo: userNo, folderNo: this.data.folderNo },
-    ).subscribe({
-      next: () => {
-        this.fetchAccessGranted();
-      },
-    });
+    this.http
+      .post<void>(`${environment.vfm}/open/api/vfolder/access/remove`, {
+        userNo: userNo,
+        folderNo: this.data.folderNo,
+      })
+      .subscribe({
+        next: () => {
+          this.fetchAccessGranted();
+        },
+      });
   }
 
   onPagingControllerReady(pc) {

@@ -1,36 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { HClient } from 'src/common/api-util';
-import { isEnterKey } from 'src/common/condition';
-import { PagingController } from 'src/common/paging';
-import { UserService } from '../user.service';
-import { Toaster } from '../notification.service';
-import { ConfirmDialog } from 'src/common/dialog';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from "@angular/core";
+import { isEnterKey } from "src/common/condition";
+import { PagingController } from "src/common/paging";
+import { ConfirmDialog } from "src/common/dialog";
+import { environment } from "src/environments/environment";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: 'app-bookmark-blacklist',
-  templateUrl: './bookmark-blacklist.component.html',
-  styleUrls: ['./bookmark-blacklist.component.css']
+  selector: "app-bookmark-blacklist",
+  templateUrl: "./bookmark-blacklist.component.html",
+  styleUrls: ["./bookmark-blacklist.component.css"],
 })
 export class BookmarkBlacklistComponent implements OnInit {
-
   readonly isEnterKeyPressed = isEnterKey;
-  readonly tabcol = ['id', 'name', 'operation']
+  readonly tabcol = ["id", "name", "operation"];
 
   pagingController: PagingController;
-  tabdat = []
+  tabdat = [];
   isEnter = isEnterKey;
   file = null;
 
   searchName = null;
   showUploadPanel = false;
 
-  constructor(private hclient: HClient,
-    private confirmDialog: ConfirmDialog,
-  ) { }
+  constructor(private http: HttpClient, private confirmDialog: ConfirmDialog) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onPagingControllerReady(pc) {
     this.pagingController = pc;
@@ -39,27 +33,34 @@ export class BookmarkBlacklistComponent implements OnInit {
   }
 
   fetchList() {
-    this.hclient.post<any>(environment.vfm,
-      '/bookmark/blacklist/list', { paging: this.pagingController.paging, name: this.searchName }, false).
-      subscribe({
+    this.http
+      .post<any>(`${environment.vfm}/bookmark/blacklist/list`, {
+        paging: this.pagingController.paging,
+        name: this.searchName,
+      })
+      .subscribe({
         next: (r) => {
           this.tabdat = r.data.payload;
           this.pagingController.onTotalChanged(r.data.paging);
-        }
+        },
       });
   }
 
   popToRemove(id, name) {
-    this.confirmDialog.show("Remove Bookmark Blacklist", [`Removing Bookmark Blacklist ${name}`], () => {
-      this.remove(id);
-    });
+    this.confirmDialog.show(
+      "Remove Bookmark Blacklist",
+      [`Removing Bookmark Blacklist ${name}`],
+      () => {
+        this.remove(id);
+      }
+    );
   }
 
   remove(id) {
-    this.hclient.post<any>(environment.vfm,
-      '/bookmark/blacklist/remove', { id: id }, false).
-      subscribe({
-        complete: () => this.fetchList()
+    this.http
+      .post<any>(`${environment.vfm}/bookmark/blacklist/remove`, { id: id })
+      .subscribe({
+        complete: () => this.fetchList(),
       });
   }
 
@@ -67,6 +68,4 @@ export class BookmarkBlacklistComponent implements OnInit {
     this.searchName = null;
     this.fetchList();
   }
-
-
 }

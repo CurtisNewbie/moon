@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
+import {
+  animateElementExpanding,
+  getExpanded,
+  isIdEqual,
+} from "src/animate/animate-util";
 import { environment } from "src/environments/environment";
 import { PagingController } from "src/common/paging";
 import {
@@ -12,8 +16,8 @@ import {
 import { ConfirmDialogComponent } from "../dialog/confirm/confirm-dialog.component";
 import { Toaster } from "../notification.service";
 import { RoleBrief, UserService } from "../user.service";
-import { HClient } from "src/common/api-util";
 import { isEnterKey } from "src/common/condition";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-manager-user",
@@ -55,9 +59,9 @@ export class ManagerUserComponent implements OnInit {
   constructor(
     private toaster: Toaster,
     private dialog: MatDialog,
-    private http: HClient,
+    private http: HttpClient,
     private userService: UserService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.fetchRoleBriefs();
@@ -72,18 +76,21 @@ export class ManagerUserComponent implements OnInit {
       return;
     }
 
-    this.http.post<any>(
-      environment.uservault, "/user/add",
-      { username: this.usernameToBeAdded, password: this.passswordToBeAdded, roleNo: this.userRoleOfAddedUser },
-    ).subscribe({
-      complete: () => {
-        this.userRoleOfAddedUser = null;
-        this.usernameToBeAdded = null;
-        this.passswordToBeAdded = null;
-        this.addUserPanelDisplayed = false;
-        this.fetchUserInfoList();
-      },
-    });
+    this.http
+      .post<any>(`${environment.uservault}/open/api/user/add`, {
+        username: this.usernameToBeAdded,
+        password: this.passswordToBeAdded,
+        roleNo: this.userRoleOfAddedUser,
+      })
+      .subscribe({
+        complete: () => {
+          this.userRoleOfAddedUser = null;
+          this.usernameToBeAdded = null;
+          this.passswordToBeAdded = null;
+          this.addUserPanelDisplayed = false;
+          this.fetchUserInfoList();
+        },
+      });
   }
 
   fetchRoleBriefs(): void {
@@ -93,32 +100,34 @@ export class ManagerUserComponent implements OnInit {
         if (dat.data) {
           this.roleBriefs = dat.data;
         }
-      }
-    })
-  }
-
-  fetchUserInfoList(): void {
-    this.searchParam.paging = this.pagingController.paging;
-    this.http.post<any>(
-      environment.uservault, "/user/list",
-      this.searchParam,
-    ).subscribe({
-      next: (resp) => {
-        this.userInfoList = [];
-        if (resp.data.payload) {
-          for (let r of resp.data.payload) {
-            if (r.createTime) r.createTime = new Date(r.createTime);
-            if (r.updateTime) r.updateTime = new Date(r.updateTime);
-            this.userInfoList.push(r);
-          }
-        }
-        this.pagingController.onTotalChanged(resp.data.paging);
       },
     });
   }
 
+  fetchUserInfoList(): void {
+    this.searchParam.paging = this.pagingController.paging;
+    this.http
+      .post<any>(
+        `${environment.uservault}/open/api/user/list`,
+        this.searchParam
+      )
+      .subscribe({
+        next: (resp) => {
+          this.userInfoList = [];
+          if (resp.data.payload) {
+            for (let r of resp.data.payload) {
+              if (r.createTime) r.createTime = new Date(r.createTime);
+              if (r.updateTime) r.updateTime = new Date(r.updateTime);
+              this.userInfoList.push(r);
+            }
+          }
+          this.pagingController.onTotalChanged(resp.data.paging);
+        },
+      });
+  }
+
   resetSearchParam(): void {
-    this.searchParam = {}
+    this.searchParam = {};
     this.pagingController.firstPage();
   }
 
@@ -126,19 +135,18 @@ export class ManagerUserComponent implements OnInit {
    * Update user info (only admin is allowed)
    */
   updateUserInfo(): void {
-    this.http.post<void>(
-      environment.uservault, "/user/info/update",
-      {
+    this.http
+      .post<void>(`${environment.uservault}/open/api/user/info/update`, {
         userNo: this.expandedElement.userNo,
         roleNo: this.expandedElement.roleNo,
         isDisabled: this.expandedElement.isDisabled,
-      },
-    ).subscribe({
-      complete: () => {
-        this.fetchUserInfoList();
-        this.expandedElement = null;
-      },
-    });
+      })
+      .subscribe({
+        complete: () => {
+          this.fetchUserInfoList();
+          this.expandedElement = null;
+        },
+      });
   }
 
   /**
@@ -160,47 +168,35 @@ export class ManagerUserComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirm) => {
       console.log(confirm);
       if (confirm) {
-        this.http.post<void>(
-          environment.uservault, "/user/delete",
-          { id: this.expandedElement.id },
-        ).subscribe({
-          complete: () => {
-            this.expandedElement = null;
-            this.fetchUserInfoList();
-          },
-        });
+        this.http
+          .post<void>(`${environment.uservault}/open/api/user/delete`, {
+            id: this.expandedElement.id,
+          })
+          .subscribe({
+            complete: () => {
+              this.expandedElement = null;
+              this.fetchUserInfoList();
+            },
+          });
       }
     });
   }
 
-  /**
-   * Open dialog to show permitted apps for user
-   */
-  // openDialogForUserApp(): void {
-  //   const dialogRef: MatDialogRef<UserPermittedAppUpdateComponent, void> =
-  //     this.dialog.open(UserPermittedAppUpdateComponent, {
-  //       width: "900px",
-  //       data: {
-  //         userId: this.expandedElement.id,
-  //       },
-  //     });
-
-  //   dialogRef.afterClosed().subscribe();
-  // }
-
   reviewRegistration(userId: number, reviewStatus: string) {
-    this.http.post<void>(
-      environment.uservault, "/user/registration/review",
-      {
-        userId: userId,
-        reviewStatus: reviewStatus,
-      },
-    ).subscribe({
-      complete: () => {
-        this.fetchUserInfoList();
-        this.expandedElement = null;
-      },
-    });
+    this.http
+      .post<void>(
+        `${environment.uservault}/open/api/user/registration/review`,
+        {
+          userId: userId,
+          reviewStatus: reviewStatus,
+        }
+      )
+      .subscribe({
+        complete: () => {
+          this.fetchUserInfoList();
+          this.expandedElement = null;
+        },
+      });
   }
 
   approveRegistration(userId: number) {

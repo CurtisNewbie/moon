@@ -1,13 +1,16 @@
 import { Component, OnInit } from "@angular/core";
 import { UserToken } from "src/common/tokens";
 import { PagingController } from "src/common/paging";
-import { HClient } from "src/common/api-util";
-import { animateElementExpanding, getExpanded, isIdEqual } from "src/animate/animate-util";
-import { UserService } from "../user.service";
+import {
+  animateElementExpanding,
+  getExpanded,
+  isIdEqual,
+} from "src/animate/animate-util";
 import { Toaster } from "../notification.service";
 import { environment } from "src/environments/environment";
 import { isEnterKey } from "src/common/condition";
 import { copyToClipboard } from "src/common/clipboard";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-manage-keys",
@@ -38,33 +41,29 @@ export class ManageKeysComponent implements OnInit {
   isEnter = isEnterKey;
   copyToClipboard = copyToClipboard;
 
-  constructor(
-    private http: HClient,
-    private toaster: Toaster
-  ) { }
+  constructor(private http: HttpClient, private toaster: Toaster) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   mask(k: string): string {
-    return k.length > 0 ? k.substring(0, 5) + "*********" + k.substring(k.length - 5) : "";
+    return k.length > 0
+      ? k.substring(0, 5) + "*********" + k.substring(k.length - 5)
+      : "";
   }
 
   fetchList() {
     this.http
-      .post<any>(
-        environment.uservault, "/user/key/list",
-        {
-          payload: { name: this.query.name },
-          paging: this.pagingController.paging,
-        },
-      )
+      .post<any>(`${environment.uservault}/open/api/user/key/list`, {
+        payload: { name: this.query.name },
+        paging: this.pagingController.paging,
+      })
       .subscribe((resp) => {
         if (resp.data) {
           this.tokens = [];
           if (resp.data.payload) {
             for (let r of resp.data.payload) {
-              if (r.expirationTime) r.expirationTime = new Date(r.expirationTime);
+              if (r.expirationTime)
+                r.expirationTime = new Date(r.expirationTime);
               if (r.createTime) r.createTime = new Date(r.createTime);
               this.tokens.push(r);
             }
@@ -99,13 +98,10 @@ export class ManageKeysComponent implements OnInit {
     this.password = null;
 
     this.http
-      .post<void>(
-        environment.uservault, "/user/key/generate",
-        {
-          password: pw,
-          keyName: keyName,
-        },
-      )
+      .post<void>(`${environment.uservault}/open/api/user/key/generate`, {
+        password: pw,
+        keyName: keyName,
+      })
       .subscribe({
         next: (resp) => {
           this.fetchList();
@@ -117,12 +113,9 @@ export class ManageKeysComponent implements OnInit {
 
   deleteUserKey(id: number) {
     this.http
-      .post<void>(
-        environment.uservault, "/user/key/delete",
-        {
-          userKeyId: id,
-        },
-      )
+      .post<void>(`${environment.uservault}/open/api/user/key/delete`, {
+        userKeyId: id,
+      })
       .subscribe({
         complete: () => this.fetchList(),
       });

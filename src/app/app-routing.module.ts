@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { FileTaskComponent } from "./file-task/file-task.component";
 import { FolderComponent } from "./folder/folder.component";
 import { GalleryImageComponent } from "./gallery-image/gallery-image.component";
 import { GalleryComponent } from "./gallery/gallery.component";
@@ -35,10 +34,6 @@ const routes: Routes = [
   {
     path: NavType.LOGIN_PAGE,
     component: LoginComponent,
-  },
-  {
-    path: NavType.FILE_TASK,
-    component: FileTaskComponent,
   },
   {
     path: NavType.PDF_VIEWER,

@@ -44,33 +44,3 @@ export function getToken() {
   }
   return tkn;
 }
-
-// Deprecate this thingy
-@Injectable({
-  providedIn: "root",
-})
-export class HClient {
-  constructor(private httpClient: HttpClient) {}
-
-  /** Do POST request */
-  post<T>(
-    serviceBase: string,
-    url: string,
-    payload: any,
-    openApiPrefix: boolean = true
-  ): Observable<Resp<T>> {
-    url = openApiPrefix ? buildApiPath(url, serviceBase) : serviceBase + url;
-    console.log("url", url);
-    return this.httpClient.post<Resp<T>>(url, payload, buildOptions());
-  }
-
-  /** Do GET request */
-  get<T>(
-    serviceBase: string,
-    url: string,
-    openApiPrefix: boolean = true
-  ): Observable<Resp<T>> {
-    url = openApiPrefix ? buildApiPath(url, serviceBase) : serviceBase + url;
-    return this.httpClient.get<Resp<T>>(url, buildOptions());
-  }
-}
