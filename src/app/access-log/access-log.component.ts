@@ -1,8 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { AccessLog } from "src/common/access-log";
 import { PagingController } from "src/common/paging";
 import { HttpClient } from "@angular/common/http";
+
+export interface AccessLog {
+  id: number;
+  accessTime: Date;
+  success: boolean;
+  ipAddress: string;
+  username: string;
+  url: string;
+  userAgent: string;
+}
 
 @Component({
   selector: "app-access-log",

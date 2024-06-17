@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { UserToken } from "src/common/tokens";
 import { PagingController } from "src/common/paging";
 import {
   animateElementExpanding,
@@ -11,6 +10,24 @@ import { environment } from "src/environments/environment";
 import { isEnterKey } from "src/common/condition";
 import { copyToClipboard } from "src/common/clipboard";
 import { HttpClient } from "@angular/common/http";
+
+export interface UserToken {
+
+    id: number;
+
+    /** secret key */
+    secretKey: string;
+
+    /** name of the key */
+    name: string;
+
+    /** when the key is expired */
+    expirationTime: Date;
+
+    /** when the record is created */
+    createTime: Date;
+
+}
 
 @Component({
   selector: "app-manage-keys",

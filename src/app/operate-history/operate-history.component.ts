@@ -1,8 +1,27 @@
 import { Component, OnInit } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { OperateLog } from "src/common/operate-log";
 import { PagingController } from "src/common/paging";
 import { HttpClient } from "@angular/common/http";
+
+export interface OperateLog {
+  /** name of operation */
+  operateName: string;
+
+  /** description of operation */
+  operateDesc: string;
+
+  /** when the operation happens */
+  operateTime: Date;
+
+  /** parameters used for the operation */
+  operateParam: string;
+
+  /** username */
+  username: string;
+
+  /** primary key of user */
+  userId: number;
+}
 
 @Component({
   selector: "app-operate-history",

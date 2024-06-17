@@ -1,5 +1,4 @@
 import { Paging } from "./paging";
-import { Option } from "./select-util";
 
 export interface UserInfo {
   id: number;
