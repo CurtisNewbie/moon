@@ -66,6 +66,8 @@ export interface ApiListStatisticsRes {
       </div>
     </div>
 
+    <plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot>
+
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
       <button mat-raised-button class="m-2" (click)="fetchList()">Fetch</button>
       <button mat-raised-button class="m-2" (click)="reset()">Reset</button>
@@ -113,6 +115,20 @@ export class CashflowStatisticsComponent implements OnInit {
     aggType: "YEARLY",
   };
   isEnterKey = isEnterKey;
+
+  public graph = {
+    data: [
+      {
+        x: [1, 2, 3],
+        y: [2, 6, 3],
+        type: "scatter",
+        mode: "lines+points",
+        marker: { color: "red" },
+      },
+      { x: [1, 2, 3], y: [2, 5, 3], type: "bar" },
+    ],
+    layout: { width: 900, height: 300, title: "A Fancy Plot" },
+  };
 
   constructor(private snackBar: MatSnackBar, private http: HttpClient) {}
   ngOnInit(): void {}

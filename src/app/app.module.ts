@@ -74,7 +74,11 @@ import {
 } from "./versioned-file/versioned-file.component";
 import { TokenInterceptor } from "./interceptors/token-interceptor";
 import { CashflowComponent } from "./cashflow/cashflow.component";
-import { CashflowStatisticsComponent } from './cashflow-statistics/cashflow-statistics.component';
+import { CashflowStatisticsComponent } from "./cashflow-statistics/cashflow-statistics.component";
+import * as PlotlyJS from "plotly.js-dist";
+import { PlotlyModule } from "angular-plotly.js";
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   exports: [],
@@ -121,6 +125,7 @@ import { CashflowStatisticsComponent } from './cashflow-statistics/cashflow-stat
     CashflowStatisticsComponent,
   ],
   imports: [
+    PlotlyModule,
     MatTabsModule,
     MatCheckboxModule,
     MatAutocompleteModule,
