@@ -26,28 +26,9 @@ export interface ApiListStatisticsRes {
     </div>
 
     <div class="row row-cols-lg-auto g-3 align-items-center">
-      <mat-form-field style="width: 300px;" class="mb-1 mt-3">
-        <mat-label>Currency</mat-label>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="listReq.currency"
-          (keyup)="isEnterKey($event) && fetchList()"
-        />
-        <button
-          *ngIf="listReq.currency"
-          matSuffix
-          aria-label="Clear"
-          (click)="listReq.currency = ''"
-          class="btn-close"
-        ></button>
-      </mat-form-field>
-    </div>
-
-    <div class="row row-cols-lg-auto g-3 align-items-center">
       <div class="col">
         <mat-form-field>
-          <mat-label>Category</mat-label>
+          <mat-label>Type</mat-label>
           <mat-select
             (valueChange)="onAggTypeSelected($event)"
             [value]="listReq.aggType"
@@ -63,6 +44,22 @@ export interface ApiListStatisticsRes {
               "
             >
               {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row row-cols-lg-auto g-3 align-items-center">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Currency</mat-label>
+          <mat-select
+            (valueChange)="onCurrencySelected($event)"
+            [value]="listReq.currency"
+          >
+            <mat-option [value]="option" *ngFor="let option of currencies">
+              {{ option }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -110,6 +107,7 @@ export interface ApiListStatisticsRes {
 export class CashflowStatisticsComponent implements OnInit {
   tabcol = ["aggType", "aggRange", "aggValue", "currency"];
   dat: ApiListStatisticsRes[] = [];
+  currencies = [];
   pagingController: PagingController;
   listReq: ApiListStatisticsReq = {
     aggType: "YEARLY",
@@ -141,6 +139,8 @@ export class CashflowStatisticsComponent implements OnInit {
           });
         },
       });
+
+    this.fetchCurrencies();
   }
 
   reset() {
@@ -158,10 +158,39 @@ export class CashflowStatisticsComponent implements OnInit {
     this.fetchList();
   }
 
+  onCurrencySelected(currency) {
+    this.listReq.currency = currency;
+    if (!this.pagingController.firstPage()) {
+      this.fetchList();
+    }
+  }
+
   onAggTypeSelected(aggType) {
     this.listReq.aggType = aggType;
     if (!this.pagingController.firstPage()) {
       this.fetchList();
     }
+  }
+
+  fetchCurrencies() {
+    this.http.get<any>(`/acct/open/api/v1/cashflow/list-currency`).subscribe({
+      next: (resp) => {
+        if (resp.error) {
+          this.snackBar.open(resp.msg, "ok", { duration: 6000 });
+          return;
+        }
+        let dat: string[] = resp.data;
+        if (dat == null) {
+          dat = [];
+        }
+        this.currencies = dat;
+      },
+      error: (err) => {
+        console.log(err);
+        this.snackBar.open("Request failed, unknown error", "ok", {
+          duration: 3000,
+        });
+      },
+    });
   }
 }
