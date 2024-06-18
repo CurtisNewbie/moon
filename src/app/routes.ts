@@ -29,5 +29,6 @@ export enum NavType {
     LIST_NOTIFICATION= "notifications",
     VERSIONED_FILES = "versioned-files",
     CASHFLOWS = "cashflows",
+    CASHFLOWS_STATISTICS = "cashflows-statistics",
 }
 

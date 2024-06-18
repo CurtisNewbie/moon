@@ -25,6 +25,7 @@ import { ListNotificationComponent } from "./list-notification/list-notification
 import { BookmarkBlacklistComponent } from "./bookmark-blacklist/bookmark-blacklist.component";
 import { VersionedFileComponent } from "./versioned-file/versioned-file.component";
 import { CashflowComponent } from "./cashflow/cashflow.component";
+import { CashflowStatisticsComponent } from "./cashflow-statistics/cashflow-statistics.component";
 
 const routes: Routes = [
   {
@@ -126,6 +127,10 @@ const routes: Routes = [
   {
     path: NavType.CASHFLOWS,
     component: CashflowComponent,
+  },
+  {
+    path: NavType.CASHFLOWS_STATISTICS,
+    component: CashflowStatisticsComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS },
 ];

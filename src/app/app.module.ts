@@ -74,6 +74,7 @@ import {
 } from "./versioned-file/versioned-file.component";
 import { TokenInterceptor } from "./interceptors/token-interceptor";
 import { CashflowComponent } from "./cashflow/cashflow.component";
+import { CashflowStatisticsComponent } from './cashflow-statistics/cashflow-statistics.component';
 
 @NgModule({
   exports: [],
@@ -117,6 +118,7 @@ import { CashflowComponent } from "./cashflow/cashflow.component";
     VersionedFileComponent,
     VerFileHistoryComponent,
     CashflowComponent,
+    CashflowStatisticsComponent,
   ],
   imports: [
     MatTabsModule,
