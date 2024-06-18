@@ -49,7 +49,7 @@ export interface ApiListStatisticsRes {
         <mat-form-field>
           <mat-label>Category</mat-label>
           <mat-select
-            (valueChange)="listReq.aggType = $event"
+            (valueChange)="onAggTypeSelected($event)"
             [value]="listReq.aggType"
           >
             <mat-option
@@ -147,12 +147,21 @@ export class CashflowStatisticsComponent implements OnInit {
     this.listReq = {
       aggType: "YEARLY",
     };
-    this.pagingController.firstPage();
+    if (!this.pagingController.firstPage()) {
+      this.fetchList();
+    }
   }
 
   onPagingControllerReady(pc) {
     this.pagingController = pc;
     this.pagingController.onPageChanged = () => this.fetchList();
     this.fetchList();
+  }
+
+  onAggTypeSelected(aggType) {
+    this.listReq.aggType = aggType;
+    if (!this.pagingController.firstPage()) {
+      this.fetchList();
+    }
   }
 }
