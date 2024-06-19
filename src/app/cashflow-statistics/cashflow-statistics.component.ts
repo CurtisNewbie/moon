@@ -41,7 +41,12 @@ export interface ApiListStatisticsRes {
     <mat-form-field appearance="fill">
       <mat-label>Plot Date Range</mat-label>
       <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input
+          matStartDate
+          (dateChange)="fetchPlots()"
+          formControlName="start"
+          placeholder="Start date"
+        />
         <input
           matEndDate
           (dateChange)="fetchPlots()"
@@ -154,7 +159,7 @@ export class CashflowStatisticsComponent implements OnInit {
 
   range = new FormGroup({
     start: new FormControl(
-      new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+      new Date(new Date().setMonth(new Date().getMonth() - 3))
     ),
     end: new FormControl(new Date()),
   });
@@ -172,12 +177,12 @@ export class CashflowStatisticsComponent implements OnInit {
       height: 300,
       xaxis: {
         labelalias: {},
-        title: "Range",
+        title: "Date Range",
       },
       yaxis: {
         title: "Cashflow",
       },
-      title: "Cashflow Statistics",
+      // title: "Cashflow Statistics",
     },
   };
 
@@ -214,7 +219,7 @@ export class CashflowStatisticsComponent implements OnInit {
 
   reset() {
     this.listReq = {
-      aggType: "WEEEKLY",
+      aggType: "WEEKLY",
     };
     if (!this.pagingController.firstPage()) {
       this.fetchList();
@@ -275,6 +280,9 @@ export class CashflowStatisticsComponent implements OnInit {
 
     this.plotReq.currency = this.listReq.currency;
     this.plotReq.aggType = this.listReq.aggType;
+
+    this.range.value.start.setHours(0, 0, 0, 0);
+    this.range.value.end.setHours(23, 59, 59, 99);
     this.plotReq.startTime = this.range.value.start.getTime();
     this.plotReq.endTime = this.range.value.end.getTime();
 
