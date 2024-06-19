@@ -170,11 +170,11 @@ export class CashflowStatisticsComponent implements OnInit {
         x: [],
         y: [],
         type: "scatter",
-        mode: "lines+points",
+        mode: "lines",
       },
     ],
     layout: {
-      height: 300,
+      height: 350,
       xaxis: {
         labelalias: {},
         title: "Date Range",
