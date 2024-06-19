@@ -82,12 +82,36 @@ export interface ListCashFlowRes {
         <mat-form-field>
           <mat-label>Category</mat-label>
           <mat-select
-            (valueChange)="fetchListReq.category = $event"
+            (valueChange)="onCategorySelected($event)"
             [value]="fetchListReq.category"
           >
             <mat-option
               [value]="option.value"
               *ngFor="let option of [{ name: 'Wechat', value: 'WECHAT' }]"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row row-cols-lg-auto g-3 align-items-center">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Direction</mat-label>
+          <mat-select
+            (valueChange)="onDirectionSelected($event)"
+            [value]="fetchListReq.direction"
+          >
+            <mat-option
+              [value]="option.value"
+              *ngFor="
+                let option of [
+                  { name: 'In', value: 'IN' },
+                  { name: 'Out', value: 'OUT' }
+                ]
+              "
             >
               {{ option.name }}
             </mat-option>
@@ -118,7 +142,7 @@ export interface ListCashFlowRes {
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="direction">
+        <!-- <ng-container matColumnDef="direction">
           <th mat-header-cell *matHeaderCellDef>Direction</th>
           <td mat-cell *matCellDef="let u">
             <span *ngIf="u.direction == 'IN'" class="greenspan">
@@ -128,7 +152,7 @@ export interface ListCashFlowRes {
               {{ u.direction }}
             </span>
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="counterparty">
           <th mat-header-cell *matHeaderCellDef>Counteryparty</th>
@@ -137,7 +161,13 @@ export interface ListCashFlowRes {
 
         <ng-container matColumnDef="amount">
           <th mat-header-cell *matHeaderCellDef>Amount</th>
-          <td mat-cell *matCellDef="let u">{{ u.amount }}</td>
+          <td
+            mat-cell
+            *matCellDef="let u"
+            [ngClass]="u.amount.startsWith('-') ? 'redtext' : 'greentext'"
+          >
+            {{ u.amount }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="currency">
@@ -190,7 +220,7 @@ export interface ListCashFlowRes {
 export class CashflowComponent implements OnInit {
   tabdat: ListCashFlowRes[] = [];
   tabcol = [
-    "direction",
+    // "direction",
     "transTime",
     "transId",
     "counterparty",
@@ -214,9 +244,7 @@ export class CashflowComponent implements OnInit {
     private userService: UserService
   ) {}
 
-  ngOnInit(): void {
-    this.fetchList();
-  }
+  ngOnInit(): void {}
 
   popToRemove(transId, name) {}
 
@@ -235,6 +263,11 @@ export class CashflowComponent implements OnInit {
           this.tabdat = payload;
           if (this.tabdat == null) {
             this.tabdat = [];
+          }
+          for (let r of this.tabdat) {
+            if (r.direction == "OUT") {
+              r.amount = "-" + r.amount;
+            }
           }
           this.pagingController.onTotalChanged(paging);
         },
@@ -306,6 +339,16 @@ export class CashflowComponent implements OnInit {
   reset() {
     this.fetchListReq = {};
     this.pagingController.firstPage();
+    this.fetchList();
+  }
+
+  onDirectionSelected(dir) {
+    this.fetchListReq.direction = dir;
+    this.fetchList();
+  }
+
+  onCategorySelected(cat) {
+    this.fetchListReq.category = cat;
     this.fetchList();
   }
 }

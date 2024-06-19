@@ -13,6 +13,14 @@
   background-color: rgba(222, 8, 8, 0.529);
 }
 
+.greentext {
+  color: rgb(20, 163, 1);
+}
+
+.redtext {
+  color: rgb(172, 3, 3);
+}
+
 html,
 body {
   height: 100%;

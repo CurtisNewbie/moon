@@ -125,7 +125,7 @@ export interface ApiListStatisticsRes {
 
         <ng-container matColumnDef="aggValue">
           <th mat-header-cell *matHeaderCellDef>Amount</th>
-          <td mat-cell *matCellDef="let u">{{ u.aggValue }}</td>
+          <td mat-cell *matCellDef="let u" [ngClass]="u.aggValue.startsWith('-') ? 'redtext' : 'greentext'"> {{ u.aggValue }}</td>
         </ng-container>
 
         <ng-container matColumnDef="currency">
