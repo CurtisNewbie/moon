@@ -3,6 +3,19 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { Paging, PagingController } from "src/common/paging";
 import { isEnterKey } from "src/common/condition";
+import { FormControl, FormGroup } from "@angular/forms";
+
+export interface ApiPlotStatisticsReq {
+  startTime?: number; // Start time
+  endTime?: number; // End time
+  aggType?: string; // Aggregation Type.
+  currency?: string; // Currency
+}
+
+export interface ApiPlotStatisticsRes {
+  aggRange?: string; // Aggregation Range. The corresponding year (YYYY), month (YYYYMM), sunday of the week (YYYYMMDD).
+  aggValue?: string; // Aggregation Value.
+}
 
 export interface ApiListStatisticsReq {
   paging?: Paging;
@@ -24,6 +37,28 @@ export interface ApiListStatisticsRes {
     <div>
       <h3 class="mt-2 mb-3">Cashflow Statistics</h3>
     </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Plot Date Range</mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input
+          matEndDate
+          (dateChange)="fetchPlots()"
+          formControlName="end"
+          placeholder="End date"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <plotly-plot
+      [data]="graph.data"
+      [layout]="graph.layout"
+      [useResizeHandler]="true"
+      [style]="{ position: 'relative', width: '100%', height: '100%' }"
+    ></plotly-plot>
 
     <div class="row row-cols-lg-auto g-3 align-items-center">
       <div class="col">
@@ -66,8 +101,6 @@ export interface ApiListStatisticsRes {
       </div>
     </div>
 
-    <plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot>
-
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
       <button mat-raised-button class="m-2" (click)="fetchList()">Fetch</button>
       <button mat-raised-button class="m-2" (click)="reset()">Reset</button>
@@ -108,29 +141,48 @@ export interface ApiListStatisticsRes {
 })
 export class CashflowStatisticsComponent implements OnInit {
   tabcol = ["aggType", "aggRange", "aggValue", "currency"];
-  dat: ApiListStatisticsRes[] = [];
-  currencies = [];
   pagingController: PagingController;
-  listReq: ApiListStatisticsReq = {
-    aggType: "YEARLY",
-  };
   isEnterKey = isEnterKey;
+
+  dat: ApiListStatisticsRes[] = [];
+  plotDat: ApiPlotStatisticsRes[] = [];
+  currencies = [];
+  listReq: ApiListStatisticsReq = {
+    aggType: "WEEKLY",
+  };
+  plotReq: ApiPlotStatisticsReq = {};
+
+  range = new FormGroup({
+    start: new FormControl(
+      new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+    ),
+    end: new FormControl(new Date()),
+  });
 
   public graph = {
     data: [
       {
-        x: [1, 2, 3],
-        y: [2, 6, 3],
+        x: [],
+        y: [],
         type: "scatter",
         mode: "lines+points",
-        marker: { color: "red" },
       },
-      { x: [1, 2, 3], y: [2, 5, 3], type: "bar" },
     ],
-    layout: { width: 900, height: 300, title: "A Fancy Plot" },
+    layout: {
+      height: 300,
+      xaxis: {
+        labelalias: {},
+        title: "Range",
+      },
+      yaxis: {
+        title: "Cashflow",
+      },
+      title: "Cashflow Statistics",
+    },
   };
 
   constructor(private snackBar: MatSnackBar, private http: HttpClient) {}
+
   ngOnInit(): void {}
 
   fetchList() {
@@ -156,12 +208,13 @@ export class CashflowStatisticsComponent implements OnInit {
         },
       });
 
+    this.fetchPlots();
     this.fetchCurrencies();
   }
 
   reset() {
     this.listReq = {
-      aggType: "YEARLY",
+      aggType: "WEEEKLY",
     };
     if (!this.pagingController.firstPage()) {
       this.fetchList();
@@ -186,6 +239,7 @@ export class CashflowStatisticsComponent implements OnInit {
     if (!this.pagingController.firstPage()) {
       this.fetchList();
     }
+    this.fetchPlots();
   }
 
   fetchCurrencies() {
@@ -208,5 +262,55 @@ export class CashflowStatisticsComponent implements OnInit {
         });
       },
     });
+  }
+
+  fetchPlots() {
+    if (
+      !this.listReq.currency ||
+      !this.range.value.start ||
+      !this.range.value.end
+    ) {
+      return;
+    }
+
+    this.plotReq.currency = this.listReq.currency;
+    this.plotReq.aggType = this.listReq.aggType;
+    this.plotReq.startTime = this.range.value.start.getTime();
+    this.plotReq.endTime = this.range.value.end.getTime();
+
+    this.http
+      .post<any>(`/acct/open/api/v1/cashflow/plot-statistics`, this.plotReq)
+      .subscribe({
+        next: (resp) => {
+          if (resp.error) {
+            this.snackBar.open(resp.msg, "ok", { duration: 6000 });
+            return;
+          }
+          let dat: ApiPlotStatisticsRes[] = resp.data;
+          this.plotDat = dat;
+          if (this.plotDat == null) {
+            this.plotDat = [];
+          }
+          let x = [];
+          let y = [];
+          this.graph.data[0].x = x;
+          this.graph.data[0].y = y;
+          let i = 0;
+          for (let v of this.plotDat) {
+            x.push(i);
+            y.push(v.aggValue);
+            this.graph.layout.xaxis.labelalias[i] = v.aggRange;
+            i += 1;
+          }
+          console.log(x);
+          console.log(y);
+        },
+        error: (err) => {
+          console.log(err);
+          this.snackBar.open("Request failed, unknown error", "ok", {
+            duration: 3000,
+          });
+        },
+      });
   }
 }

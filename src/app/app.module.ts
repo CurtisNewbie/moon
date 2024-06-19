@@ -13,7 +13,7 @@ import {
 } from "@angular/common";
 import { LoginComponent } from "./login/login.component";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NavComponent } from "./nav/nav.component";
 import { RespInterceptor } from "./interceptors/resp-interceptor";
 import { ErrorInterceptor } from "./interceptors/error-interceptor";
@@ -134,6 +134,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule,
     MatDatepickerModule,
     MatNativeDateModule,
