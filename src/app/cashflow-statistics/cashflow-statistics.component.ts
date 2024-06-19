@@ -159,7 +159,7 @@ export class CashflowStatisticsComponent implements OnInit {
 
   range = new FormGroup({
     start: new FormControl(
-      new Date(new Date().setMonth(new Date().getMonth() - 3))
+      new Date(new Date().setFullYear(new Date().getFullYear() - 1))
     ),
     end: new FormControl(new Date()),
   });
@@ -259,6 +259,10 @@ export class CashflowStatisticsComponent implements OnInit {
           dat = [];
         }
         this.currencies = dat;
+        if (this.currencies.length == 1 && !this.listReq.currency) {
+          this.listReq.currency = this.currencies[0];
+          this.fetchPlots();
+        }
       },
       error: (err) => {
         console.log(err);
