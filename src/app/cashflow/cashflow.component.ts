@@ -5,6 +5,7 @@ import { Paging, PagingController } from "src/common/paging";
 import { UserService } from "../user.service";
 import { Observable } from "rxjs";
 import { isEnterKey } from "src/common/condition";
+import { FormControl, FormGroup } from "@angular/forms";
 
 export interface ListCashFlowReq {
   paging?: Paging;
@@ -77,6 +78,7 @@ export interface ListCashFlowRes {
         ></button>
       </mat-form-field>
     </div>
+
     <div class="row row-cols-lg-auto g-3 align-items-center">
       <div class="col">
         <mat-form-field>
@@ -119,6 +121,26 @@ export interface ListCashFlowRes {
         </mat-form-field>
       </div>
     </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Transaction Time</mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input
+          matStartDate
+          (dateChange)="fetchList()"
+          formControlName="start"
+          placeholder="Start date"
+        />
+        <input
+          matEndDate
+          (dateChange)="fetchList()"
+          formControlName="end"
+          placeholder="End date"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
       <button mat-raised-button class="m-2" (click)="showWechatImport()">
@@ -238,6 +260,11 @@ export class CashflowComponent implements OnInit {
   importType: string;
   isEnterKeyPressed = isEnterKey;
 
+  range = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl(),
+  });
+
   constructor(
     private snackBar: MatSnackBar,
     private http: HttpClient,
@@ -250,6 +277,16 @@ export class CashflowComponent implements OnInit {
 
   fetchList() {
     this.fetchListReq.paging = this.pagingController.paging;
+    if (this.range.value.start) {
+      this.fetchListReq.transTimeStart = this.range.value.start.getTime();
+    } else {
+      this.fetchListReq.transTimeStart = null;
+    }
+    if (this.range.value.end) {
+      this.fetchListReq.transTimeEnd = this.range.value.end.getTime();
+    } else {
+      this.fetchListReq.transTimeEnd = null;
+    }
     this.http
       .post<any>(`/acct/open/api/v1/cashflow/list`, this.fetchListReq)
       .subscribe({
@@ -338,6 +375,7 @@ export class CashflowComponent implements OnInit {
 
   reset() {
     this.fetchListReq = {};
+    this.range.reset();
     this.pagingController.firstPage();
     this.fetchList();
   }
