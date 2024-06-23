@@ -3,7 +3,6 @@ import { HttpClient, HttpEvent } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { Paging, PagingController } from "src/common/paging";
 import { UserService } from "../user.service";
-import { Observable } from "rxjs";
 import { isEnterKey } from "src/common/condition";
 import { FormControl, FormGroup } from "@angular/forms";
 
@@ -14,6 +13,7 @@ export interface ListCashFlowReq {
   transTimeEnd?: number; // Transaction Time Range End
   transId?: string; // Transaction ID
   category?: string; // Category Code
+  minAmt?: string; // Minimum amount
 }
 
 export interface ListCashFlowRes {
@@ -96,9 +96,9 @@ export interface ListCashFlowRes {
           </mat-select>
         </mat-form-field>
       </div>
-    </div>
+      <!-- </div> -->
 
-    <div class="row row-cols-lg-auto g-3 align-items-center">
+      <!-- <div class="row row-cols-lg-auto g-3 align-items-center"> -->
       <div class="col">
         <mat-form-field>
           <mat-label>Direction</mat-label>
@@ -118,6 +118,25 @@ export interface ListCashFlowRes {
               {{ option.name }}
             </mat-option>
           </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col">
+        <mat-form-field style="width: 150px" class="mb-1 mt-1">
+          <mat-label>Minimum Amount</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="fetchListReq.minAmt"
+            (keyup)="isEnterKeyPressed($event) && fetchList()"
+          />
+          <button
+            *ngIf="fetchListReq.transId"
+            matSuffix
+            aria-label="Clear"
+            (click)="fetchListReq.minAmt = null"
+            class="btn-close"
+          ></button>
         </mat-form-field>
       </div>
     </div>
@@ -277,16 +296,15 @@ export class CashflowComponent implements OnInit {
 
   fetchList() {
     this.fetchListReq.paging = this.pagingController.paging;
-    if (this.range.value.start) {
-      this.fetchListReq.transTimeStart = this.range.value.start.getTime();
-    } else {
-      this.fetchListReq.transTimeStart = null;
-    }
-    if (this.range.value.end) {
-      this.fetchListReq.transTimeEnd = this.range.value.end.getTime();
-    } else {
-      this.fetchListReq.transTimeEnd = null;
-    }
+
+    this.fetchListReq.transTimeStart = this.range.value.start
+      ? this.range.value.start.getTime()
+      : null;
+
+    this.fetchListReq.transTimeEnd = this.range.value.end
+      ? this.range.value.end.getTime()
+      : null;
+
     this.http
       .post<any>(`/acct/open/api/v1/cashflow/list`, this.fetchListReq)
       .subscribe({
