@@ -7,6 +7,7 @@ import {
   isPdf,
   isStreamableVideo,
   isTxt,
+  isWebpage,
   resolveSize,
 } from "src/common/file";
 import { Subscription } from "rxjs";
@@ -81,7 +82,12 @@ function preview(u, dialog, nav, fileService, isMobile, onNav = null): void {
           nav.navigateTo(NavType.TXT_VIEWER, [
             { name: u.name, url: getDownloadUrl(), uuid: u.fileKey },
           ]);
-        } else {
+        } else if (isWebpage(u.name)) {
+            console.log("is webpage")
+            this.nav.navigateTo(NavType.WEBPAGE_VIEWER, [
+              { name: u.name, url: getDownloadUrl(), uuid: u.uuid },
+            ]);
+          } else {
           // image
           dialog.open(ImageViewerComponent, {
             data: {

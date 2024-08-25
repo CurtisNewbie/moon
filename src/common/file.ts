@@ -6,7 +6,8 @@ const GB_UNIT: number = 1024 * 1024 * 1024;
 
 const videoSuffix = new Set(["mp4", "mov", "webm", "ogg"]);
 const imageSuffix = new Set(["jpeg", "jpg", "gif", "png", "svg", "bmp", "webp", "apng", "avif"]);
-const textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "html", "ts", "css", "list", "service"]);
+const textSuffix = new Set(["conf", "txt", "yml", "yaml", "properties", "json", "sh", "md", "java", "js", "ts", "css", "list", "service"]);
+const webpageSuffix = new Set(["html"]);
 
 const suffixIcon: [Set<string>, string][] = [
     [new Set(["pdf"]), "./assets/pdf.png"],
@@ -57,6 +58,10 @@ export function guessFileThumbnail(f: FileInfo): string {
         }
     }
     return "./assets/file.png"
+}
+
+export function isWebpage(fname: string): boolean {
+    return fileSuffixAnyMatch(fname, webpageSuffix);
 }
 
 export function isTxt(fname: string): boolean {

@@ -30,5 +30,6 @@ export enum NavType {
     VERSIONED_FILES = "versioned-files",
     CASHFLOWS = "cashflows",
     CASHFLOWS_STATISTICS = "cashflows-statistics",
+    WEBPAGE_VIEWER = "webpage-viewer",
 }
 

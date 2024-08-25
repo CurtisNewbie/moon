@@ -26,6 +26,7 @@ import { BookmarkBlacklistComponent } from "./bookmark-blacklist/bookmark-blackl
 import { VersionedFileComponent } from "./versioned-file/versioned-file.component";
 import { CashflowComponent } from "./cashflow/cashflow.component";
 import { CashflowStatisticsComponent } from "./cashflow-statistics/cashflow-statistics.component";
+import { WebpageViewerComponent } from "./webpage-viewer/webpage-viewer.component";
 
 const routes: Routes = [
   {
@@ -131,6 +132,10 @@ const routes: Routes = [
   {
     path: NavType.CASHFLOWS_STATISTICS,
     component: CashflowStatisticsComponent,
+  },
+  {
+    path: NavType.WEBPAGE_VIEWER,
+    component: WebpageViewerComponent,
   },
   { path: "**", redirectTo: "/" + NavType.USER_DETAILS },
 ];

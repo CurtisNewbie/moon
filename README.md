@@ -8,6 +8,7 @@ Angular frontend project for a privately hosted website.
 - [mini-fstore](https://github.com/CurtisNewbie/mini-fstore)
 - [user-vault](https://github.com/CurtisNewbie/user-vault)
 - [logbot](https://github.com/CurtisNewbie/logbot)
+- [acct](https://github.com/CurtisNewbie/acct)
 
 ## Doc
 

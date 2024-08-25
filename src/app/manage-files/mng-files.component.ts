@@ -36,6 +36,7 @@ import {
   guessFileThumbnail,
   isTxt,
   resolveSize,
+  isWebpage,
 } from "src/common/file";
 import { MediaStreamerComponent } from "../media-streamer/media-streamer.component";
 import { Option } from "src/common/select-util";
@@ -644,7 +645,8 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
       isPdf(filename) ||
       isImageByName(filename) ||
       isStreamableVideo(filename) ||
-      isTxt(filename)
+      isTxt(filename) ||
+      isWebpage(filename)
     );
   }
 
@@ -681,6 +683,10 @@ export class MngFilesComponent implements OnInit, OnDestroy, DoCheck {
             ]);
           } else if (isTxt(u.name)) {
             this.nav.navigateTo(NavType.TXT_VIEWER, [
+              { name: u.name, url: getDownloadUrl(), uuid: u.uuid },
+            ]);
+          } else if (isWebpage(u.name)) {
+            this.nav.navigateTo(NavType.WEBPAGE_VIEWER, [
               { name: u.name, url: getDownloadUrl(), uuid: u.uuid },
             ]);
           } else {
