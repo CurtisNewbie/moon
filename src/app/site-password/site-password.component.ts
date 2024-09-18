@@ -1,5 +1,10 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Inject, OnInit } from "@angular/core";
+import {
+  ApplicationInitStatus,
+  Component,
+  Inject,
+  OnInit,
+} from "@angular/core";
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -10,6 +15,11 @@ import { isEnterKey } from "src/common/condition";
 import { ConfirmDialog } from "src/common/dialog";
 import { Paging, PagingController } from "src/common/paging";
 
+export interface EditSitePasswordReq {
+  recordId?: string;
+  site?: string;
+  alias?: string;
+}
 export interface DecryptSitePasswordDialogData {
   title?: string;
   sitePassword?: ListSitePasswordRes;
@@ -43,6 +53,78 @@ export interface RemoveSitePasswordRes {
 }
 
 @Component({
+  selector: "edit-site-password-dialog",
+  template: `
+    <h1 mat-dialog-title>Edit Site Password</h1>
+    <div>
+      <ng-container>
+        <p>Record Id: {{ data.recordId }}</p>
+      </ng-container>
+
+      <ng-container>
+        <mat-form-field style="width: 100%;">
+          <mat-label>Alias</mat-label>
+          <input matInput [(ngModel)]="data.alias" />
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-label>Site</mat-label>
+          <input matInput [(ngModel)]="data.site" />
+        </mat-form-field>
+        <div class="justify-content-md-end d-md-flex">
+          <button
+            mat-raised-button
+            class="mt-2"
+            (click)="editSitePassword()"
+            [mat-dialog-close]="true"
+          >
+            Submit
+          </button>
+        </div>
+      </ng-container>
+    </div>
+
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="true">Close</button>
+    </div>
+  `,
+})
+export class EditSitePasswordDialogComponent {
+  constructor(
+    private snackBar: MatSnackBar,
+    private http: HttpClient,
+    public dialogRef: MatDialogRef<
+      EditSitePasswordDialogComponent,
+      ListSitePasswordRes
+    >,
+    @Inject(MAT_DIALOG_DATA) public data: ListSitePasswordRes
+  ) {}
+
+  editSitePassword() {
+    let req: EditSitePasswordReq = {
+      recordId: this.data.recordId,
+      site: this.data.site,
+      alias: this.data.alias,
+    };
+    this.http
+      .post<any>(`/user-vault/open/api/password/edit-site-password`, req)
+      .subscribe({
+        next: (resp) => {
+          if (resp.error) {
+            this.snackBar.open(resp.msg, "ok", { duration: 6000 });
+            return;
+          }
+        },
+        error: (err) => {
+          console.log(err);
+          this.snackBar.open("Request failed, unknown error", "ok", {
+            duration: 3000,
+          });
+        },
+      });
+  }
+}
+
+@Component({
   selector: "site-password-decrypted-dialog",
   template: `
     <h1 mat-dialog-title>{{ data.title }}</h1>
@@ -54,7 +136,15 @@ export interface RemoveSitePasswordRes {
       <ng-container *ngIf="!decrypted">
         <mat-form-field g style="width: 100%;">
           <mat-label>Login Password</mat-label>
-          <input matInput type="password" [(ngModel)]="loginPasssword" />
+          <input
+            matInput
+            type="password"
+            [(ngModel)]="loginPasssword"
+            (keyup)="
+              isEnterKey($event) &&
+                decryptSitePassword(data.sitePassword, loginPasssword)
+            "
+          />
         </mat-form-field>
         <div class="justify-content-md-end d-md-flex">
           <button
@@ -86,6 +176,7 @@ export class SitePasswordDecryptedDialogComponent implements OnInit {
 
   loginPasssword: string = "";
   decrypted: string = "";
+  isEnterKey = isEnterKey;
 
   decryptSitePassword(u: ListSitePasswordRes, loginPassword: string) {
     let req: DecryptSitePasswordReq = {
@@ -145,7 +236,7 @@ export class SitePasswordDecryptedDialogComponent implements OnInit {
       </mat-form-field>
 
       <mat-form-field g style="width: 100%;">
-        <mat-label>Site Username</mat-label>
+        <mat-label>Site Account Name</mat-label>
         <input matInput [(ngModel)]="addSitePasswordReq.username" />
       </mat-form-field>
 
@@ -210,7 +301,7 @@ export class SitePasswordDecryptedDialogComponent implements OnInit {
       </mat-form-field>
 
       <mat-form-field g style="width: 100%;" class="">
-        <mat-label>Site Username:</mat-label>
+        <mat-label>Site Account Name:</mat-label>
         <input
           matInput
           type="text"
@@ -288,6 +379,14 @@ export class SitePasswordDecryptedDialogComponent implements OnInit {
               (click)="$event.stopPropagation() || removeSitePassword(u)"
             >
               Remove
+            </button>
+
+            <button
+              class="small-btn m-2"
+              mat-raised-button
+              (click)="$event.stopPropagation() || edit(u)"
+            >
+              Edit
             </button>
           </td>
         </ng-container>
@@ -427,33 +526,49 @@ export class SitePasswordComponent implements OnInit {
     });
   }
 
+  edit(u: ListSitePasswordRes) {
+    this.dialog
+      .open(EditSitePasswordDialogComponent, {
+        data: { ...u },
+        width: "600px",
+      })
+      .afterClosed()
+      .subscribe(() => {
+        this.fetchList();
+      });
+  }
+
   removeSitePassword(u: ListSitePasswordRes) {
     let n = u.site;
     if (!n) {
       n = u.alias;
     }
-    this.confirmDialog.show(`Remove password for ${n}?`, [
-      `Are you sure you want to remove password for ${n}?`,
-      "Result cannot be reverted once you remove it."
-    ], () => {
-      let req: RemoveSitePasswordRes = { recordId: u.recordId };
-      this.http
-        .post<any>(`/user-vault/open/api/password/remove-site-password`, req)
-        .subscribe({
-          next: (resp) => {
-            if (resp.error) {
-              this.snackBar.open(resp.msg, "ok", { duration: 6000 });
-              return;
-            }
-            this.fetchList();
-          },
-          error: (err) => {
-            console.log(err);
-            this.snackBar.open("Request failed, unknown error", "ok", {
-              duration: 3000,
-            });
-          },
-        });
-    });
+    this.confirmDialog.show(
+      `Remove password for ${n}?`,
+      [
+        `Are you sure you want to remove password for ${n}?`,
+        "Result cannot be reverted once you remove it.",
+      ],
+      () => {
+        let req: RemoveSitePasswordRes = { recordId: u.recordId };
+        this.http
+          .post<any>(`/user-vault/open/api/password/remove-site-password`, req)
+          .subscribe({
+            next: (resp) => {
+              if (resp.error) {
+                this.snackBar.open(resp.msg, "ok", { duration: 6000 });
+                return;
+              }
+              this.fetchList();
+            },
+            error: (err) => {
+              console.log(err);
+              this.snackBar.open("Request failed, unknown error", "ok", {
+                duration: 3000,
+              });
+            },
+          });
+      }
+    );
   }
 }
