@@ -127,14 +127,18 @@ export class EditSitePasswordDialogComponent {
 @Component({
   selector: "site-password-decrypted-dialog",
   template: `
-    <h1 mat-dialog-title>{{ data.title }}</h1>
+    <h1 mat-dialog-title>View Site Password</h1>
     <div>
+      <p>{{ data.title }}</p>
       <ng-container *ngIf="decrypted">
-        <p>Decrypted: {{ decrypted }}</p>
+        <mat-form-field style="width: 100%;">
+          <mat-label>Decrypted:</mat-label>
+          <input matInput [ngModel]="decrypted" [disabled]="true" />
+        </mat-form-field>
       </ng-container>
 
       <ng-container *ngIf="!decrypted">
-        <mat-form-field g style="width: 100%;">
+        <mat-form-field style="width: 100%;">
           <mat-label>Login Password</mat-label>
           <input
             matInput
