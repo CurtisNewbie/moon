@@ -2,6 +2,8 @@
 
 Angular frontend project for a privately hosted website.
 
+> **_This project is part of the monorepo ([https://github.com/CurtisNewbie/moon-monorepo](https://github.com/CurtisNewbie/moon-monorepo)). This repo is nolonger maintained, latest changes are commited to the monorepo instead._**
+
 ## Dependencies
 
 - [vfm](https://github.com/CurtisNewbie/vfm)
